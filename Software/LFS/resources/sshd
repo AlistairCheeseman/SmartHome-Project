@@ -1,0 +1,75 @@
+#!/bin/ash
+#
+# Open SSH
+
+. /etc/init.d/functions
+
+
+RSAKEY=/etc/ssh/ssh_host_rsa_key
+DSAKEY=/etc/ssh/ssh_host_dsa_key
+ECDSAKEY=/etc/ssh/ssh_host_ecdsa_key
+ED25519KEY=/etc/ssh/ssh_host_ed25519_key
+
+
+PIDFILE=/var/run/sshd.pid
+CONFIGFILE=/etc/ssh/sshd_config
+LOGFILE=/var/log/sshd
+
+case "$1" in
+start)
+	if [ ! -r "$DSAKEY" ]; then
+		echo -n "Generating DSA host key: "
+		/bin/ssh-keygen -t dsa -f "$DSAKEY" -N ''  >/dev/null 2>&1
+		check_status
+	fi
+		if [ ! -r "$RSAKEY" ]; then
+		echo -n "Generating RSA host key: "
+		/bin/ssh-keygen -t rsa -f "$RSAKEY" -N '' >/dev/null 2>&1
+		check_status
+	fi
+		if [ ! -r "$ECDSAKEY" ]; then
+		echo -n "Generating ECDSA host key: "
+		/bin/ssh-keygen -t ecdsa -f "$ECDSAKEY" -N '' >/dev/null 2>&1
+		check_status
+	fi
+		if [ ! -r "$ED25519KEY" ]; then
+		echo -n "Generating ED25519 host key: "
+		/bin/ssh-keygen -t ed25519 -f "$ED25519KEY" -N '' >/dev/null 2>&1
+		check_status
+	fi
+
+
+
+
+	if [ -r "$PIDFILE" ]; then
+		echo "Service sshd already running."
+	else
+		echo -n "Starting SSH server: "
+		/sbin/sshd -f $CONFIGFILE -E $LOGFILE
+		check_status
+	fi
+	;;
+stop)
+	if [ -r "$PIDFILE" ]; then
+		echo -n "Stopping sshd server: "
+		kill `cat "$PIDFILE"`
+		check_status
+	else
+		echo "Service sshd not running."
+	fi
+	;;
+restart)
+	$0 stop
+	$0 start
+	;;
+status)
+	if [ -r "$PIDFILE" ]; then
+		echo "Service sshd running (PID $(cat "$PIDFILE"))."
+	else
+		echo "Service sshd not running."
+	fi
+	;;
+*)
+	echo "Usage: $0 {start|stop|restart|status}"
+	exit 1
+esac

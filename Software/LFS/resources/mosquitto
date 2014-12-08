@@ -1,0 +1,44 @@
+#!/bin/ash
+#
+# Mosquitto Broker
+
+. /etc/init.d/functions
+
+PIDFILE=/var/run/mosquitto.pid
+CONFIGFILE=/etc/mosquitto/mosquitto.conf
+
+case "$1" in
+start)
+	if [ -r "$PIDFILE" ]; then
+		echo "Service Mosquitto already running."
+	else
+		echo -n "Starting Mosquitto server: "
+		/usr/local/sbin/mosquitto -c $CONFIGFILE  -d
+		check_status
+	fi
+	;;
+stop)
+	if [ -r "$PIDFILE" ]; then
+		echo -n "Stopping Mosquitto server: "
+		kill `cat "$PIDFILE"`
+		check_status
+		rm -r $PIDFILE
+	else
+		echo "Service Mosquitto not running."
+	fi
+	;;
+restart)
+	$0 stop
+	$0 start
+	;;
+status)
+	if [ -r "$PIDFILE" ]; then
+		echo "Service Mosquitto running (PID $(cat "$PIDFILE"))."
+	else
+		echo "Service Mosquitto not running."
+	fi
+	;;
+*)
+	echo "Usage: $0 {start|stop|restart|status}"
+	exit 1
+esac
