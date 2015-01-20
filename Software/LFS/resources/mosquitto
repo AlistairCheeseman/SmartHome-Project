@@ -13,7 +13,7 @@ start)
 		echo "Service Mosquitto already running."
 	else
 		echo -n "Starting Mosquitto server: "
-		/usr/local/sbin/mosquitto -c $CONFIGFILE  -d
+		/sbin/mosquitto -c $CONFIGFILE  -d
 		check_status
 	fi
 	;;

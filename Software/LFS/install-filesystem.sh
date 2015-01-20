@@ -186,6 +186,10 @@ cp ${DIR}/resources/sshd ${TARGETFS}/etc/init.d/sshd
 cp ${DIR}/resources/syslog ${TARGETFS}/etc/init.d/syslog
 cp ${DIR}/resources/mosquitto ${TARGETFS}/etc/init.d/mosquitto
 
+chmod +x ${TARGETFS}/etc/init.d/sshd
+chmod +x ${TARGETFS}/etc/init.d/syslog
+chmod +x ${TARGETFS}/etc/init.d/mosquitto
+
 cp ${DIR}/resources/functions ${TARGETFS}/etc/init.d/functions
 
 mkdir $TARGETFS/etc/rcS.d
