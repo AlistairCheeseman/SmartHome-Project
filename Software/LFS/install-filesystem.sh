@@ -78,6 +78,7 @@ cd $SRCDIR
 
 wget ftp://ftp.denx.de/pub/u-boot/u-boot-2014.07.tar.bz2
 tar -xf u-boot-2014.07.tar.bz2
+rm u-boot-2014.07.tar.bz2
 cd u-boot-2014.07
 #note CROSS_COMPILE and ARCH must be set for this to work on the target system.
 make am335x_evm_config
@@ -91,20 +92,26 @@ cp u-boot.img $TARGETFS/boot/u-boot.img
 			
 cp tools/mkimage ${BUILDTOOLSYSDIR}/bin/mkimage
 
+#git no longer clones to /kernel.
+#cp -R ${BUILDTOOLSYSDIR}/../src/kernel  $SRCDIR/kernel
+cp -R ${BUILDTOOLSYSDIR}/../src/linux  $SRCDIR/linux
 
-cp -R ${BUILDTOOLSYSDIR}/../src/kernel  $SRCDIR/kernel
-
-
-cd $SRCDIR/kernel/kernel
- make beaglebone_defconfig
-
- make uImage dtbs LOADADDR=0x80008000
+#cd $SRCDIR/kernel/kernel
+cd $SRCDIR/linux
+#make beaglebone_defconfig
+make ARCH=arm bb.org_defconfig
+#this bit requires user input.
+#reccommended changes:
+#Device Drivers > SPI Support > (ENABLE) Debug Support for SPI drivers
+#Device Drivers > LED Support > LED Trigger Support > (DISABLE) LED Default ON Trigger
+make menuconfig
+make uImage dtbs LOADADDR=0x80008000
  
- make modules
- make INSTALL_MOD_PATH=$TARGETFS modules_install
+make modules
+make INSTALL_MOD_PATH=$TARGETFS modules_install
 
- cp arch/arm/boot/uImage $TARGETFS/boot/uImage
- cp arch/arm/boot/zImage $TARGETFS/boot/zImage
+cp arch/arm/boot/uImage $TARGETFS/boot/uImage
+cp arch/arm/boot/zImage $TARGETFS/boot/zImage
 cp arch/arm/boot/dts/am335x-boneblack.dtb $TARGETFS/boot/am335x-boneblack.dtb
 
 
@@ -124,13 +131,14 @@ EOF
 cd $SRCDIR
 wget http://busybox.net/downloads/busybox-1.22.1.tar.bz2
 tar -xf busybox-1.22.1.tar.bz2
+rm busybox-1.22.1.tar.bz2
 cd busybox-1.22.1
 make defconfig
 make menuconfig
-#set the install path to /data/arm/targetfs1
 #remove rpc support as cannot build with against new versions of glibc
-make
-make install
+#CONFIG_PREFIX sets the install directory
+make CONFIG_PREFIX="/remote/arm/targetfs2"
+make CONFIG_PREFIX="/remote/arm/targetfs2" install
 chmod +x ${TARGETFS}/bin/busybox
 
 
@@ -142,6 +150,7 @@ chmod 755 ${BUILDTOOLSYSDIR}/bin/depmod.pl
 cd ${SRCDIR}
 wget http://sethwklein.net/iana-etc-2.30.tar.bz2
 tar -xf iana-etc-2.30.tar.bz2
+rm iana-etc-2.30.tar.bz2
 cd iana-etc-2.30
 make get
 make STRIP=yes
@@ -150,16 +159,15 @@ make DESTDIR=$TARGETFS install
 
 cp ${DIR}/resources/fstab.nfs ${TARGETFS}/etc/fstab.nfs
 cp ${DIR}/resources/fstab.local ${TARGETFS}/etc/fstab.local
-cp ${TARGETFS}/etc/fstab.nfs ${TARGETFS]/etc/fstab
+cp ${TARGETFS}/etc/fstab.nfs ${TARGETFS}/etc/fstab
+
 cp ${DIR}/resources/mdev.conf ${TARGETFS}/etc/mdev.conf
 cp ${DIR}/resources/profile ${TARGETFS}/etc/profile
 cp ${DIR}/resources/inittab ${TARGETFS}/etc/inittab
 cp ${DIR}/resources/hosts ${TARGETFS}/etc/hosts
 cp ${DIR}/resources/shells ${TARGETFS}/etc/shells
 
-cp ${DIR}/resources/sshd ${TARGETFS}/etc/sshd
-cp ${DIR}/resources/syslog ${TARGETFS}/etc/syslog
-cp ${DIR}/resources/mosquitto ${TARGETFS}/etc/mosquitto
+
 
 
 cp ${DIR}/resources/rc.shutdown ${TARGETFS}/etc/rc.shutdown
@@ -174,6 +182,10 @@ cp ${DIR}/resources/resolv.conf ${TARGETFS}/etc/resolv.conf
 
 mkdir $TARGETFS/etc/init.d
 
+cp ${DIR}/resources/sshd ${TARGETFS}/etc/init.d/sshd
+cp ${DIR}/resources/syslog ${TARGETFS}/etc/init.d/syslog
+cp ${DIR}/resources/mosquitto ${TARGETFS}/etc/init.d/mosquitto
+
 cp ${DIR}/resources/functions ${TARGETFS}/etc/init.d/functions
 
 mkdir $TARGETFS/etc/rcS.d
@@ -187,10 +199,12 @@ ln -sfv ../init.d/sshd S30sshd
 ln -sfv ../init.d/mosquitto S40mosquitto
 
 
+
 cd $SRCDIR
-wget http://www.mirrorservice.org/pub/OpenBSD/OpenSSH/portable/openssh-6.6p1.tar.gz
-tar -xf openssh-6.6p1.tar.gz
-cd openssh-6.6p1
+wget http://www.mirrorservice.org/pub/OpenBSD/OpenSSH/portable/openssh-6.7p1.tar.gz
+tar -xf openssh-6.7p1.tar.gz
+rm openssh-6.7p1.tar.gz
+cd openssh-6.7p1
 ./configure --host=$TARGET --with-libs --with-zlib=${BUILDTOOLSYSDIR}/sysroot --prefix=/ --with-ssl-dir=${BUILDTOOLSYSDIR}/sysroot LD=$TARGET-gcc AR=$TARGET-ar  --sysconfdir=/etc/ssh 
 LD=$TARGET-gcc AR=$TARGET-ar make
 make install-nokeys LD=$TARGET-gcc AR=$TARGET-ar DESTDIR=${TARGETFS} STRIP_OPT="-s --strip-program=arm-unknown-linux-gnueabihf-strip"
@@ -198,10 +212,11 @@ make install-nokeys LD=$TARGET-gcc AR=$TARGET-ar DESTDIR=${TARGETFS} STRIP_OPT="
 cd $SRCDIR
 wget http://mosquitto.org/files/source/mosquitto-1.3.5.tar.gz
 tar -xf mosquitto-1.3.5.tar.gz
+rm mosquitto-1.3.5.tar.gz
 cd mosquitto-1.3.5
 ##maybe change prefix install dir as installs in /usr/local/ this is at the bottom of the config.mk
 make
-make install DESTDIR=$TARGETFS
+make install prefix='' DESTDIR=$TARGETFS
 
 cp $TARGETFS/etc/mosquitto/mosquitto.conf.example $TARGETFS/etc/mosquitto/mosquitto.conf
 
@@ -210,10 +225,14 @@ cp $TARGETFS/etc/mosquitto/mosquitto.conf.example $TARGETFS/etc/mosquitto/mosqui
 cd $SRCDIR
 wget http://rsync.samba.org/ftp/rsync/src/rsync-3.1.1.tar.gz
 tar -xf rsync-3.1.1.tar.gz
+rm rsync-3.1.1.tar.gz
 cd rsync-3.1.1
 ./configure --host=$TARGET --prefix=/
 make
-make install DESTDIR=$TARGETFS
+make install prefix=/ DESTDIR=$TARGETFS
+
+
+
 
 
 
@@ -222,11 +241,22 @@ make install DESTDIR=$TARGETFS
 
 
 cp -vP /${BUILDTOOLSYSDIR}/sysroot/lib/*.so* ${TARGETFS}/lib/
+cp -vP /${BUILDTOOLSYSDIR}/arm-unknown-linux-gnueabihf/lib/*.so* ${TARGETFS}/lib/
 
+#TODO:
+#sort out sql install. at the moment it is a lot of hassle and can only be ran manually.
+#the Device Tree Builder from Rober Nelson must be applied to kernel to get SPI working on the 3.14 kernel.
+#
+#
+#wget https://downloads.mariadb.org/interstitial/mariadb-5.5.41/source/mariadb-5.5.41.tar.gz
 #wget http://dev.mysql.com/get/Downloads/MySQL-5.6/mysql-5.6.20.tar.gz
 #tar -xf mysql-5.6.20.tar.gz
 #cd mysql-5.6.20
-
-install sql
-cd sql dir
-mkdir bld
+#install sql
+#cd sql dir
+#mkdir bld
+#
+#
+#
+#
+#https://github.com/RobertCNelson/dtb-rebuilder/tree/3.14-ti
