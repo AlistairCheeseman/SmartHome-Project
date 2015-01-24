@@ -34,8 +34,7 @@ export FPU=neon
 #the float point type
 export FLOAT=hard
 
-#todo: not sure on correct function to call here. at moment must be set manually.
-export MAKEINFO_LOC=${which makeinfo}
+export MAKEINFO_LOC=$(which makeinfo)
 
 
 
@@ -94,8 +93,10 @@ git config --global user.email “ali@kmxsoftware.co.uk”
 git clone https://github.com/beagleboard/linux.git
 #cd kernel
 cd linux
+#with new git repository this may not be needed anymore
 #git checkout origin/3.13 -b 3.13
-git checkout origin/3.14 -b 3.14
+#git checkout origin/3.14 -b 3.14
+#
 #./patch.sh
 #cp configs/beaglebone kernel/arch/arm/configs/beaglebone_defconfig
 #wget http://arago-project.org/git/projects/?p=am33x-cm3.git\;a=blob_plain\;f=bin/am335x-pm-firmware.bin\;hb=HEAD -O kernel/firmware/am335x-pm-firmware.bin
@@ -152,23 +153,23 @@ mkdir -pv $SRCDIR/gcc-build-1
  2>&1 | tee configure.out
 
 make 2>&1 | tee make.out
- make install 2>&1 | tee -a make.out
+make install 2>&1 | tee -a make.out
 echo "GLibC"
- #glibc-build
+#glibc-build
 mkdir $SRCDIR/glibc-build
- cd $SRCDIR/glibc-build
- #glibc
- BUILD_CC=gcc CC=${CROSS_COMPILE}gcc \
- AR=${CROSS_COMPILE}ar \
- RANLIB=${CROSS_COMPILE}ranlib \
- AS=${CROSS_COMPILE}as \
- LD=${CROSS_COMPILE}ld \
- ../glibc/configure \
- --prefix=/ \
- --build=$HOST \
- --host=$TARGET \
- --target=$TARGET \
- --without-__thread \
+cd $SRCDIR/glibc-build
+#glibc
+BUILD_CC=gcc CC=${CROSS_COMPILE}gcc \
+AR=${CROSS_COMPILE}ar \
+RANLIB=${CROSS_COMPILE}ranlib \
+AS=${CROSS_COMPILE}as \
+LD=${CROSS_COMPILE}ld \
+../glibc/configure \
+--prefix=/ \
+--build=$HOST \
+--host=$TARGET \
+--target=$TARGET \
+--without-__thread \
  --with-headers=${SYSROOT}/include \
  2>&1 | tee configure.out
  make 2>&1 | tee make.out
@@ -203,7 +204,8 @@ echo "GCC - Pass 2"
  make install 2>&1 | tee -a make.out
 
 export CC=arm-unknown-linux-gnueabihf-gcc
- #below untested
+
+
 echo "ZLIB"
  cd $SRCDIR
  wget http://zlib.net/zlib-1.2.8.tar.gz

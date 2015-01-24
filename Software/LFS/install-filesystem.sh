@@ -105,6 +105,9 @@ make ARCH=arm bb.org_defconfig
 #Device Drivers > SPI Support > (ENABLE) Debug Support for SPI drivers
 #Device Drivers > LED Support > LED Trigger Support > (DISABLE) LED Default ON Trigger
 make menuconfig
+#edit the device tree to allow for UART and SPI Access.
+#spi1 can be used when hdmi is still in use, additionally there are two lines to enable serial. ENSURE the *-bone-* is selected for serial access.
+nano arch/arm/boot/dts/am335x-boneblack.dts
 make uImage dtbs LOADADDR=0x80008000
  
 make modules
@@ -112,8 +115,23 @@ make INSTALL_MOD_PATH=$TARGETFS modules_install
 
 cp arch/arm/boot/uImage $TARGETFS/boot/uImage
 cp arch/arm/boot/zImage $TARGETFS/boot/zImage
+
+
 cp arch/arm/boot/dts/am335x-boneblack.dtb $TARGETFS/boot/am335x-boneblack.dtb
 
+
+#24-jan-2015 don't need the DTB rebuilder as have solved SPI + UART Issue in the main linux build.
+#https://github.com/RobertCNelson/dtb-rebuilder/tree/3.14-ti
+#cd $SRCDIR
+#git clone https://github.com/RobertCNelson/dtb-rebuilder.git
+#cd dtb-rebuilder
+#git checkout origin/3.14-ti
+#UNCOMMENT SPI1 to read:
+#include "am335x-bone-spi1-spidev.dtsi
+#nano src/arm/am335x-boneblack.dts
+#cp ../linux/arch/arm/boot/dts/am335x-boneblack.dtb src/arm/am335x-boneblack.dtb
+#make DTC=../linux/scripts/dtc/dtc src/arm/am335x-boneblack.dtb
+#cp src/arm/am335x-boneblack.dtb $TARGETFS/boot/am335x-boneblack.dtb
 
 
 
@@ -136,6 +154,7 @@ cd busybox-1.22.1
 make defconfig
 make menuconfig
 #remove rpc support as cannot build with against new versions of glibc
+#Networking Utilities --> (DISABLE) inetd/Support RPC services
 #CONFIG_PREFIX sets the install directory
 make CONFIG_PREFIX="/remote/arm/targetfs2"
 make CONFIG_PREFIX="/remote/arm/targetfs2" install
@@ -263,4 +282,15 @@ cp -vP /${BUILDTOOLSYSDIR}/arm-unknown-linux-gnueabihf/lib/*.so* ${TARGETFS}/lib
 #
 #
 #
-#https://github.com/RobertCNelson/dtb-rebuilder/tree/3.14-ti
+wget http://dev.mysql.com/get/Downloads/MySQL-5.6/mysql-5.6.20.tar.gz
+tar -xf mysql-5.6.20.tar.gz 
+mv mysql-5.6.20 mysql-src-host
+tar -xf mysql-5.6.20.tar.gz 
+mv mysql-5.6.20 mysql-src-arm
+rm mysql-5.6.20.tar.gz
+cd mysql-src-host/BUILD
+./compile-pentium
+
+
+
+

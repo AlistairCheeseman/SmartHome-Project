@@ -31,3 +31,5 @@
 *.info
 *.eps
 
+/Software/Apps/LogicLayer/build/
+/Software/Apps/LogicLayer/dist/
