@@ -366,13 +366,14 @@ UsedLibrary="D:/Program Data/Eagle/lbr/CustomParts/LD1117V33.lbr"
 UsedLibrary="D:/Program Data/Eagle/lbr/CustomParts/VTX214001103.lbr"
 UsedLibrary="D:/Program Data/Eagle/lbr/CustomParts/W5500.lbr"
 UsedLibrary="D:/Program Data/Eagle/lbr/CustomParts/xbee.lbr"
+UsedLibrary="D:/Program Data/Eagle/lbr/CustomParts/2X23Header.lbr"
 
 [Win_1]
 Type="Control Panel"
-Loc="1912 -538 2511 -139"
+Loc="30 478 629 877"
 State=1
 Number=0
 
 [Desktop]
-Screen="3000 1920"
+Screen="1920 1080"
 Window="Win_1"

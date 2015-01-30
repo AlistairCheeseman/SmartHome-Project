@@ -723,6 +723,26 @@ Source: http://www.maxstream.net/products/xbee/datasheet_XBee_OEM_RF-Modules.pdf
 <pad name="20" x="11" y="9" drill="0.8" diameter="1.27" rot="R180"/>
 <text x="-11.43" y="13.97" size="1.27" layer="25">&gt;NAME</text>
 <text x="-11.43" y="-19.3" size="1.27" layer="27">&gt;VALUE</text>
+<smd name="1-1" x="-12.2" y="9" dx="1.27" dy="0.635" layer="1"/>
+<smd name="2-1" x="-9.8" y="7" dx="1.27" dy="0.635" layer="1"/>
+<smd name="3-1" x="-12.2" y="5" dx="1.27" dy="0.635" layer="1"/>
+<smd name="4-1" x="-9.8" y="3" dx="1.27" dy="0.635" layer="1"/>
+<smd name="5-1" x="-12.2" y="1" dx="1.27" dy="0.635" layer="1"/>
+<smd name="6-1" x="-9.8" y="-1" dx="1.27" dy="0.635" layer="1"/>
+<smd name="7-1" x="-12.2" y="-3" dx="1.27" dy="0.635" layer="1"/>
+<smd name="8-1" x="-9.8" y="-5" dx="1.27" dy="0.635" layer="1"/>
+<smd name="9-1" x="-12.2" y="-7" dx="1.27" dy="0.635" layer="1"/>
+<smd name="10-1" x="-9.8" y="-9" dx="1.27" dy="0.635" layer="1"/>
+<smd name="20-1" x="12.2" y="9" dx="1.27" dy="0.635" layer="1"/>
+<smd name="19-1" x="9.8" y="7" dx="1.27" dy="0.635" layer="1"/>
+<smd name="18-1" x="12.2" y="5" dx="1.27" dy="0.635" layer="1"/>
+<smd name="17-1" x="9.8" y="3" dx="1.27" dy="0.635" layer="1"/>
+<smd name="16-1" x="12.2" y="1" dx="1.27" dy="0.635" layer="1"/>
+<smd name="15-1" x="9.8" y="-1" dx="1.27" dy="0.635" layer="1"/>
+<smd name="14-1" x="12.2" y="-3" dx="1.27" dy="0.635" layer="1"/>
+<smd name="13-1" x="9.8" y="-5" dx="1.27" dy="0.635" layer="1"/>
+<smd name="12-1" x="12.2" y="-7" dx="1.27" dy="0.635" layer="1"/>
+<smd name="11-1" x="9.8" y="-9" dx="1.27" dy="0.635" layer="1"/>
 </package>
 </packages>
 <symbols>
@@ -793,24 +813,24 @@ Source: MaxStream, Inc. xbee_productmanual.pdf</description>
 </device>
 <device name="-PRO" package="XBEE-PRO">
 <connects>
-<connect gate="G$1" pin="!CTS!/DIO7" pad="12"/>
-<connect gate="G$1" pin="!DTR!/SLEEP_RQ/DIO8" pad="9"/>
-<connect gate="G$1" pin="!RESET" pad="5"/>
-<connect gate="G$1" pin="!RTS!/DIO6" pad="16"/>
-<connect gate="G$1" pin="AD0/DIO0" pad="20"/>
-<connect gate="G$1" pin="AD1/DIO1" pad="19"/>
-<connect gate="G$1" pin="AD2/DIO2" pad="18"/>
-<connect gate="G$1" pin="AD3/DIO3" pad="17"/>
-<connect gate="G$1" pin="ASSOC/DIO5" pad="15"/>
-<connect gate="G$1" pin="DIN/!CONFIG" pad="3"/>
-<connect gate="G$1" pin="DIO12" pad="4"/>
-<connect gate="G$1" pin="DIO4" pad="11"/>
-<connect gate="G$1" pin="DOUT" pad="2"/>
-<connect gate="G$1" pin="GND" pad="10"/>
-<connect gate="G$1" pin="ON/!SLEEP" pad="13"/>
-<connect gate="G$1" pin="RSSI/PWM/DIO10" pad="6"/>
-<connect gate="G$1" pin="VCC" pad="1"/>
-<connect gate="G$1" pin="VREF" pad="14"/>
+<connect gate="G$1" pin="!CTS!/DIO7" pad="12 12-1"/>
+<connect gate="G$1" pin="!DTR!/SLEEP_RQ/DIO8" pad="9 9-1"/>
+<connect gate="G$1" pin="!RESET" pad="5 5-1"/>
+<connect gate="G$1" pin="!RTS!/DIO6" pad="16 16-1"/>
+<connect gate="G$1" pin="AD0/DIO0" pad="20 20-1"/>
+<connect gate="G$1" pin="AD1/DIO1" pad="19 19-1"/>
+<connect gate="G$1" pin="AD2/DIO2" pad="18 18-1"/>
+<connect gate="G$1" pin="AD3/DIO3" pad="17 17-1"/>
+<connect gate="G$1" pin="ASSOC/DIO5" pad="15 15-1"/>
+<connect gate="G$1" pin="DIN/!CONFIG" pad="3 3-1"/>
+<connect gate="G$1" pin="DIO12" pad="4 4-1"/>
+<connect gate="G$1" pin="DIO4" pad="11 11-1"/>
+<connect gate="G$1" pin="DOUT" pad="2 2-1"/>
+<connect gate="G$1" pin="GND" pad="10 10-1"/>
+<connect gate="G$1" pin="ON/!SLEEP" pad="13 13-1"/>
+<connect gate="G$1" pin="RSSI/PWM/DIO10" pad="6 6-1"/>
+<connect gate="G$1" pin="VCC" pad="1 1-1"/>
+<connect gate="G$1" pin="VREF" pad="14 14-1"/>
 </connects>
 <technologies>
 <technology name="">
@@ -8487,8 +8507,8 @@ Source: www.kingbright.com</description>
 <part name="U$8" library="microbuilder" deviceset="GND" device=""/>
 <part name="U$9" library="microbuilder" deviceset="3.3V" device=""/>
 <part name="U$16" library="microbuilder" deviceset="GND" device=""/>
-<part name="R1" library="rcl" deviceset="R-EU_" device="0207/7" value="110R"/>
-<part name="LED1" library="led" deviceset="LED" device="5MM" value="Assoc"/>
+<part name="R1" library="rcl" deviceset="R-EU_" device="R1206" value="110R"/>
+<part name="LED1" library="led" deviceset="LED" device="SMT1206" value="Assoc"/>
 <part name="P8" library="2X23Header" deviceset="PINHD-2X24" device="" value="HEADER1"/>
 <part name="P9" library="2X23Header" deviceset="PINHD-2X24" device="" value="HEADER2"/>
 <part name="U$17" library="microbuilder" deviceset="GND" device=""/>
@@ -8499,11 +8519,11 @@ Source: www.kingbright.com</description>
 <part name="U$20" library="microbuilder" deviceset="5.0V" device=""/>
 <part name="U$21" library="microbuilder" deviceset="GND" device=""/>
 <part name="U$22" library="microbuilder" deviceset="GND" device=""/>
-<part name="LED2" library="led" deviceset="LED" device="5MM" value="ON_SLEEP"/>
-<part name="R2" library="rcl" deviceset="R-EU_" device="0207/7" value="110R"/>
-<part name="C1" library="rcl" deviceset="C-EU" device="025-025X050" value="1u"/>
-<part name="C2" library="rcl" deviceset="C-EU" device="025-025X050" value="8.2p"/>
-<part name="R3" library="rcl" deviceset="R-EU_" device="0207/7" value="110R"/>
+<part name="LED2" library="led" deviceset="LED" device="SMT1206" value="ON_SLEEP"/>
+<part name="R2" library="rcl" deviceset="R-EU_" device="R1206" value="110R"/>
+<part name="C1" library="rcl" deviceset="C-EU" device="C1206" value="1u"/>
+<part name="C2" library="rcl" deviceset="C-EU" device="C1206" value="8.2p"/>
+<part name="R3" library="rcl" deviceset="R-EU_" device="R1206" value="110R"/>
 <part name="U$2" library="microbuilder" deviceset="GND" device=""/>
 <part name="U$3" library="microbuilder" deviceset="3.3V" device=""/>
 </parts>
@@ -8704,7 +8724,6 @@ Source: www.kingbright.com</description>
 <segment>
 <pinref part="XB1" gate="G$1" pin="ASSOC/DIO5"/>
 <wire x1="116.84" y1="76.2" x2="96.52" y2="76.2" width="0.1524" layer="91"/>
-<label x="106.68" y="78.74" size="1.778" layer="95" rot="R180"/>
 <wire x1="96.52" y1="76.2" x2="96.52" y2="35.56" width="0.1524" layer="91"/>
 <pinref part="LED1" gate="G$1" pin="A"/>
 </segment>
@@ -8775,6 +8794,11 @@ Source: www.kingbright.com</description>
 <wire x1="93.98" y1="144.78" x2="81.28" y2="144.78" width="0.1524" layer="91"/>
 <label x="81.28" y="144.78" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="P9" gate="A" pin="28"/>
+<wire x1="27.94" y1="35.56" x2="43.18" y2="35.56" width="0.1524" layer="91"/>
+<label x="35.56" y="35.56" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="N$1" class="0">
 <segment>
@@ -8789,7 +8813,6 @@ Source: www.kingbright.com</description>
 <wire x1="93.98" y1="101.6" x2="93.98" y2="43.18" width="0.1524" layer="91"/>
 <wire x1="93.98" y1="43.18" x2="86.36" y2="43.18" width="0.1524" layer="91"/>
 <wire x1="86.36" y1="43.18" x2="86.36" y2="35.56" width="0.1524" layer="91"/>
-<label x="96.52" y="101.6" size="1.778" layer="95"/>
 <pinref part="XB1" gate="G$1" pin="ON/!SLEEP"/>
 <wire x1="116.84" y1="101.6" x2="93.98" y2="101.6" width="0.1524" layer="91"/>
 </segment>
@@ -8815,7 +8838,7 @@ Source: www.kingbright.com</description>
 </sheets>
 <errors>
 <approved hash="104,1,116.84,109.22,XB1,VCC,3.3V,,,"/>
-<approved hash="106,1,101.6,144.78,IRQ,,,,,"/>
+<approved hash="106,1,93.98,144.78,IRQ,,,,,"/>
 </errors>
 </schematic>
 </drawing>
