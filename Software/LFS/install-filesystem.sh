@@ -382,11 +382,26 @@ rm php-5.6.5.tar.gz
 cd php-5.6.5
 #sed -i -e 's/my $installbuilddir = "/apache24/build";/' 
 nano ${TARGETFS}/apache24/bin/apxs
-./configure --host=$TARGET --prefix='' --with-libxml-dir=/remote/arm/tools/build/sysroot --with-sqlite3 --disable-all --with-apxs2=${TARGETFS}/apache24/bin/apxs 
+./configure --host=$TARGET --prefix='' --with-libxml-dir=/remote/arm/tools/build/sysroot --with-sqlite3 --disable-all --with-apxs2=${TARGETFS}/apache24/bin/apxs --enable-session
 LDFLAGS='-ldl' make
 make INSTALL_ROOT=/remote/arm/targetfs2 install
 #modify the incorrect location of the php module
 #sed -i -e 's///remote//arm//targetfs2//apache24////'
+
+
+
+
+echo "<FilesMatch \.php$>
+    SetHandler application/x-httpd-php
+</FilesMatch>" >> $TARGETFS/apache24/etc/httpd.conf
+
+
+
+
+
+
+
+
 
 
 
