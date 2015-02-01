@@ -114,9 +114,17 @@ make ARCH=arm bb.org_defconfig
 #CONFIG_LEDS_TRIGGER_DEFAULT_ON=y --> #CONFIG_LEDS_TRIGGER_DEFAULT_ON is not set
 
 #make menuconfig
+
+
 #edit the device tree to allow for UART and SPI Access.
 #spi1 can be used when hdmi is still in use, additionally there are two lines to enable serial. ENSURE the *-bone-* is selected for serial access.
+#automated process by using sed command.
 #nano arch/arm/boot/dts/am335x-boneblack.dts
+sed -i -e 's|/\* #include "am335x-bone-spi1-spidev.dtsi" \*/|#include \"am335x-bone-spi1-spidev.dtsi\"|g' arch/arm/boot/dts/am335x-boneblack.dts
+sed -i -e 's|#include "am335x-ttyO1.dtsi"|/\* #include "am335x-ttyO1.dtsi" \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
+sed -i -e 's|/\* #include "am335x-bone-ttyO1.dtsi" \*/|#include "am335x-bone-ttyO1.dtsi"|g' arch/arm/boot/dts/am335x-boneblack.dts
+
+
 make uImage dtbs LOADADDR=0x80008000
 
 make modules
@@ -382,11 +390,16 @@ rm php-5.6.5.tar.gz
 cd php-5.6.5
 #sed -i -e 's/my $installbuilddir = "/apache24/build";/' 
 nano ${TARGETFS}/apache24/bin/apxs
-./configure --host=$TARGET --prefix='' --with-libxml-dir=/remote/arm/tools/build/sysroot --with-sqlite3 --disable-all --with-apxs2=${TARGETFS}/apache24/bin/apxs --enable-session
+./configure --host=$TARGET --prefix='' --with-libxml-dir=/remote/arm/tools/build/sysroot --with-sqlite3 --enable-pdo --enable-json --with-pdo-sqlite --disable-all --with-apxs2=${TARGETFS}/apache24/bin/apxs --enable-session
 LDFLAGS='-ldl' make
 make INSTALL_ROOT=/remote/arm/targetfs2 install
 #modify the incorrect location of the php module
-#sed -i -e 's///remote//arm//targetfs2//apache24////'
+#/remote/arm/targetfs2/apache24/modules/libphp5.so
+#to
+#modules/libphp5.so
+#sed -i -e "s/"/remote/arm/targetfs2/apache24"/""/g" $TARGETFS/apache24/etc/httpd.conf
+#using | as a delimeter so as not to confuse the escaping sequence
+sed -i -e 's|/remote/arm/targetfs2/apache24/||g' $TARGETFS/apache24/etc/httpd.conf
 
 
 
@@ -401,9 +414,9 @@ echo "<FilesMatch \.php$>
 
 
 
-
-
-
+#make db directory and allow access to all
+mkdir $TARGETFS/var/db
+chmod 777 $TARGETFS/var/db
 
 #install the WWW data from the git repo to the filesystem.
 cp -Rv $DIR/../www/* $TARGETFS/apache24/htdocs/

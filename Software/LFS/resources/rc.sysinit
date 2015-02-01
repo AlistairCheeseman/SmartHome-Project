@@ -98,11 +98,15 @@ done
 
 
 
-echo -n "Muting all usr LEDS"
+echo "Muting all usr LEDS"
 echo none > /sys/class/leds/beaglebone:green:usr0/trigger
 echo none > /sys/class/leds/beaglebone:green:usr1/trigger
 echo none > /sys/class/leds/beaglebone:green:usr2/trigger
 echo none > /sys/class/leds/beaglebone:green:usr3/trigger
+
+
+echo "run once ntp client"
+ntpd -q -p ptbtime1.ptb.de
 
 exit 0
 
