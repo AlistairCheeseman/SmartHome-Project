@@ -8,7 +8,7 @@
  */
 include "functions.php";
 //prevent SQL injections
-$powerfactor = intval($_GET['pf']);
+$powerfactor = floatval($_GET['pf']);
 $power = intval($_GET['pow']);
 if ($powerfactor != null && $power != null) {
     try {

@@ -5,6 +5,7 @@
  * Date: 10/12/2014
  * Time: 12:14
  */
+date_default_timezone_set('Europe/London');
 //if using mysql these variables must be set
 define('DB_NAME','Smart_Home');
 define('DB_USER','Smart_Home');
