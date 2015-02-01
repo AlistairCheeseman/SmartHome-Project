@@ -6,102 +6,107 @@
         <title>SmartHome - Home</title>
         <!-- this is a clone of the Highcharts sample file -->
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script type="text/javascript">
+                    $(document).ready(function ()
+            {
+            powerVals = [];
+                    powerAngle = [];
+                    $.getJSON('get_data.php', function (json)
+                    {
+                        $.each(json, function (key, value)
+                    {
+                       moment = stringToDate(value['moment']).getTime();
+                       
+                 //   powerAngle.push([ Date.parse(value['moment']), parseFloat(value['powerFactor']) ]);
+                   powerAngle.push([ moment, parseFloat(value['powerFactor']) ]);
+                 
+                         //   powerVals.push([ Date.parse(value['moment']), parseFloat(value['powerReading']) ]);
+                         powerVals.push([  moment, parseFloat(value['powerReading']) ]);
+                    });
+                            $('#container').highcharts(
+                    {
+                    title: {
+                    text:'Power Consumption'
+                    }, 
+                    xAxis: {
+            type: 'datetime'
+                    },
+                    yAxis: [{ // Primary yAxis
+                            labels: {
+                            format: '{value}',
+                                    style: {
+                                    color: Highcharts.getOptions().colors[1]
+                                    }
+                            },
+                                    title: {
+                                    text: 'Power Angle',
+                                            style: {
+                                            color: Highcharts.getOptions().colors[1]
+                                            }
+                                            
+                                    },
+                                    opposite: true,
+                                    min:0,
+                                    max:1
+                                  
+                            }, { // Secondary yAxis
+                            gridLineWidth: 0,
+                                    title: {
+                                    text: 'Power',
+                                            style: {
+                                            color: Highcharts.getOptions().colors[0]
+                                            }
+                                    },
+                                    labels: {
+                                    format: '{value}W',
+                                            style: {
+                                            color: Highcharts.getOptions().colors[0]
+                                            }
+                                    }
 
-		<script type="text/javascript">
-$(function () {
-    $(document).ready(function () {
-        Highcharts.setOptions({
-            global: {
-                useUTC: false
-            }
-        });
+                            }],
+                            series: [{
+                            name: 'Power Usage',
+                              yAxis: 1,
+                                    data: powerVals
+                            }, {
+                            name: 'Power Angle',
+                                    data: powerAngle,
+                                    yAxis: 0
+                            }]
+                            });
+                            });
+                            });
+                                                    function stringToDate(s)  {
+  s = s.split(/[-: ]/);
+  return new Date(s[0], s[1]-1, s[2], s[3], s[4], s[5]);
+}
+                                                    function stringToUnixDate(s)  {
+  s = s.split(/[-: ]/);
+  return dateToUnix(s[0], s[1], s[2], s[3], s[4], s[5]);
+}
+        function dateToUnix(year, month, day, hour, minute, second) {
+    return ((new Date(Date.UTC(year, month - 1, day, hour, minute, second))).getTime() / 1000.0);
+}
+        
+        </script>
 
-        $('#container').highcharts({
-            chart: {
-                type: 'spline',
-                animation: Highcharts.svg, // don't animate in old IE
-                marginRight: 10,
-                events: {
-                    load: function () {
-
-                        // set up the updating of the chart each second
-                        var series = this.series[0];
-                        setInterval(function () {
-                            var x = (new Date()).getTime(), // current time
-                                y = Math.random();
-                            series.addPoint([x, y], true, true);
-                        }, 1000);
-                    }
-                }
-            },
-            title: {
-                text: 'random data test'
-            },
-            xAxis: {
-                type: 'datetime',
-                tickPixelInterval: 150
-            },
-            yAxis: {
-                title: {
-                    text: 'Value'
-                },
-                plotLines: [{
-                    value: 0,
-                    width: 1,
-                    color: '#808080'
-                }]
-            },
-            tooltip: {
-                formatter: function () {
-                    return '<b>' + this.series.name + '</b><br/>' +
-                        Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
-                        Highcharts.numberFormat(this.y, 2);
-                }
-            },
-            legend: {
-                enabled: false
-            },
-            exporting: {
-                enabled: false
-            },
-            series: [{
-                name: 'Random data',
-                data: (function () {
-                    // generate an array of random data
-                    var data = [],
-                        time = (new Date()).getTime(),
-                        i;
-
-                    for (i = -19; i <= 0; i += 1) {
-                        data.push({
-                            x: time + i * 1000,
-                            y: Math.random()
-                        });
-                    }
-                    return data;
-                }())
-            }]
-        });
-    });
-});
-		</script>
 
     </head>
     <body>
-          <div>  
-              <h1> Current Power Statistics </h1>
-        <p> This shows the total power consumption for the past 24 Hours. </p>
-             
-        
-        
-       
 
-        <script src="js/highcharts.js"></script>
-<script src="js/modules/exporting.js"></script>
 
-<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-</div>
-     
-        
+        <div>  
+            <h1> Current Power Statistics </h1>
+            <p> This shows the total power consumption for the past 24 Hours. </p>
+
+
+
+
+
+            <script src="js/highcharts.js"></script>
+            <script src="js/modules/exporting.js"></script>
+            <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div> 
+        </div>    
     </body>
 </html>
