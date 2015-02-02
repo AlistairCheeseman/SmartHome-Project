@@ -1,0 +1,49 @@
+#!/bin/ash
+#
+#apache 2.4 Web Server httpd daemon
+
+. /etc/init.d/functions
+
+PIDFILE=/var/run/apache24.pid
+CONFIGFILE=/apache24/etc/httpd.conf
+
+case "$1" in
+start)
+
+
+/apache24/bin/apachectl -f /apache24/etc/httpd.conf
+
+
+
+stop)
+
+
+/apache24/bin/apachectl stop
+
+restart)
+	$0 stop
+	$0 start
+	;;
+status)
+	if [ -r "$PIDFILE"]; then
+		echo "apache24 service running (PID $(cat "$PIDFILE"))."
+	else
+		echo "apache24 service not running."
+
+
+
+
+*)
+	echo "Usage: $0 {start|stop|restart|status}"
+	exit 1
+esac
+
+
+
+
+
+
+
+
+
+/apache24/bin/apachectl -f /apache24/etc/httpd.conf
