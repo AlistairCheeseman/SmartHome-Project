@@ -103,10 +103,15 @@ echo none > /sys/class/leds/beaglebone:green:usr0/trigger
 echo none > /sys/class/leds/beaglebone:green:usr1/trigger
 echo none > /sys/class/leds/beaglebone:green:usr2/trigger
 echo none > /sys/class/leds/beaglebone:green:usr3/trigger
-
+check_status
 
 echo "run once ntp client"
-ntpd -q -p ptbtime1.ptb.de
+ntpd -qp 0.pool.ntp.org
+check_status
+
+echo -n "starting cron jobs"
+/sbin/crond
+check_status
 
 exit 0
 
