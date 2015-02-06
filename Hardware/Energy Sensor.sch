@@ -16399,13 +16399,13 @@ BLOCK</description>
 <parts>
 <part name="C1" library="rcl" deviceset="CPOL-EU" device="E2.5-6" value="10u"/>
 <part name="C2" library="rcl" deviceset="CPOL-EU" device="E2.5-6" value="47u"/>
-<part name="X1" library="con-wago-500" deviceset="W237-102" device=""/>
-<part name="X2" library="con-wago-500" deviceset="W237-102" device=""/>
+<part name="X1" library="con-wago-500" deviceset="W237-102" device="" value="MAINS IN"/>
+<part name="X2" library="con-wago-500" deviceset="W237-102" device="" value="MAINS OUT"/>
 <part name="R1" library="varistor" deviceset="P594" device=""/>
-<part name="F1" library="fuse" deviceset="GSH15" device=""/>
-<part name="TR1" library="xformer" deviceset="VV11" device=""/>
+<part name="F1" library="fuse" deviceset="GSH15" device="" value="230V 10A"/>
+<part name="TR1" library="xformer" deviceset="VV11" device="" value="vn20.10 09477"/>
 <part name="D1" library="diode" deviceset="1N4148" device="DO35-7"/>
-<part name="IC1" library="v-reg" deviceset="78XXL" device=""/>
+<part name="IC1" library="v-reg" deviceset="78XXL" device="" value="7805"/>
 <part name="C3" library="rcl" deviceset="C-EU" device="025-025X050" value="1n"/>
 <part name="C4" library="rcl" deviceset="C-EU" device="025-025X050" value="1n"/>
 <part name="GND1" library="supply1" deviceset="GND" device=""/>
@@ -16421,20 +16421,20 @@ BLOCK</description>
 <part name="R6" library="rcl" deviceset="R-EU_" device="0207/7" value="470k"/>
 <part name="R7" library="rcl" deviceset="R-EU_" device="0207/7" value="470k"/>
 <part name="GND3" library="supply1" deviceset="GND" device=""/>
-<part name="IC2" library="ic-package" deviceset="DIL28" device="-4"/>
+<part name="IC2" library="ic-package" deviceset="DIL28" device="-4" value="ATMega328p-pu"/>
 <part name="GND4" library="supply1" deviceset="GND" device=""/>
 <part name="Q1" library="crystal" deviceset="CRYSTAL" device="HC49S" value="16MHz"/>
-<part name="R8" library="rcl" deviceset="R-EU_" device="0207/7"/>
+<part name="R8" library="rcl" deviceset="R-EU_" device="0207/7" value="10K"/>
 <part name="C8" library="rcl" deviceset="C-EU" device="025-025X050" value="22p"/>
 <part name="C9" library="rcl" deviceset="C-EU" device="025-025X050" value="22p"/>
 <part name="C10" library="rcl" deviceset="C-EU" device="025-025X050" value="1u"/>
 <part name="GND5" library="supply1" deviceset="GND" device=""/>
 <part name="GND6" library="supply1" deviceset="GND" device=""/>
-<part name="SV1" library="con-lsta" deviceset="FE12W" device=""/>
+<part name="SV1" library="con-lsta" deviceset="FE12W" device="" value="Comms"/>
 <part name="GND7" library="supply1" deviceset="GND" device=""/>
 <part name="P+7" library="supply1" deviceset="+5V" device=""/>
 <part name="+3V1" library="supply1" deviceset="+3V3" device=""/>
-<part name="IC3" library="v-reg" deviceset="79XXL" device=""/>
+<part name="IC3" library="v-reg" deviceset="79XXL" device="" value="ld33v"/>
 <part name="GND8" library="supply1" deviceset="GND" device=""/>
 <part name="+3V2" library="supply1" deviceset="+3V3" device=""/>
 <part name="+3V3" library="supply1" deviceset="+3V3" device=""/>
@@ -16442,17 +16442,17 @@ BLOCK</description>
 <part name="+3V5" library="supply1" deviceset="+3V3" device=""/>
 <part name="C11" library="rcl" deviceset="CPOL-EU" device="E2.5-6" value="10u"/>
 <part name="C12" library="rcl" deviceset="C-EU" device="025-025X050" value="1n"/>
-<part name="LED1" library="led" deviceset="LED" device="5MM"/>
-<part name="LED2" library="led" deviceset="LED" device="5MM"/>
-<part name="R9" library="rcl" deviceset="R-EU_" device="0207/7"/>
-<part name="R10" library="rcl" deviceset="R-EU_" device="0207/7"/>
+<part name="LINK" library="led" deviceset="LED" device="5MM" value="GRN"/>
+<part name="ACTIVITY" library="led" deviceset="LED" device="5MM" value="RED"/>
+<part name="R9" library="rcl" deviceset="R-EU_" device="0207/7" value="330R"/>
+<part name="R10" library="rcl" deviceset="R-EU_" device="0207/7" value="330R"/>
 <part name="GND9" library="supply1" deviceset="GND" device=""/>
 <part name="R11" library="rcl" deviceset="R-EU_" device="0207/7" value="56k"/>
 <part name="R12" library="rcl" deviceset="R-EU_" device="0207/7" value="68k"/>
 <part name="GND10" library="supply1" deviceset="GND" device=""/>
 <part name="+3V6" library="supply1" deviceset="+3V3" device=""/>
 <part name="C13" library="rcl" deviceset="C-EU" device="025-025X050" value="1u"/>
-<part name="JP1" library="jumper" deviceset="JP1E" device=""/>
+<part name="JP1" library="jumper" deviceset="JP1E" device="" value="Extern_Power"/>
 <part name="H1" library="holes" deviceset="MOUNT-HOLE" device="2.8"/>
 <part name="H2" library="holes" deviceset="MOUNT-HOLE" device="2.8"/>
 <part name="H3" library="holes" deviceset="MOUNT-HOLE" device="2.8"/>
@@ -16510,8 +16510,8 @@ BLOCK</description>
 <instance part="+3V5" gate="G$1" x="162.56" y="86.36"/>
 <instance part="C11" gate="G$1" x="198.12" y="121.92"/>
 <instance part="C12" gate="G$1" x="205.74" y="121.92"/>
-<instance part="LED1" gate="G$1" x="149.86" y="45.72"/>
-<instance part="LED2" gate="G$1" x="157.48" y="45.72"/>
+<instance part="LINK" gate="G$1" x="149.86" y="45.72"/>
+<instance part="ACTIVITY" gate="G$1" x="157.48" y="45.72"/>
 <instance part="R9" gate="G$1" x="157.48" y="55.88" rot="R90"/>
 <instance part="R10" gate="G$1" x="149.86" y="55.88" rot="R90"/>
 <instance part="GND9" gate="1" x="154.94" y="33.02"/>
@@ -16679,12 +16679,12 @@ BLOCK</description>
 <junction x="187.96" y="114.3"/>
 </segment>
 <segment>
-<pinref part="LED2" gate="G$1" pin="C"/>
+<pinref part="ACTIVITY" gate="G$1" pin="C"/>
 <wire x1="157.48" y1="40.64" x2="157.48" y2="38.1" width="0.1524" layer="91"/>
 <wire x1="157.48" y1="38.1" x2="154.94" y2="38.1" width="0.1524" layer="91"/>
 <pinref part="GND9" gate="1" pin="GND"/>
 <wire x1="154.94" y1="38.1" x2="154.94" y2="35.56" width="0.1524" layer="91"/>
-<pinref part="LED1" gate="G$1" pin="C"/>
+<pinref part="LINK" gate="G$1" pin="C"/>
 <wire x1="149.86" y1="40.64" x2="149.86" y2="38.1" width="0.1524" layer="91"/>
 <wire x1="149.86" y1="38.1" x2="154.94" y2="38.1" width="0.1524" layer="91"/>
 <junction x="154.94" y="38.1"/>
@@ -16744,6 +16744,7 @@ BLOCK</description>
 <junction x="30.48" y="63.5"/>
 <pinref part="TR1" gate="1" pin="P1"/>
 <wire x1="40.64" y1="83.82" x2="12.7" y2="83.82" width="0.1524" layer="91"/>
+<junction x="12.7" y="83.82"/>
 </segment>
 </net>
 <net name="N$8" class="0">
@@ -17013,14 +17014,14 @@ BLOCK</description>
 <net name="N$14" class="0">
 <segment>
 <pinref part="R10" gate="G$1" pin="1"/>
-<pinref part="LED1" gate="G$1" pin="A"/>
+<pinref part="LINK" gate="G$1" pin="A"/>
 <wire x1="149.86" y1="50.8" x2="149.86" y2="48.26" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$15" class="0">
 <segment>
 <pinref part="R9" gate="G$1" pin="1"/>
-<pinref part="LED2" gate="G$1" pin="A"/>
+<pinref part="ACTIVITY" gate="G$1" pin="A"/>
 <wire x1="157.48" y1="50.8" x2="157.48" y2="48.26" width="0.1524" layer="91"/>
 </segment>
 </net>
