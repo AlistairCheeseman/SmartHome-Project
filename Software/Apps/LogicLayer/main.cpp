@@ -16,8 +16,9 @@ using namespace std;
  */
 int main(int argc, char** argv) {
  
-    SQL *test = new SQL();
-
+    SQL *test = new SQL("/var/db/smarthome");
+    test = NULL;
+    
     return 0;
 }
 

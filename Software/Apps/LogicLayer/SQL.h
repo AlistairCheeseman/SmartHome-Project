@@ -14,11 +14,10 @@
 
 class SQL {
 public:
-    SQL();
-    SQL(const SQL& orig);
+    SQL(const char *filename);
     virtual ~SQL();
 private:
-    void connectDB(void);
+    void connectDB(const char *filename);
     sqlite3 *db;
     bool isdbopen;
 };

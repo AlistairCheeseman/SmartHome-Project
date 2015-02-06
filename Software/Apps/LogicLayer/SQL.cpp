@@ -9,24 +9,22 @@
 #include <sqlite3.h>
 
 
-SQL::SQL() {
-    connectDB();
-}
-
-SQL::SQL(const SQL& orig) {
+SQL::SQL(const char *filename) {
+    connectDB(filename);
 }
 
 SQL::~SQL() {
     if (isdbopen) {
         sqlite3_close(db);
     }
-
+    db =NULL;
+    isdbopen=NULL;
 }
 
-void SQL::connectDB() {
+void SQL::connectDB(const char *filename) {
     int rc;
 
-    rc = sqlite3_open("/var/db/smarthome", &db);
+    rc = sqlite3_open(filename, &db);
     if (rc) {
         fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
         //exit(0);
@@ -35,8 +33,7 @@ void SQL::connectDB() {
         fprintf(stderr, "Opened database successfully\n");
         isdbopen = true;
     }
-    if (isdbopen) {
-        sqlite3_close(db);
-    }
+
+
 }
 
