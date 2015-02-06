@@ -4,6 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>SQL.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -12,6 +13,7 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>SQL.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -36,6 +38,10 @@
       </toolsSet>
       <compileType>
       </compileType>
+      <item path="SQL.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SQL.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
@@ -48,23 +54,30 @@
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
-          <commandlineTool>arm-unknown-linux-gnueabihf-gcc</commandlineTool>
+          <commandlineTool>/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-gcc</commandlineTool>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
-          <commandlineTool>arm-unknown-linux-gnueabihf-g++</commandlineTool>
+          <commandlineTool>/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++</commandlineTool>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
         </fortranCompilerTool>
         <asmTool>
           <developmentMode>5</developmentMode>
-          <commandlineTool>arm-unknown-linux-gnueabihf-as</commandlineTool>
+          <commandlineTool>/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-as</commandlineTool>
         </asmTool>
         <linkerTool>
-          <commandlineTool>arm-unknown-linux-gnueabihf-g++</commandlineTool>
+          <commandlineTool>/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++</commandlineTool>
+          <linkerLibItems>
+            <linkerLibLibItem>sqlite3</linkerLibLibItem>
+          </linkerLibItems>
         </linkerTool>
       </compileType>
+      <item path="SQL.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SQL.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>

@@ -7,12 +7,16 @@
 
 #include <cstdlib>
 
+#include "SQL.h"
+
 using namespace std;
 
 /*
  * 
  */
 int main(int argc, char** argv) {
+ 
+    SQL *test = new SQL();
 
     return 0;
 }

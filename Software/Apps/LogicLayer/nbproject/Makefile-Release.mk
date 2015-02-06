@@ -14,11 +14,11 @@ GREP=grep
 NM=nm
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=arm-unknown-linux-gnueabihf-gcc
-CCC=arm-unknown-linux-gnueabihf-g++
-CXX=arm-unknown-linux-gnueabihf-g++
+CC=/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-gcc
+CCC=/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++
+CXX=/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++
 FC=gfortran
-AS=arm-unknown-linux-gnueabihf-as
+AS=/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-as
 
 # Macros
 CND_PLATFORM=GNU-Linux-x86
@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/SQL.o \
 	${OBJECTDIR}/main.o
 
 
@@ -52,7 +53,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=
+LDLIBSOPTIONS=-lsqlite3
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -60,7 +61,12 @@ LDLIBSOPTIONS=
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/logiclayer: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	arm-unknown-linux-gnueabihf-g++ -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/logiclayer ${OBJECTFILES} ${LDLIBSOPTIONS}
+	/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++ -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/logiclayer ${OBJECTFILES} ${LDLIBSOPTIONS}
+
+${OBJECTDIR}/SQL.o: SQL.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SQL.o SQL.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
