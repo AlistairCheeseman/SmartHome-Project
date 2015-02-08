@@ -58,7 +58,8 @@ build: .build-post
 
 .build-post: .build-impl
 # Add your post 'build' code here...
-
+#this is a quick and dirty deploy to live system for immediate testing via mounted remote file system.
+	cp dist/Release/GNU_ARM-Linux-x86/logiclayer /mnt/arm/targetfs2/bin/
 
 # clean
 clean: .clean-post

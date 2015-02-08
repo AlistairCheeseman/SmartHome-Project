@@ -1,0 +1,21 @@
+/* 
+ * File:   ProcessMessage.h
+ * Author: Alistair
+ *
+ * Created on 08 February 2015, 10:35
+ */
+
+#ifndef PROCESSMESSAGE_H
+#define	PROCESSMESSAGE_H
+
+class ProcessMessage {
+public:
+    ProcessMessage(char *dbloc);
+    virtual ~ProcessMessage();
+    void messageReceived(char *topic, char *payload, int payloadlen,  class mqtt *sender);
+private:
+    class SQL *sqldb;
+};
+
+#endif	/* PROCESSMESSAGE_H */
+

@@ -4,7 +4,9 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>ProcessMessage.h</itemPath>
       <itemPath>SQL.h</itemPath>
+      <itemPath>mqtt.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -13,8 +15,10 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>ProcessMessage.cpp</itemPath>
       <itemPath>SQL.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
+      <itemPath>mqtt.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -32,22 +36,30 @@
   <confs>
     <conf name="Debug" type="1">
       <toolsSet>
-        <compilerSet>default</compilerSet>
+        <compilerSet>GNU_ARM|GNU</compilerSet>
         <dependencyChecking>true</dependencyChecking>
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
       </compileType>
+      <item path="ProcessMessage.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ProcessMessage.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="SQL.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="SQL.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="mqtt.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="mqtt.h" ex="false" tool="3" flavor2="0">
+      </item>
     </conf>
     <conf name="Release" type="1">
       <toolsSet>
-        <compilerSet>default</compilerSet>
+        <compilerSet>GNU_ARM|GNU</compilerSet>
         <dependencyChecking>true</dependencyChecking>
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
@@ -71,14 +83,23 @@
           <commandlineTool>/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++</commandlineTool>
           <linkerLibItems>
             <linkerLibLibItem>sqlite3</linkerLibLibItem>
+            <linkerLibLibItem>mosquittopp</linkerLibLibItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
+      <item path="ProcessMessage.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ProcessMessage.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="SQL.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="SQL.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="mqtt.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="mqtt.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>
