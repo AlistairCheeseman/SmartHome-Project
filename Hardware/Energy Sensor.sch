@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.5.0">
+<eagle version="6.4">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -16471,7 +16471,7 @@ BLOCK</description>
 <instance part="X2" gate="-1" x="-20.32" y="27.94"/>
 <instance part="X2" gate="-2" x="-20.32" y="22.86"/>
 <instance part="R1" gate="1" x="35.56" y="76.2" rot="R90"/>
-<instance part="F1" gate="1" x="12.7" y="76.2" rot="R90"/>
+<instance part="F1" gate="1" x="12.7" y="68.58" rot="R90"/>
 <instance part="TR1" gate="1" x="45.72" y="78.74"/>
 <instance part="D1" gate="G$1" x="68.58" y="83.82"/>
 <instance part="IC1" gate="A" x="99.06" y="83.82"/>
@@ -16727,7 +16727,6 @@ BLOCK</description>
 <pinref part="U$1" gate="G$1" pin="3"/>
 <wire x1="25.4" y1="60.96" x2="25.4" y2="63.5" width="0.1524" layer="91"/>
 <wire x1="25.4" y1="63.5" x2="30.48" y2="63.5" width="0.1524" layer="91"/>
-<wire x1="12.7" y1="71.12" x2="12.7" y2="63.5" width="0.1524" layer="91"/>
 <wire x1="25.4" y1="63.5" x2="12.7" y2="63.5" width="0.1524" layer="91"/>
 <junction x="25.4" y="63.5"/>
 <junction x="30.48" y="63.5"/>
@@ -17075,7 +17074,7 @@ BLOCK</description>
 <wire x1="-15.24" y1="78.74" x2="-15.24" y2="83.82" width="0.1524" layer="91"/>
 <pinref part="F2" gate="1" pin="1"/>
 <wire x1="15.24" y1="83.82" x2="12.7" y2="83.82" width="0.1524" layer="91"/>
-<wire x1="12.7" y1="83.82" x2="12.7" y2="81.28" width="0.1524" layer="91"/>
+<wire x1="12.7" y1="83.82" x2="12.7" y2="73.66" width="0.1524" layer="91"/>
 <pinref part="F1" gate="1" pin="2"/>
 <wire x1="-15.24" y1="83.82" x2="12.7" y2="83.82" width="0.1524" layer="91"/>
 <junction x="12.7" y="83.82"/>
