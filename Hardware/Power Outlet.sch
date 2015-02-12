@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.5.0">
+<eagle version="6.4">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -16440,8 +16440,8 @@ In this library the device names are the same as the pin names of the symbols, t
 <part name="K2" library="relay" deviceset="G5LE" device=""/>
 <part name="S1" library="switch-omron" deviceset="40-XX" device="" value="OUT1_SW"/>
 <part name="S2" library="switch-omron" deviceset="40-XX" device="" value="OUT2_SW"/>
-<part name="LED1" library="led" deviceset="LED" device="5MM" value="HEAT"/>
-<part name="LED2" library="led" deviceset="LED" device="5MM" value="WATER"/>
+<part name="LED1" library="led" deviceset="LED" device="5MM" value="OUT2"/>
+<part name="LED2" library="led" deviceset="LED" device="5MM" value="OUT1"/>
 <part name="IC1" library="ic-package" deviceset="DIL28" device="-4" value="ATMega 328p-pu"/>
 <part name="Q1" library="crystal" deviceset="CRYSTAL" device="HC49S" value="16MHz"/>
 <part name="R2" library="rcl" deviceset="R-EU_" device="R1206W" value="10k"/>
