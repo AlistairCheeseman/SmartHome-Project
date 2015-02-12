@@ -10,7 +10,7 @@
 
 class ProcessMessage {
 public:
-    ProcessMessage(char *dbloc);
+    ProcessMessage(const char *dbloc);
     virtual ~ProcessMessage();
     void messageReceived(char *topic, char *payload, int payloadlen,  class mqtt *sender);
 private:

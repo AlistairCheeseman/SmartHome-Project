@@ -15,13 +15,13 @@
 
 
 
-mqtt::mqtt(const char *id, const char *host, int port) : mosquittopp(id)
+mqtt::mqtt(const char *id, const char *host, int port,const char *dbloc) : mosquittopp(id)
 {
   	int keepalive = 60;
 	/* Connect immediately. This could also be done by calling
 	 * mqtt_tempconv->connect(). */
 	connect(host, port, keepalive);  
-        messageProcessor = new ProcessMessage("/var/db/smarthome");
+        messageProcessor = new ProcessMessage(dbloc);
         
 }
 
@@ -41,11 +41,13 @@ void mqtt::on_connect(int rc)
 
 void mqtt::on_message(const struct mosquitto_message *message)
 {
-    printf("message received\n");
+    if (message->payloadlen > 0)
+    {
     char buffer[101];
     memset(buffer, 0,101*sizeof(char));
     memcpy(buffer, message->payload, 100*sizeof(char));
     messageProcessor->messageReceived(message->topic, buffer, message->payloadlen, this);
+    }
 }
 
 void mqtt::on_subscribe(int mid, int qos_count, const int *granted_qos)

@@ -21,10 +21,21 @@ public:
     void writePower(float pf, float pow);
     int callback(int argc, char **argv, char **azColName);
     void get_data();
+    // get the topic that the SR Request must be published to for the Dev Request.
+    char* getSRDEVTopic(char* DevRequestTopic);
+    // get the topic that the SR Request must be published to for the MAP Request.
+    char* getSRMAPTopic(char* MapRequestTopic);
+    //get the Mapping layer path from the mac and Id.
+    char* getMAPDevtopic(char* mac, char* id);
+    //Set the current value into the db.
+    void setSMAPVal(char* MAPTopic, char* MAPVal);
+    
 private:
     void connectDB(const char *filename);
     sqlite3 *db;
     bool isdbopen;
+    char* getCurrentMoment();
+
 };
 
 #endif	/* SQL_H */

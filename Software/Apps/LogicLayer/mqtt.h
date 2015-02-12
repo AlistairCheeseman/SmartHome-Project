@@ -12,7 +12,7 @@
 
 class mqtt : public mosqpp::mosquittopp {
 public:
-    mqtt(const char *id, const char *host, int port);
+    mqtt(const char *id, const char *host, int port,const char *dbloc);
     virtual ~mqtt();
 
     void on_connect(int rc);
