@@ -25,11 +25,20 @@ function escape($value) {
 
 function createDB($db) {
     $db->exec("CREATE TABLE 'PowerLog' ('moment' DATETIME PRIMARY KEY NOT NULL, 'powerReading' REAL NOT NULL, 'powerFactor' REAL NOT NULL)");
-       }
+    $db->exec("CREATE TABLE 'log' ('id' INTEGER PRIMARY KEY NOT NULL, 'moment' DATETIME NOT NULL, 'topic' TEXT NOT NULL, 'payload' TEXT NOT NULL)");
+    $db->exec("CREATE TABLE 'Dev_Types' ('Id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'Name' INTEGER, 'TopicName' INTEGER)");
+    $db->exec("CREATE TABLE 'Rooms' ('Id' INTEGER PRIMARY KEY NOT NULL, 'Name' TEXT, 'TopicName' TEXT)");
+   $db->exec("CREATE TABLE 'Dev_Controls' ('Id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'TypeId' INTEGER NOT NULL, 'ControlId' INTERGER NOT NULL, 'Name' TEXT, 'TopicName'  TEXT ,FOREIGN KEY(TypeId) REFERENCES Dev_Types(Id), UNIQUE (TypeId, ControlId))");
+    
+   
+   
+     $db->exec("CREATE TABLE 'Devices' ('Id' TEXT PRIMARY KEY NOT NULL, 'TypeId' INTEGER, 'Name' INTEGER, 'RoomId' INTEGER, FOREIGN KEY(TypeId) REFERENCES Dev_Types(Id), FOREIGN KEY(RoomId) REFERENCES Rooms(Id))");
+  $db->exec("CREATE VIEW 'Maps' AS SELECT t1.DevId, t2.TopicName as room, t3.TopicName as DeviceType, t4.TopicName as control, t4.ControlId as controlId FROM Devices t1 INNER JOIN Rooms t2 ON t1.RoomId = t2.RoomId INNER JOIN Dev_Types t3 on t1.TypeId = t3.Id INNER JOIN Dev_Controls t4 on t3.Id = t4.TypeId");
+}
 
 function connectDB() {
     try {
-    
+
         $db = new PDO(DB_CONNECTION);
         $exists = checkTableexists("PowerLog", $db);
         if ($exists == FALSE) {
@@ -41,29 +50,23 @@ function connectDB() {
     return $db;
 }
 
-function checkTableexists($tablename,$db) {
+function checkTableexists($tablename, $db) {
     try {
         $query = "SELECT name FROM sqlite_master WHERE type='table' AND name='" . $tablename . "'";
-     $result = $db->query($query);
-    $count = 0;
-     foreach ($result as $row)
-     {
-         $count++;
-     }
-       if ($count > 0)
-       {
+        $result = $db->query($query);
+        $count = 0;
+        foreach ($result as $row) {
+            $count++;
+        }
+        if ($count > 0) {
             return TRUE;
-       }
-       else
-       { 
-           return FALSE;
-       }
-       } 
-       catch (PDOException $ex) {
+        } else {
+            return FALSE;
+        }
+    } catch (PDOException $ex) {
         echo $ex;
         return FALSE;
     }
 }
-
 
 ?>
