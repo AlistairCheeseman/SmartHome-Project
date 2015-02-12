@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.5.0">
+<eagle version="6.4">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -407,8 +407,8 @@ drill 1.0 mm</description>
 </class>
 </classes>
 <parts>
-<part name="SV1" library="con-lstb" deviceset="MA03-2" device=""/>
-<part name="SV2" library="con-lstb" deviceset="MA12-1W" device=""/>
+<part name="SV1" library="con-lstb" deviceset="MA03-2" device="" value="ICSP"/>
+<part name="SV2" library="con-lstb" deviceset="MA12-1W" device="" value="COMMS"/>
 <part name="LSP1" library="solpad" deviceset="MCS10B" device=""/>
 </parts>
 <sheets>
