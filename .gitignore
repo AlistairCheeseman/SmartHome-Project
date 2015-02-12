@@ -1,4 +1,4 @@
-/Software/www/nbproject/private/
+
 
 # Ignore list for Eagle, a PCB layout tool
 # Backup files
@@ -31,5 +31,10 @@
 *.info
 *.eps
 
+/Software/www/nbproject/private/
 /Software/Apps/LogicLayer/build/
 /Software/Apps/LogicLayer/dist/
+/Software/Apps/LogicLayer/nbproject/private/
+/Software/Apps/Wireless-NRF/build/
+/Software/Apps/Wireless-NRF/dist/
+/Software/Apps/Wireless-NRF/nbproject/private/
