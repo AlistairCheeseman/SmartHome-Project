@@ -79,6 +79,7 @@ cp tools/mkimage ${BUILDTOOLSYSDIR}/bin/mkimage
 
 #git no longer clones to /kernel.
 #cp -R ${BUILDTOOLSYSDIR}/../src/kernel  $SRCDIR/kernel
+echo "copying linux source files from toolchain build."
 cp -R ${BUILDTOOLSYSDIR}/../src/linux  $SRCDIR/linux
 
 #cd $SRCDIR/kernel/kernel
@@ -102,6 +103,16 @@ sleep 1
 sed -i -e 's|/\* #include "am335x-bone-spi1-spidev.dtsi" \*/|#include \"am335x-bone-spi1-spidev.dtsi\"|g' arch/arm/boot/dts/am335x-boneblack.dts
 sed -i -e 's|#include "am335x-ttyO1.dtsi"|/\* #include "am335x-ttyO1.dtsi" \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
 sed -i -e 's|/\* #include "am335x-bone-ttyO1.dtsi" \*/|#include "am335x-bone-ttyO1.dtsi"|g' arch/arm/boot/dts/am335x-boneblack.dts
+sed -i -e 's|#include "am335x-boneblack-nxp-hdmi-audio.dtsi"|/\* #include "am335x-boneblack-nxp-hdmi-audio.dtsi" \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
+sed -i -e 's|#include "am335x-can0.dtsi"|/\* #include "am335x-can0.dtsi" \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
+sed -i -e 's|#include "am335x-can1.dtsi"|/\* #include "am335x-can1.dtsi" \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
+sed -i -e 's|#include "am335x-bone-i2c2-cape-eeprom.dtsi"|/\* #include "am335x-bone-i2c2-cape-eeprom.dtsi" \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
+sed -i -e 's|#include "am335x-ttyO2.dtsi"|/\* #include "am335x-ttyO2.dtsi" \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
+sed -i -e 's|#include "am335x-ttyO4.dtsi"|/\* #include "am335x-ttyO4.dtsi" \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
+sed -i -e 's|#include "am335x-ttyO5.dtsi"|/\* #include "am335x-ttyO5.dtsi" \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
+#sed -i -e 's||/\*  \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
+#sed -i -e 's||/\*  \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
+nano arch/arm/boot/dts/am335x-boneblack.dts
 make uImage dtbs LOADADDR=0x80008000
 make modules
 make INSTALL_MOD_PATH=$TARGETFS modules_install
