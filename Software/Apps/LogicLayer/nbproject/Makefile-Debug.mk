@@ -14,11 +14,11 @@ GREP=grep
 NM=nm
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=arm-unknown-linux-gnueabihf-gcc
-CCC=arm-unknown-linux-gnueabihf-g++
-CXX=arm-unknown-linux-gnueabihf-g++
+CC=/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-gcc
+CCC=/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++
+CXX=/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++
 FC=gfortran
-AS=arm-unknown-linux-gnueabihf-as
+AS=/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-as
 
 # Macros
 CND_PLATFORM=GNU_ARM-Linux-x86
@@ -55,7 +55,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=
+LDLIBSOPTIONS=-lmosquittopp -lsqlite3
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -63,7 +63,7 @@ LDLIBSOPTIONS=
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/logiclayer: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/logiclayer ${OBJECTFILES} ${LDLIBSOPTIONS}
+	/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++ -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/logiclayer ${OBJECTFILES} ${LDLIBSOPTIONS}
 
 ${OBJECTDIR}/ProcessMessage.o: ProcessMessage.cpp 
 	${MKDIR} -p ${OBJECTDIR}

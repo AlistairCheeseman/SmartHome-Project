@@ -22,13 +22,13 @@ public:
     int callback(int argc, char **argv, char **azColName);
     void get_data();
     // get the topic that the SR Request must be published to for the Dev Request.
-    char* getSRDEVTopic(char* DevRequestTopic);
+    char* getSRDEVTopic(char* mac, char* id);
     // get the topic that the SR Request must be published to for the MAP Request.
-    char* getSRMAPTopic(char* MapRequestTopic);
+    char* getSRMAPTopic(char* room, char* device, char* setting);
     //get the Mapping layer path from the mac and Id.
     char* getMAPDevtopic(char* mac, char* id);
     //Set the current value into the db.
-    void setSMAPVal(char* MAPTopic, char* MAPVal);
+    void setSMAPVal(char* room, char* device, char* setting, char* MAPVal);
     
 private:
     void connectDB(const char *filename);

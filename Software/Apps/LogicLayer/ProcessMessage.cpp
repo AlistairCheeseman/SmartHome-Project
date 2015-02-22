@@ -55,7 +55,7 @@ void ProcessMessage::messageReceived(char *topic, char *payload, int payloadlen,
             //a request has been initiated.
             //look up the database and find what device it corresponds to. then publish a State Request to that device.
 
-            char* publishtopic = sqldb->getSRDEVTopic(longtopic);
+            char* publishtopic = sqldb->getSRDEVTopic(mac, id);
             printf("ACTION: Publishing State Request to DEV topic: %s \n", publishtopic);
             sender->publish(NULL, publishtopic, strlen(publishtopic), payload);
         } else if (!strcmp(type, "S")) {
@@ -102,10 +102,10 @@ void ProcessMessage::messageReceived(char *topic, char *payload, int payloadlen,
         if (!strcmp(type, "S")) {
             //logical device has been updated. ensure db holds up-to-date value by writing to it.
             printf("ACTION: writing new State value to DB.\n");
-            sqldb->setSMAPVal(longtopic, payload);
+            sqldb->setSMAPVal(room, device, setting, payload);
         }
         if (!strcmp(type, "R")) {
-            char* publishtopic = sqldb->getSRMAPTopic(longtopic);
+            char* publishtopic = sqldb->getSRMAPTopic(room, device, setting);
             printf("ACTION: Publishing State Request to DEV topic: %s \n", publishtopic);
             sender->publish(NULL, publishtopic, strlen(publishtopic), payload);
             //a request has been published. look up what device it corresponds to and publish a request on the physical layer.

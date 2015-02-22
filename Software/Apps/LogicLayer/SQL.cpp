@@ -126,9 +126,42 @@ char* SQL::getCurrentMoment() {
 
 
 // get the topic that the SR Request must be published to for the Dev Request.
+//multiple Requests can map to one ServiceRequest. (two light switches in a room control one light from different locations.)
+// an incoming string should look like: dev/<mac address>/<device output id>/R
+// an outgoing string should look like: dev/<mac address>/<device output id>/SR
 
-char* SQL::getSRDEVTopic(char* DevRequestTopic) {
-    return (char*) "/dev/87-86-92-5E/1/SR";
+char* SQL::getSRDEVTopic(char* mac, char* id) {
+    //check the sensor table and if the sr topic is null republish to the same source with SR
+    //else 
+    //get the topic from the table.
+    //todo: if missing record in sql table?
+    const char *statement = "SELECT * FROM Sensors WHERE DevId = '%s' AND controlId = '%s'";
+    char *sql = new char[300];
+    char *SRTopic = new char[50];
+    sprintf(sql, statement, mac, id);
+    sqlite3_stmt *ppStmt;
+    int res = 0;
+    if (sqlite3_prepare_v2(db, sql, strlen(sql), &ppStmt, 0) == SQLITE_OK) {
+        while (1) {
+            res = sqlite3_step(ppStmt);
+            if (res == SQLITE_ROW) {
+                if (sqlite3_column_text(ppStmt,4) == NULL)
+                {
+                    sprintf(SRTopic, "%s/%s", mac, id);
+                }
+                else
+                {
+                strcpy(SRTopic, reinterpret_cast<const char*> (sqlite3_column_text(ppStmt, 4)));
+                }
+            }
+            if (res == SQLITE_DONE || res == SQLITE_ERROR) {
+                break;
+            }
+        }
+    }
+    char *output = new char[200];
+    sprintf(output, "dev/%s/SR", SRTopic);
+    return output;
 }
 
 
@@ -137,9 +170,36 @@ char* SQL::getSRDEVTopic(char* DevRequestTopic) {
 
 
 // get the topic that the SR Request must be published to for the MAP Request.
+// a mapping layer maps one to one to a device. the map is unique in the sensor table
+// an incoming string should look like: map/<room>/<device>/<named device output>/R
+// an outgoing string should look like: dev/<mac address>/<device output id>/SR
 
-char* SQL::getSRMAPTopic(char* MapRequestTopic) {
-    return (char*) "/dev/87-86-92-5E/1/SR";
+char* SQL::getSRMAPTopic(char* room, char* device, char* setting) {
+    //try and find the map topic in the Sensor table.
+    //get the device and publish the state request there.
+    //todo:if the topic is not in the table?
+     const char *statement = "SELECT * FROM Sensors WHERE MapTopic = '%s/%s/%s'";
+    char *sql = new char[300];
+    char *DevId = new char[50];
+    char *ControlId = new char[50];
+    sprintf(sql, statement, room,device, setting);
+    sqlite3_stmt *ppStmt;
+    int res = 0;
+    if (sqlite3_prepare_v2(db, sql, strlen(sql), &ppStmt, 0) == SQLITE_OK) {
+        while (1) {
+            res = sqlite3_step(ppStmt);
+            if (res == SQLITE_ROW) {    
+                strcpy(DevId, reinterpret_cast<const char*> (sqlite3_column_text(ppStmt, 1)));
+                  strcpy(ControlId, reinterpret_cast<const char*> (sqlite3_column_text(ppStmt, 2)));
+            }
+            if (res == SQLITE_DONE || res == SQLITE_ERROR) {
+                break;
+            }
+        }
+    }
+    char *output = new char[200];
+    sprintf(output, "dev/%s/%s/SR", DevId, ControlId);
+    return output;
 }
 
 
@@ -148,14 +208,14 @@ char* SQL::getSRMAPTopic(char* MapRequestTopic) {
 
 
 //get the Mapping layer path from the mac and Id.
+// an incoming string should look like: dev/<mac address>/<device output id>/S
+// an outgoing string should look like: map/<room>/<device>/<named device output>/S
 
 char* SQL::getMAPDevtopic(char* mac, char* id) {
-    const char *statement = "SELECT * FROM Maps WHERE DevId = '%s' AND controlId = '%s'";
+    const char *statement = "SELECT * FROM Sensors WHERE DevId = '%s' AND controlId = '%s'";
     char *sql = new char[300];
 
-    char *room = new char[50];
-    char *type = new char[50];
-    char *control = new char[50];
+    char *SMapTopic= new char[50];
     sprintf(sql, statement, mac, id);
     sqlite3_stmt *ppStmt;
     int res = 0;
@@ -163,14 +223,8 @@ char* SQL::getMAPDevtopic(char* mac, char* id) {
         while (1) {
             res = sqlite3_step(ppStmt);
             if (res == SQLITE_ROW) {
-
-                strcpy(room, reinterpret_cast<const char*> (sqlite3_column_text(ppStmt, 1)));
-                strcpy(type, reinterpret_cast<const char*> (sqlite3_column_text(ppStmt, 2)));
-                strcpy(control, reinterpret_cast<const char*> (sqlite3_column_text(ppStmt, 3)));
-
-
-
-            }
+                strcpy(SMapTopic, reinterpret_cast<const char*> (sqlite3_column_text(ppStmt, 3)));
+              }
             if (res == SQLITE_DONE || res == SQLITE_ERROR) {
                 break;
             }
@@ -178,7 +232,7 @@ char* SQL::getMAPDevtopic(char* mac, char* id) {
     }
 
     char *output = new char[200];
-    sprintf(output, "map/%s/%s/%s/S", room, type, control);
+    sprintf(output, "map/%s/S", SMapTopic);
 
     return output;
 
@@ -186,8 +240,56 @@ char* SQL::getMAPDevtopic(char* mac, char* id) {
     // return (char*) "/map/global/heating/hotwater/S"; 
 }
 
-//Set the current value into the db.
 
-void SQL::setSMAPVal(char* MAPTopic, char* MAPVal) {
-
+//Set the current value into the db and log the change.
+// an incoming string should look like: mmap/<room>/<device>/<named device output>/S
+//it does not need to return anything.
+void SQL::setSMAPVal(char* room, char* device, char* setting, char* MAPVal) {
+//get the sensorid for the map.
+    //log the new value in the sensor log table with with the FK SensorId.
+    //update the sensor table the the sensors current state.
+    const char *SelStatement = "SELECT Id FROM Sensors WHERE MapTopic = '%s/%s/%s'";
+    const char *InsStatement = "INSERT INTO Sensor_Histories (SensorId, moment, value) VALUES ('%d', '%s', '%s' )";
+    const char *UpdStatement = "UPDATE Sensors SET CurrentValue ='%s' WHERE Id = '%d'";
+    
+        char *sql = new char[300];
+    
+        int SensorId;
+    sprintf(sql, SelStatement, room, device, setting);
+    sqlite3_stmt *ppStmt;
+    int res = 0;
+    if (sqlite3_prepare_v2(db, sql, strlen(sql), &ppStmt, 0) == SQLITE_OK) {
+        while (1) {
+            res = sqlite3_step(ppStmt);
+            if (res == SQLITE_ROW) {
+              SensorId  = (sqlite3_column_int(ppStmt, 0));
+              }
+            if (res == SQLITE_DONE || res == SQLITE_ERROR) {
+                break;
+            }
+        }
+    }
+ sprintf(sql, InsStatement, SensorId, getCurrentMoment(), MAPVal);
+ int rc;
+  char *zErrMsg = 0;
+     rc = sqlite3_exec(db, sql, c_callback, this, &zErrMsg);
+    if (rc != SQLITE_OK) {
+        printf("SQL error: %s\n", zErrMsg);
+        sqlite3_free(zErrMsg);
+    } else {
+       // printf("Records stored successfully\n");
+    }
+    
+     sprintf(sql, UpdStatement,MAPVal, SensorId);
+     rc=0;
+     zErrMsg = 0;
+     rc = sqlite3_exec(db, sql, c_callback, this, &zErrMsg);
+    if (rc != SQLITE_OK) {
+        printf("SQL error: %s\n", zErrMsg);
+        sqlite3_free(zErrMsg);
+    } else {
+       // printf("Records stored successfully\n");
+    }
+    
+    
 }
