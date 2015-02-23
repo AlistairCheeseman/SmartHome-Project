@@ -1,5 +1,4 @@
 serverip=192.168.3.1
 autoload=no
-bootargs=console=ttyO0,115200n8 rw ip=dhcp root=/dev/nfs rootfstype=nfs 
-nfsroot=192.168.3.1:/data/arm/targetfs,nolock,vers=3
+bootargs=console=ttyO0,115200n8 rw ip=dhcp root=/dev/nfs rootfstype=nfs nfsroot=192.168.3.1:/data/arm/targetfs,nolock,vers=3
 uenvcmd=dhcp;tftp 0x80200000 uImage;tftp 0x80f80000 am335x-boneblack.dtb;bootm 0x80200000 - 0x80f80000
