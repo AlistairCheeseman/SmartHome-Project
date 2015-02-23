@@ -1,12 +1,12 @@
-#/bin/bash
+#!/bin/bash
 
 set -e
 STARTTIME=$(date +%s)
 export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ./buildscript.sh
 
-rm -R $TARGETFS
-rm -R $SRCDIR
+rm -Rf $TARGETFS
+rm -Rf $SRCDIR
 mkdir -pv $TARGETFS
 cd $TARGETFS
 
@@ -110,9 +110,6 @@ sed -i -e 's|#include "am335x-bone-i2c2-cape-eeprom.dtsi"|/\* #include "am335x-b
 sed -i -e 's|#include "am335x-ttyO2.dtsi"|/\* #include "am335x-ttyO2.dtsi" \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
 sed -i -e 's|#include "am335x-ttyO4.dtsi"|/\* #include "am335x-ttyO4.dtsi" \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
 sed -i -e 's|#include "am335x-ttyO5.dtsi"|/\* #include "am335x-ttyO5.dtsi" \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
-#sed -i -e 's||/\*  \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
-#sed -i -e 's||/\*  \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
-nano arch/arm/boot/dts/am335x-boneblack.dts
 make uImage dtbs LOADADDR=0x80008000
 make modules
 make INSTALL_MOD_PATH=$TARGETFS modules_install
@@ -338,7 +335,10 @@ make INSTALL_ROOT=/remote/arm/targetfs2 install
 #modules/libphp5.so
 #using | as a delimeter so as not to confuse the escaping sequence
 sed -i -e 's|/remote/arm/targetfs2/apache24/||g' $TARGETFS/apache24/etc/httpd.conf
-
+sed -i -e 's|DirectoryIndex index.html|DirectoryIndex index.html index.xhtml index.php|g' $TARGETFS/apache24/etc/httpd.conf
+#todo: this sed command needs to only replace the first occurence.
+sed -i -e '1,/AllowOverride None/s/AllowOverride None/AllowOverride All/' $TARGETFS/apache24/etc/httpd.conf
+sed -i -e 's|#LoadModule rewrite_module modules/mod_rewrite.so|LoadModule rewrite_module modules/mod_rewrite.so|g' $TARGETFS/apache24/etc/httpd.conf
 echo "<FilesMatch \.php$>
     SetHandler application/x-httpd-php
 </FilesMatch>" >> $TARGETFS/apache24/etc/httpd.conf
@@ -360,8 +360,8 @@ echo "####################################################################"
 echo "#                                                                  #"
 echo "#                                                                  #"
 echo "#                           COMPLETED SUCESSFULLY                  #"
-echo "#                      INSTALLED TO ${TARGETFS}                    #"
-echo "#                                took $((($ENDTIME - $STARTTIME)/60)) mins   #"
+echo "#                      INSTALLED TO ${TARGETFS}             #"
+echo "#                                took $((($ENDTIME - $STARTTIME)/60)) mins             #"
 echo "#                                                                  #"
 echo "#                                                                  #"
 echo "#                                                                  #"
