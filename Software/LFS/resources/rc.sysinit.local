@@ -86,6 +86,14 @@ echo -n "Setting up interface lo: "
 ifconfig lo up 127.0.0.1
 check_status
 
+echo -n "Bringing up eth0: "
+ifcofig eth0 up
+check_status
+
+echo -n "Getting DHCP Lease: "
+udhcpc -i eth0 -s /etc/udhcpc/default.script
+check_status
+
 echo "Running start scripts."
 
 for i in /etc/rcS.d/*

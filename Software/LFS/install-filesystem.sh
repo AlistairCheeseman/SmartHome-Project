@@ -169,8 +169,14 @@ cp ${DIR}/resources/rc.sysinit.local ${TARGETFS}/etc/
 cp ${TARGETFS}/etc/rc.sysinit.nfs ${TARGETFS}/etc/rc.sysinit
 
 
+
+
 chmod +x ${TARGETFS}/etc/rc.sysinit
 chmod +x ${TARGETFS}/etc/rc.shutdown
+
+mkdir ${TARGETFS}/etc/udhcpc
+cp ${DIR/resources/default.script $TARGETFS/etc/udhcpc/
+chmod +x ${TARGETFS}/etc/udhcpc/default.script
 
 echo "beaglebone" > ${TARGETFS}/etc/HOSTNAME
 
