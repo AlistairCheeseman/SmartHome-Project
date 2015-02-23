@@ -119,12 +119,11 @@ cp arch/arm/boot/zImage $TARGETFS/boot/zImage
 
 cp arch/arm/boot/dts/am335x-boneblack.dtb $TARGETFS/boot/am335x-boneblack.dtb
 
-cat > $TARGETFS/boot/uEnv.txt << EOF
-serverip=192.168.3.1
-autoload=no
-bootargs=console=ttyO0,115200n8 rw ip=dhcp root=/dev/nfs rootfstype=nfs nfsroot=192.168.3.1:/data/arm/targetfs,nolock,vers=3
-uenvcmd=dhcp;tftp 0x80200000 uImage;tftp 0x80f80000 am335x-boneblack.dtb;bootm 0x80200000 - 0x80f80000
-EOF
+
+cp ${DIR}/resources/uEnv.txt.nfs ${TARGETFS}/boot/
+cp ${DIR}/resources/uEnv.txt.local ${TARGETFS}/boot/
+cp ${TARGETFS}/boot/uEnv.txt.nfs ${TARGETFS}/boot/uEnv.txt
+
 
 cd $SRCDIR
 wget http://busybox.net/downloads/busybox-1.22.1.tar.bz2
@@ -164,7 +163,11 @@ cp ${DIR}/resources/hosts ${TARGETFS}/etc/hosts
 cp ${DIR}/resources/shells ${TARGETFS}/etc/shells
 
 cp ${DIR}/resources/rc.shutdown ${TARGETFS}/etc/rc.shutdown
-cp ${DIR}/resources/rc.sysinit ${TARGETFS}/etc/rc.sysinit
+
+cp ${DIR}/resources/rc.sysinit.nfs ${TARGETFS}/etc/
+cp ${DIR}/resources/rc.sysinit.local ${TARGETFS}/etc/
+cp ${TARGETFS}/etc/rc.sysinit.nfs ${TARGETFS}/etc/rc.sysinit
+
 
 chmod +x ${TARGETFS}/etc/rc.sysinit
 chmod +x ${TARGETFS}/etc/rc.shutdown
