@@ -12,7 +12,6 @@
 class SPI {
 public:
     SPI();
-    SPI(const SPI& orig);
     virtual ~SPI();
 private:
 

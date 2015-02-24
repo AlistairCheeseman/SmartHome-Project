@@ -10,8 +10,6 @@
 SPI::SPI() {
 }
 
-SPI::SPI(const SPI& orig) {
-}
 
 SPI::~SPI() {
 }

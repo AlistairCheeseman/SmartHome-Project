@@ -11,9 +11,18 @@
 
 class GPIO {
 public:
+
+#define GPIO_DDR_OUT 1
+#define GPIO_DDR_IN 0
+#define GPIO_VAL_HIGH 1
+#define GPIO_VAL_LOW 0
+
     GPIO();
-    GPIO(const GPIO& orig);
     virtual ~GPIO();
+    static void open(int port, int DDR);
+    static void close(int port);
+    static int read(int port);
+    static void write(int port, int value);
 private:
 
 };
