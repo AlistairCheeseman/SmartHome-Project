@@ -6,8 +6,8 @@
  * and open the template in the editor.
  */
 include "functions.php";
-$DBView = gettext($_GET['view']);
-if ($DBview != NULL) {
+
+ $DBView = $_GET['view'];
     $db = connectDB();
     if ($DBView == "power") {
         //    $statement =    $db->prepare("SELECT DATE(moment) as moment, powerReading, powerFactor  FROM 'PowerLog'"); 
@@ -21,8 +21,3 @@ if ($DBview != NULL) {
         $results = $statement->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($results);
     }
-    $db = null;
-} else {
-    echo "missing or wrong parameters";
-}
-?>
