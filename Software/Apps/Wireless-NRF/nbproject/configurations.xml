@@ -5,7 +5,13 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>GPIO.h</itemPath>
+      <itemPath>MQTTSNCheck.h</itemPath>
+      <itemPath>Radio.h</itemPath>
       <itemPath>SPI.h</itemPath>
+      <itemPath>SensorNet.h</itemPath>
+      <itemPath>Timing.h</itemPath>
+      <itemPath>UDP.h</itemPath>
+      <itemPath>nRF24L01P.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -15,7 +21,12 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>GPIO.cpp</itemPath>
+      <itemPath>MQTTSNCheck.cpp</itemPath>
+      <itemPath>Radio.cpp</itemPath>
       <itemPath>SPI.cpp</itemPath>
+      <itemPath>SensorNet.cpp</itemPath>
+      <itemPath>Timing.cpp</itemPath>
+      <itemPath>UDP.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -39,21 +50,55 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
+        <cTool>
+          <commandlineTool>/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-gcc</commandlineTool>
+        </cTool>
+        <ccTool>
+          <commandlineTool>/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++</commandlineTool>
+        </ccTool>
+        <asmTool>
+          <commandlineTool>/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-as</commandlineTool>
+        </asmTool>
+        <linkerTool>
+          <commandlineTool>/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++</commandlineTool>
+        </linkerTool>
       </compileType>
       <item path="GPIO.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="GPIO.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="MQTTSNCheck.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="MQTTSNCheck.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Radio.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Radio.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="SPI.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="SPI.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="SensorNet.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SensorNet.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Timing.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Timing.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="UDP.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="UDP.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="nRF24L01P.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
       <toolsSet>
-        <compilerSet>GNU_ARM|GNU</compilerSet>
+        <compilerSet>default</compilerSet>
         <dependencyChecking>true</dependencyChecking>
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
@@ -75,11 +120,33 @@
       </item>
       <item path="GPIO.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="MQTTSNCheck.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="MQTTSNCheck.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Radio.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Radio.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="SPI.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="SPI.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="SensorNet.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SensorNet.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Timing.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Timing.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="UDP.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="UDP.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="nRF24L01P.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>

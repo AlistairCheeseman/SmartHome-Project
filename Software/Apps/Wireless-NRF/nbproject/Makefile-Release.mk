@@ -18,7 +18,7 @@ CC=arm-unknown-linux-gnueabihf-gcc
 CCC=arm-unknown-linux-gnueabihf-g++
 CXX=arm-unknown-linux-gnueabihf-g++
 FC=gfortran
-AS=arm-unknown-linux-gnueabihf-ar
+AS=arm-unknown-linux-gnueabihf-as
 
 # Macros
 CND_PLATFORM=GNU_ARM-Linux-x86
@@ -36,7 +36,12 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/GPIO.o \
+	${OBJECTDIR}/MQTTSNCheck.o \
+	${OBJECTDIR}/Radio.o \
 	${OBJECTDIR}/SPI.o \
+	${OBJECTDIR}/SensorNet.o \
+	${OBJECTDIR}/Timing.o \
+	${OBJECTDIR}/UDP.o \
 	${OBJECTDIR}/main.o
 
 
@@ -69,10 +74,35 @@ ${OBJECTDIR}/GPIO.o: GPIO.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/GPIO.o GPIO.cpp
 
+${OBJECTDIR}/MQTTSNCheck.o: MQTTSNCheck.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MQTTSNCheck.o MQTTSNCheck.cpp
+
+${OBJECTDIR}/Radio.o: Radio.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Radio.o Radio.cpp
+
 ${OBJECTDIR}/SPI.o: SPI.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SPI.o SPI.cpp
+
+${OBJECTDIR}/SensorNet.o: SensorNet.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SensorNet.o SensorNet.cpp
+
+${OBJECTDIR}/Timing.o: Timing.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Timing.o Timing.cpp
+
+${OBJECTDIR}/UDP.o: UDP.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/UDP.o UDP.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}

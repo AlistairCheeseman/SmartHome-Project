@@ -14,11 +14,11 @@ GREP=grep
 NM=nm
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=arm-unknown-linux-gnueabihf-gcc
-CCC=arm-unknown-linux-gnueabihf-g++
-CXX=arm-unknown-linux-gnueabihf-g++
+CC=/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-gcc
+CCC=/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++
+CXX=/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++
 FC=gfortran
-AS=arm-unknown-linux-gnueabihf-ar
+AS=/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-as
 
 # Macros
 CND_PLATFORM=GNU_ARM-Linux-x86
@@ -36,7 +36,12 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/GPIO.o \
+	${OBJECTDIR}/MQTTSNCheck.o \
+	${OBJECTDIR}/Radio.o \
 	${OBJECTDIR}/SPI.o \
+	${OBJECTDIR}/SensorNet.o \
+	${OBJECTDIR}/Timing.o \
+	${OBJECTDIR}/UDP.o \
 	${OBJECTDIR}/main.o
 
 
@@ -62,17 +67,42 @@ LDLIBSOPTIONS=
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/wireless-nrf: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/wireless-nrf ${OBJECTFILES} ${LDLIBSOPTIONS}
+	/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++ -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/wireless-nrf ${OBJECTFILES} ${LDLIBSOPTIONS}
 
 ${OBJECTDIR}/GPIO.o: GPIO.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/GPIO.o GPIO.cpp
 
+${OBJECTDIR}/MQTTSNCheck.o: MQTTSNCheck.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MQTTSNCheck.o MQTTSNCheck.cpp
+
+${OBJECTDIR}/Radio.o: Radio.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Radio.o Radio.cpp
+
 ${OBJECTDIR}/SPI.o: SPI.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SPI.o SPI.cpp
+
+${OBJECTDIR}/SensorNet.o: SensorNet.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SensorNet.o SensorNet.cpp
+
+${OBJECTDIR}/Timing.o: Timing.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Timing.o Timing.cpp
+
+${OBJECTDIR}/UDP.o: UDP.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/UDP.o UDP.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
