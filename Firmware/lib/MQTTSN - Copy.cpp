@@ -4,17 +4,6 @@
 * Created: 28/02/2015 07:53:11
 *  Author: Ali
 */
-void MQTTSN::connect()
-{
-	packet.msgType = CONNECT;
-	packet.flags = (CLEAN_SESSION);
-	packet.duration = KEEPALIVE;
-	packet.clientId =nodeid;
-	unsigned char payload[20];
-	packet.gen_packet(payload, 0x00);
-	network->sendpacket(payload, payload[0]);
-	this->currentState = STATE_WAIT_CONNACK;
-}
 void MQTTSN::tick()
 {
 	network->tick();
@@ -103,40 +92,10 @@ lasttrans = 	lasttrans - this->lastTransmission;
 		this->ping();
 	}*/
 }
-MQTTSN::~MQTTSN()
-{
-}
-/*
-void MQTTSN::setcallback(void(*)(char*,uint8_t*,unsigned int))
-{
-	 this->callback = callback;	
-}*/
-void MQTTSN::disconnect(bool isresponse)
-{
-	packet.msgType = DISCONNECT;
-	unsigned char payload[20];
-	packet.gen_packet(payload, 0x00);
-	network->sendpacket(payload, payload[0]);
-	this->lastTransmission = Timing::millis();
-	if (isresponse != true)
-	this->currentState = STATE_WAIT_DISCONNECT;
-}
-void MQTTSN::ping()
-{
-	packet.msgType = PINGREQ;
-	unsigned char payload[20];
-	packet.gen_packet(payload, 0x00);
-	network->sendpacket(payload, payload[0]);
-	this->lastTransmission = Timing::millis();
-	this->currentState = STATE_WAIT_PINGRESP;
-}
+
 void MQTTSN::pingresponse()
 {
-	packet.msgType = PINGRESP;
-	unsigned char payload[20];
-	packet.gen_packet(payload, 0x00);
-	network->sendpacket(payload, payload[0]);
-	this->lastTransmission = Timing::millis();
+
 }
 
 

@@ -38,3 +38,6 @@
 /Software/Apps/Wireless-NRF/build/
 /Software/Apps/Wireless-NRF/dist/
 /Software/Apps/Wireless-NRF/nbproject/private/
+
+/Firmware/PowerOutlet/Debug/
+/Firmware/PowerOutlet/Release/
