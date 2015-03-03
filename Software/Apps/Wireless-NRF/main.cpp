@@ -26,9 +26,6 @@ int main(int argc, char** argv) {
     int fd = -1;
     int sock = -1;
     uint8_t currentPackLen = 0;
-    /*at the moment the radio will send back whatever is sent to it. so what we send here will get sent back (good for testing) currently set to MQTT-SN connect packet.*/
-    uint8_t test[] = {0x07, 0x04, 0x00, 0x01, 0x0F, 0x8C, 0x28};
-    net->sendpacket(test, 7);
     while (1) {
         net->tick();
          
