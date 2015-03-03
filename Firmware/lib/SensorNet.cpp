@@ -34,6 +34,8 @@ void SensorNet::setup()
 }
 void SensorNet::tick()
 {
+	//force a 200ms wait incase we have just transmitted
+	_delay_ms(200);
 	// if there is data ready
 	if ( radio.available() )
 	{
@@ -43,9 +45,7 @@ void SensorNet::tick()
 			radio.read(receive_payload, len );
 			this->receive_size = len;
 			this->pendingpacket = true;
-	}
-
-	
+	}	
 }
 void SensorNet::sendpacket(const void* payload, const uint8_t len)
 {

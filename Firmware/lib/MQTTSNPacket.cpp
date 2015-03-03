@@ -184,7 +184,7 @@ bool MQTTSNPacket::load_packet(unsigned char * payload)
 	return false;
 }
 /* varlength is the length of the variable part */
-void MQTTSNPacket::gen_packet(unsigned char  (&payloadOut)[20],const uint8_t varLength)
+void MQTTSNPacket::gen_packet(unsigned char  (&payloadOut)[20],uint8_t varLength)
 {
 	if (msgType == CONNECT)
 	{
@@ -244,7 +244,7 @@ void MQTTSNPacket::gen_packet(unsigned char  (&payloadOut)[20],const uint8_t var
 	}
 	else if (msgType == REGISTER)
 	{
-		payloadOut[0] = varLength + 6;
+		payloadOut[0] = varLength + 0x06;
 		payloadOut[1] = this->msgType;
 		payloadOut[2] = (this->topicId >> 8);
 		payloadOut[3] = this->topicId;
@@ -270,7 +270,7 @@ void MQTTSNPacket::gen_packet(unsigned char  (&payloadOut)[20],const uint8_t var
 	else if (msgType == PUBLISH)
 	{
 		this->flags = (this->flags & 0b11110011);
-		payloadOut[0] = 7+varLength;
+		payloadOut[0] = 0x07 + varLength;
 		payloadOut[1] = this->msgType;
 		payloadOut[2] = this->flags;
 		payloadOut[3] = (this-> topicId >>8);

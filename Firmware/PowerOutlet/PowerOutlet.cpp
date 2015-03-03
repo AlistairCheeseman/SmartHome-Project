@@ -24,40 +24,43 @@ int USART0SendByte (char c, FILE *stream);
 int USART0ReceiveByte(FILE *stream);
 void USARTinit(void);
 void setup(void);
-FILE * usart0_str;
 
+FILE * usart0_str;
 SensorNet network;
 MQTTSN app(network,(uint8_t) 0x28);
 
+//NOTE:: app.tick() must be called to handle any replies, and in turn update any status!
 int main(void)
 {
 	setup();
-	_delay_ms(100);
-	//comms.connect();
-	app.connect();
-	
 	_delay_ms(1000);
-		_delay_ms(1000);
-			_delay_ms(1000);
-				_delay_ms(1000);
-					app.tick();
-					_delay_ms(1000);
-						_delay_ms(1000);
-							_delay_ms(1000);
-								_delay_ms(1000);
-									_delay_ms(1000);
-	app.disconnect(false);
 	while(1)
 	{
-	app.tick();
-	//	if (network.pendingpacket == true) //? handle here or in the MQTTSN class?
-		network.sendpacket((const void*)0x28596E72, 4);
-		
-		
-	//	comms.tick(); // this polls the MQTT layer which itself polls the network layer and in turn the radio.
-	//	_delay_ms(100); // wait a bit to ensure we don't over do the tick.
+		printf("CONNECTING\n");
+		while (app.currentState != STATE_ACTIVE)
+		{
+				_delay_ms(2000); //dont spam the network with reconnections.
+				app.connect();
+				app.tick();
+		}
+	printf("CONNECTED\n");
+		//if we get disconnected stop doing work and wait until reconnected.
+		while(app.currentState != STATE_DISCONNECTED)
+		{
+					app.tick(); // process the radio no matter if connected to a MQTT server or not. this is to help the network layer communications.
+			printf("main loop\n");
+			//	if (network.pendingpacket == true) //? handle here or in the MQTTSN class?
+			//network.sendpacket((const void*)0x28596E72, 4);
+			//	comms.tick(); // this polls the MQTT layer which itself polls the network layer and in turn the radio.
+			//	_delay_ms(100); // wait a bit to ensure we don't over do the tick.
+			printf("test publish\n");
+			unsigned char data[1];
+			data[0] =  (unsigned char)0x01;
+			app.publish((unsigned char*)"d/868789/R",data, 0x0A, 0x01);
+			printf("done\n");
+		}
+		printf("DISCONNECTED\n");
 	}
-//	comms.disconnect(false);
 }
 void setup(void)
 {
@@ -66,8 +69,8 @@ void setup(void)
 	//start timers for milli function.
 	Timing::init();
 	//start up mqtt layer, this will also initialize the radio, and the network layer running on the network.
-network.setup(); //ensure network is setup before any MQTT work is done.
-//	comms.setcallback(messageReceived);
+	network.setup(); //ensure network is setup before any MQTT work is done.
+	//	comms.setcallback(messageReceived);
 }
 int USART0SendByte (char c, FILE *stream)
 {

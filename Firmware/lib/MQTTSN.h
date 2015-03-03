@@ -3,8 +3,12 @@
 *
 * Created: 28/02/2015 07:53:11
 * Author: Ali
-//this needs to manage connection, keepalive, disconnection, sleep automatically.
-//it also needs to process the incoming packets sending the relevant response.
+* //this needs to manage connection, keepalive, disconnection, sleep automatically.
+* //it also needs to process the incoming packets sending the relevant response.
+*  There are two types of message processing available.  
+*		cached - a look up table of topics to ID is stored in RAM or EEPROM.
+*		non-cached - every time a publish ( in either direction) is issued a poll to the server to get the id or topic name must also be sent before or after the publish.
+*			current plans are for non cached, caching will be a potential future feature.
 */
 
 
@@ -41,18 +45,24 @@
 #include "SensorNet.h"
 #include "MQTTSNPacket.h"
 #include "Timing.h"
+#include <string.h>
 
 class MQTTSN
 {
+	// need to create a table in ram with each messageId with its corresponding status, incase requests get mixed up or wanything which is a big issue right now.
+	
+	
 	//variables
 	public:
+	uint8_t currentState;
 	protected:
 	private:
 	SensorNet* network;
 	uint8_t clientId;
 	MQTTSNPacket packet;
-	uint8_t currentState;
 	unsigned long lastTransmission;
+	uint8_t msgid;
+	uint8_t topicIdResp;
 
 	//functions
 	public:
@@ -61,15 +71,19 @@ class MQTTSN
 		void tick(void);
 		void connect(void);
 		void disconnect(bool isresponse);
-		void subscribe();
-		void unsubscribe();
-		void publish();
+		void subscribe(unsigned char *topicName, uint8_t topicNameLen);
+		void unsubscribe(unsigned char *topicName, uint8_t topicNameLen);
+		void publish(unsigned char *topicName,unsigned  char payload[3], uint8_t topicNameLen, uint8_t payloadlen);
+		
 	protected:
 	private:
 	MQTTSN( const MQTTSN &c );
 	MQTTSN& operator=( const MQTTSN &c );
 	void ping(void);
 	void pingresponse(void);
+	//get topic id hopes that there are no new messages inbetween the messages to get the id
+	int gettopicid(unsigned char *topicNameIn, uint8_t length);
+	int getmsgid();
 }; //MQTTSN
 
 #endif //__MQTTSN_H__

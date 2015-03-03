@@ -98,7 +98,7 @@ class MQTTSNPacket
 			void sanitise();
 			/* in and out functions*/
 			/* put all the variables into a assembled packet., return packet size*/
-			void gen_packet(unsigned char  (&payloadOut)[20], const uint8_t varLength);
+			void gen_packet(unsigned char  (&payloadOut)[20], uint8_t varLength);
 			/* Strip down the packet and load it into the class variables. */
 			bool load_packet(unsigned char * payload);
 	protected:
