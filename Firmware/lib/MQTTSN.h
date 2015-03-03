@@ -74,9 +74,10 @@ class MQTTSN
 		void subscribe(unsigned char *topicName, uint8_t topicNameLen);
 		void unsubscribe(unsigned char *topicName, uint8_t topicNameLen);
 		void publish(unsigned char *topicName,unsigned  char payload[3], uint8_t topicNameLen, uint8_t payloadlen);
-		
+		void setCallback(void(*)(uint16_t topicId, uint8_t *payload,unsigned int payloadLen));
 	protected:
 	private:
+	void (*callback)(uint16_t topicId, uint8_t *payload,unsigned int payloadLen);
 	MQTTSN( const MQTTSN &c );
 	MQTTSN& operator=( const MQTTSN &c );
 	void ping(void);

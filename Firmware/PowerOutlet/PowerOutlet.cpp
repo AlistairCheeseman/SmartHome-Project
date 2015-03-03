@@ -20,14 +20,40 @@
 #include "MQTTSN.h"
 #include "SensorNet.h"
 
+FILE * usart0_str;
+SensorNet network;
+MQTTSN app(network,(uint8_t) 0x28);
+
 int USART0SendByte (char c, FILE *stream);
 int USART0ReceiveByte(FILE *stream);
 void USARTinit(void);
 void setup(void);
 
-FILE * usart0_str;
-SensorNet network;
-MQTTSN app(network,(uint8_t) 0x28);
+
+
+void callback(uint16_t topicId, uint8_t *payload,unsigned int payloadLen) {
+	printf("\n");
+	printf("Received topic update on ID: %d\n", topicId);
+	printf("Payload :%c \n", payload[0]);
+	printf("\n");
+	/*switch (topicId)
+	{
+		case 1:*/
+		if (payload[0] == 0x31)
+		{
+		ID3_PORT |= (1<<ID3_PIN);
+		} 
+		else
+		{
+		ID3_PORT &= ~(1<<ID3_PIN);
+		}/*break;
+		case 2:
+		
+		break;	
+	}*/
+}
+
+
 
 //NOTE:: app.tick() must be called to handle any replies, and in turn update any status!
 int main(void)
@@ -44,21 +70,23 @@ int main(void)
 				app.tick();
 		}
 	printf("CONNECTED\n");
-		//if we get disconnected stop doing work and wait until reconnected.
+	//subscribe to the topics here, we only need to subscribe to the State requests for outputs as they are the only things that can make it change.
+	app.subscribe((unsigned char*)"d/"MAC_SUFF"/"ID3"/"TOPIC_STATUS_REQUEST, 0x0C);
+//	app.subscribe((unsigned char*)"d/"MAC_SUFF"/"ID3"/"TOPIC_STATUS_REQUEST, 0x0C);
+	printf("SUBSCRIBED TO: %s", "d/"MAC_SUFF"/"ID3"/"TOPIC_STATUS_REQUEST);
+			//if we get disconnected stop doing work and wait until reconnected.
 		while(app.currentState != STATE_DISCONNECTED)
 		{
 					app.tick(); // process the radio no matter if connected to a MQTT server or not. this is to help the network layer communications.
 			printf("main loop\n");
-			//	if (network.pendingpacket == true) //? handle here or in the MQTTSN class?
-			//network.sendpacket((const void*)0x28596E72, 4);
-			//	comms.tick(); // this polls the MQTT layer which itself polls the network layer and in turn the radio.
-			//	_delay_ms(100); // wait a bit to ensure we don't over do the tick.
-			printf("test publish\n");
+				_delay_ms(500); // wait a bit to ensure we don't over do the tick.
 			unsigned char data[1];
-			data[0] =  (unsigned char)0x01;
-			app.publish((unsigned char*)"d/868789/R",data, 0x0A, 0x01);
-			printf("done\n");
-		}
+			data[0] =  (unsigned char)0x31;
+			app.publish((unsigned char*)(unsigned char*)"d/"MAC_SUFF"/"ID3"/"TOPIC_STATUS_REQUEST, data, 0x0C, 0x01);
+		//	app.publish((unsigned char*)"d/"MAC_SUFF"/"ID3"/"TOPIC_STATUS_UPDATE,data, 0x0C, 0x01);
+		//	app.publish((unsigned char*)"d/"MAC_SUFF"/"ID3"/"TOPIC_STATUS_REQUEST,data, 0x0C, 0x01);
+			app.tick(); 
+	}
 		printf("DISCONNECTED\n");
 	}
 }

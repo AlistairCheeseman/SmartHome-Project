@@ -49,6 +49,8 @@ void SensorNet::tick()
 }
 void SensorNet::sendpacket(const void* payload, const uint8_t len)
 {
+		_delay_ms(200); //slow down transmission to allow recieve
+	this->tick(); //process any pending packets
 	// First, stop listening so we can talk
 	radio.stopListening();
 	// Send the final one back.

@@ -49,6 +49,7 @@ void MQTTSN::tick()
 	
 	if (network->pendingpacket)
 	{//if there is a pending app layer packet that needs to be processed.
+		printf("RECEIVED MESSAGE\n");
 		packet.sanitise();
 		void *payload;
 		uint8_t len;
@@ -72,6 +73,24 @@ void MQTTSN::tick()
 			// we have been asked for a ping response, send it. we dont need to do anything on the cient end.
 			this->pingresponse();
 			break;
+			case PUBLISH:
+			// there has been an update to a registered topic. callback to the main program with the data and the topic id.
+			printf("UPDATE TOPIC RECIEVED\n");
+			printf("UPDATE TOPIC RECIEVED\n");
+			printf("UPDATE TOPIC RECIEVED\n");
+			printf("UPDATE TOPIC RECIEVED\n");
+			if ((packet.flags & 0b00000011) == TOPICID_NUM)
+			{
+				
+				//at the moment only working off ID numbers.
+				if (callback)
+				{
+					int len = packet.length - 0x07;
+					callback(packet.topicId, packet.data, len);
+				}
+			}
+			//only QOS0 supported so we do not need to send a reply.
+			break;
 			case DISCONNECT:
 			//if server initiates, respond with disconnect.
 			//if client initiates - do nothing.
@@ -88,11 +107,16 @@ void MQTTSN::tick()
 			case PUBACK:
 			this->currentState = STATE_ACTIVE;
 			break;
+			case SUBACK:
+			this->currentState = STATE_ACTIVE;
+			break;
 			case REGACK:
 			//write the topic id to the look up table. for the topic.
 			this->topicIdResp = packet.topicId;
 			this->currentState = STATE_ACTIVE;
 			break;
+			case SUBSCRIBE:
+			//should not recieve a subscribe request as a client.
 			case REGISTER:
 			// for the time being we are ignoring this util cached mode is enabled.
 			break;
@@ -179,7 +203,7 @@ void MQTTSN::unsubscribe(unsigned char *topicName, uint8_t topicNameLen)
 	uint8_t topicid = this->gettopicid(topicName, topicNameLen);
 	//send unsubscribe, wait for UNSUBACK
 	packet.sanitise();
-	
+	packet.topicId = topicid;
 
 	this->lastTransmission = Timing::millis();
 }
@@ -190,21 +214,18 @@ void MQTTSN::publish(unsigned char *topicName,unsigned char *payloaddata, uint8_
 	//wait for response with ID (REGACK)
 	uint8_t topicid = this->gettopicid(topicName, topicNameLen);
 	//send publish, wait for PUBACK
-	printf("begin main publish\n");
 	packet.sanitise();
 	packet.msgType = PUBLISH;
 	packet.flags = (QOS_NORMAL|TOPICID_NUM);
 	packet.topicId = topicid;
 	packet.msgId = 0x0000; //no qos
-		for (t = 0; t< payloadlen; t++)
-		{
-			packet.data[t] = payloaddata[t];
-		}
+	for (t = 0; t< payloadlen; t++)
+	{
+		packet.data[t] = payloaddata[t];
+	}
 	unsigned char payload[20];
 	packet.gen_packet(payload, payloadlen);
-printf("PACKET GENERATED\n");
 	network->sendpacket(payload, payload[0]);
-printf("PUBLISH SENT\n");
 	this->currentState = STATE_ACTIVE; // only if >QOS0 do we have to set waiting reply.
 	this->lastTransmission = Timing::millis();
 }
@@ -212,7 +233,6 @@ int MQTTSN::getmsgid()
 {
 	this->msgid ++;
 	return this->msgid;
-	
 }
 int MQTTSN::gettopicid(unsigned char *topicNameIn, uint8_t length)
 {
@@ -228,7 +248,9 @@ int MQTTSN::gettopicid(unsigned char *topicNameIn, uint8_t length)
 	}
 	unsigned char payload[20];
 	packet.gen_packet(payload, length);
+	this->currentState = STATE_WAIT_REGISTER;
 	network->sendpacket(payload, payload[0]);
+	int count = 0;
 	while (!hadresponse)
 	{
 		this->tick();
@@ -237,9 +259,22 @@ int MQTTSN::gettopicid(unsigned char *topicNameIn, uint8_t length)
 			//WE HAVE RESPONSE !;
 			hadresponse = true;
 		}
+		count++;
+		_delay_ms(500);
+		if (count > 8)
+		{
+			//if we have waited for a bit resend the packet.
+			network->sendpacket(payload, payload[0]);
+			count = 0;
+			if (this->currentState == STATE_DISCONNECTED)
+			{
+				//dont get stuck if connectivity is lost.
+				return 0;
+			}
+		}
 	}
-	uint8_t id = 1;
-	printf("Topic ID: %d\n", id);
+	// this is sometimes zero?
+	uint8_t id = this->topicIdResp;
 	this->topicIdResp = 0; //stop it polluting other things.
 	return id;
 }
