@@ -160,7 +160,7 @@ char* SQL::getSRDEVTopic(char* mac, char* id) {
         }
     }
     char *output = new char[200];
-    sprintf(output, "dev/%s/SR", SRTopic);
+    sprintf(output, "d/%s/P", SRTopic);
     return output;
 }
 
@@ -198,7 +198,7 @@ char* SQL::getSRMAPTopic(char* room, char* device, char* setting) {
         }
     }
     char *output = new char[200];
-    sprintf(output, "dev/%s/%s/SR", DevId, ControlId);
+    sprintf(output, "d/%s/%s/P", DevId, ControlId);
     return output;
 }
 

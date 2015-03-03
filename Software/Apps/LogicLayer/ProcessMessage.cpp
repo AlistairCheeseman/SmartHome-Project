@@ -26,7 +26,7 @@ void ProcessMessage::messageReceived(char *topic, char *payload, int payloadlen,
     strcpy(longtopic, topic);
     char* devtype;
     devtype = strtok(longtopic, "/"); // this indicates if the topic is addressing a device or a logical mapping
-    if (!strcmp(devtype, "dev")) // if it is a physical device.
+    if (!strcmp(devtype, "d")) // if it is a physical device.
     {
 
         char* mac;
@@ -43,7 +43,7 @@ void ProcessMessage::messageReceived(char *topic, char *payload, int payloadlen,
         printf("Output ID: %s\n", id);
         if (!strcmp(type, "R"))
             printf("Message Type: %s\n", "Request");
-        else if (!strcmp(type, "SR"))
+        else if (!strcmp(type, "P"))
             printf("Message Type: %s\n", "State Change Request");
         else if (!strcmp(type, "S"))
             printf("Message Type: %s\n", "State Update");
@@ -66,7 +66,7 @@ void ProcessMessage::messageReceived(char *topic, char *payload, int payloadlen,
             char* publishtopic = sqldb->getMAPDevtopic(mac, id);
             printf("ACTION: Publishing new DEV state to MAP Layer: %s \n", publishtopic);
             sender->publish(NULL, publishtopic, strlen(publishtopic), payload);
-        } else if (!strcmp(type, "SR")) {
+        } else if (!strcmp(type, "P")) {
             //nothing needs to be done for a state request, this is handled by the device.
             // the state request is solely on the device layer for the actual request of the state change
             printf("ACTION: State Request..........\nnot doing anything with packet.\n");
@@ -88,7 +88,7 @@ void ProcessMessage::messageReceived(char *topic, char *payload, int payloadlen,
         printf("Setting on Device: %s\n", setting);
         if (!strcmp(type, "R"))
             printf("Message Type: %s\n", "Request");
-        else if (!strcmp(type, "SR"))
+        else if (!strcmp(type, "P"))
             printf("Message Type: %s\n", "State Change Request");
         else if (!strcmp(type, "S"))
             printf("Message Type: %s\n", "State Update");
