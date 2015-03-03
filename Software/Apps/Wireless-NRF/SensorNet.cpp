@@ -45,7 +45,7 @@ void SensorNet::tick() {
 
 
         if (debug)
-            printf("Got response size=%i value=%s\n\r", len, receive_payload);
+         fprintf(stdout,"Got response size=%i value=%s\n\r", len, receive_payload);
 
         this->pendingpacket = true;
 

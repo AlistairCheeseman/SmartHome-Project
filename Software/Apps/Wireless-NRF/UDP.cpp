@@ -47,7 +47,7 @@ int UDP::createSocket(const char * host, const char* port) {
     // Lookup address
     ret = getaddrinfo(host, port, &hints, &result);
     if (ret != 0) {
-        printf( "getaddrinfo: %s\n", gai_strerror(ret));
+       fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(ret));
         exit(EXIT_FAILURE);
     }
 
@@ -90,7 +90,7 @@ void UDP::sendpacket(const void* payload)
     size_t sent, len = ((uint8_t*)payload)[0];
     sent = send(this->sock, payload, len, 0);
     if (sent != len ) {
-        printf("Warning: only sent %d or %d bytes\n", (int)sent, (int) len);
+      fprintf(stderr,"Warning: only sent %d or %d bytes\n", (int)sent, (int) len);
 
     }
 }
@@ -102,7 +102,7 @@ void *UDP::getpacket(uint8_t& read)
     bytes_read = recv(sock, buffer, 32, 0);
     if (bytes_read <0)
     {
-            printf("recieve failed");
+           fprintf(stderr,"recieve failed");
     }
     if (bytes_read > 33)
     {
