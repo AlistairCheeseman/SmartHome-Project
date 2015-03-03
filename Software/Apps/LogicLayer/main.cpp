@@ -6,6 +6,7 @@
  */
 
 #include <cstdlib>
+#include <signal.h>
 #include <mosquittopp.h>
 #include <string.h>
 
@@ -15,6 +16,27 @@
 
 using namespace std;
 
+
+bool keep_running = true;
+static void termination_handler (int signum)
+{
+    switch(signum) {
+        case SIGHUP:  fprintf(stderr, "Got hangup signal."); break;
+        case SIGTERM: fprintf(stderr, "Got termination signal."); break;
+        case SIGINT:  fprintf(stderr, "Got interupt signal."); break;
+    }
+
+    // Signal the main thead to stop
+    keep_running = false;
+}
+
+
+
+
+
+
+
+
 /*
  * 
  */
@@ -23,40 +45,41 @@ int main(int argc, char** argv) {
     char *database = new char[50];
     char *mqttserver = new char[50];
     int port = 1883;
-/*    if (argc > 1)
-    {
-        for (count = 1; count < argc; count++)
-        {
-            printf("argv[%d] = %s\n", count, argv[count]);
-        }
-    }*/
+    
+    // Setup signal handlers
+    signal(SIGTERM, termination_handler);
+    signal(SIGINT, termination_handler);
+    signal(SIGHUP, termination_handler);
+
+    
+    
      if (argc == 4)
     {
          strcpy(database, argv[1]);
-        printf("Database: %s\n", database);
+        fprintf(stdout,"Database: %s\n", database);
         strcpy(mqttserver, argv[2]);
-                 printf("Mqtt Server: %s\n", mqttserver);
+                 fprintf(stdout,"Mqtt Server: %s\n", mqttserver);
                  port = atoi(argv[3]);
-                 printf("Port: %d\n", port);
+                 fprintf(stdout,"Port: %d\n", port);
     }  
      else if (argc == 3)
     {
          strcpy(database, argv[1]);
-        printf("Database: %s\n", database);
+        fprintf(stdout,"Database: %s\n", database);
         strcpy(mqttserver, argv[2]);
-                 printf("Mqtt Server: %s\n", mqttserver);      
-                 printf("Port: %d\n", port);
+                 fprintf(stdout,"Mqtt Server: %s\n", mqttserver);      
+                 fprintf(stdout,"Port: %d\n", port);
     }    
     else
     {
-        printf("Correct Usage:\n");
-        printf("logiclayer <dblocation> <mqtthost> [<mqttport>]\n");
-        printf("where:\n");
-        printf("dblocation is the location of the sqlite db\nmqtthost is the ip address\nmqttport is the mqtt server port\n\n");
-        printf("The values are normally:\n");
-        printf("Database: /var/db/smarthome\n");
-        printf("MQTT Server: the local IP Address\n");
-        printf("MQTT Port: 1883\n");
+        fprintf(stdout,"Correct Usage:\n");
+        fprintf(stdout,"logiclayer <dblocation> <mqtthost> [<mqttport>]\n");
+        fprintf(stdout,"where:\n");
+        fprintf(stdout,"dblocation is the location of the sqlite db\nmqtthost is the ip address\nmqttport is the mqtt server port\n\n");
+        fprintf(stdout,"The values are normally:\n");
+        fprintf(stdout,"Database: /var/db/smarthome\n");
+        fprintf(stdout,"MQTT Server: the local IP Address\n");
+        fprintf(stdout,"MQTT Port: 1883\n");
         return 0;
     }
     
@@ -69,14 +92,13 @@ int main(int argc, char** argv) {
     int rc;
     //for time being mosquitto server and database location are hard coded. todo:get vars from arguments when program called.
     mqttstor = new mqtt("logiclayer", mqttserver, port, database);
-    while (1) {
+    while (keep_running) {
        rc = mqttstor->loop();
         if (rc) {
             mqttstor->reconnect();
         } 
     }
     mosqpp::lib_cleanup();
-    delete mqttstor;
     return 0;
 }
 

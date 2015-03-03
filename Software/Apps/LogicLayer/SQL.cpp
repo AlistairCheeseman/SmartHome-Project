@@ -90,10 +90,10 @@ void SQL::writePower(float pf, float pow) {
     /* Execute SQL statement */
     rc = sqlite3_exec(db, sql, c_callback, this, &zErrMsg);
     if (rc != SQLITE_OK) {
-        printf("SQL error: %s\n", zErrMsg);
+          fprintf(stderr, "SQL error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
     } else {
-        printf("Records stored successfully\n");
+         fprintf(stdout, "Records stored successfully\n");
     }
     delete sql;
     delete[] buffer;
@@ -108,9 +108,9 @@ int SQL::callback(int argc, char** argv, char** azColName) {
     /* just print returned results for time being.*/
     int i;
     for (i = 0; i < argc; i++) {
-        printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+          fprintf(stdout, "%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
     }
-    printf("\n");
+      fprintf(stdout, "\n");
     return 0;
 }
 
@@ -274,10 +274,10 @@ void SQL::setSMAPVal(char* room, char* device, char* setting, char* MAPVal) {
   char *zErrMsg = 0;
      rc = sqlite3_exec(db, sql, c_callback, this, &zErrMsg);
     if (rc != SQLITE_OK) {
-        printf("SQL error: %s\n", zErrMsg);
+          fprintf(stderr, "SQL error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
     } else {
-       // printf("Records stored successfully\n");
+       // fprintf(stdout,"Records stored successfully\n");
     }
     
      sprintf(sql, UpdStatement,MAPVal, SensorId);
@@ -285,10 +285,10 @@ void SQL::setSMAPVal(char* room, char* device, char* setting, char* MAPVal) {
      zErrMsg = 0;
      rc = sqlite3_exec(db, sql, c_callback, this, &zErrMsg);
     if (rc != SQLITE_OK) {
-        printf("SQL error: %s\n", zErrMsg);
+          fprintf(stderr, "SQL error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
     } else {
-       // printf("Records stored successfully\n");
+       // fprintf(stdout,"Records stored successfully\n");
     }
     
     
