@@ -1,0 +1,44 @@
+#!/bin/ash
+#
+# Wireless - UDP bridge for MQTT
+
+. /etc/init.d/functions
+
+PIDFILE=/var/run/wirelessnrf.pid
+
+case "$1" in
+start)
+	if [ -r "$PIDFILE" ]; then
+		echo "Service Wireless-bridge already running."
+	else
+		echo -n "Starting Wireless-bridge server: "
+		/sbin/start-stop-daemon -Sbx /usr/bin/wireless-nrf -mp $PIDFILE
+		check_status
+	fi
+	;;
+stop)
+	if [ -r "$PIDFILE" ]; then
+		echo -n "Stopping Wireless-bridge server: "
+		kill `cat "$PIDFILE"`
+		check_status
+		rm -r $PIDFILE
+	else
+		echo "Service Wireless-bridge not running."
+	fi
+	;;
+restart)
+	$0 stop
+	$0 start
+	;;
+
+status)
+	if [ -r "$PIDFILE" ]; then
+		echo "Service Wireless-bridge running (PID $(cat "$PIDFILE"))."
+	else
+		echo "Service Wireless-bridge not running."
+	fi
+	;;
+*)
+	echo "Usage: $0 {start|stop|restart|status}"
+	exit 1
+esac
