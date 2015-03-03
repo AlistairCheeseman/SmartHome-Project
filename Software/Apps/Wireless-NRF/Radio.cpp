@@ -105,7 +105,7 @@ uint8_t Radio::write_register(uint8_t reg, uint8_t value) {
     uint8_t status;
 
     if (debug)
-        printf("write_register(%02x,%02x)\r\n", reg, value);
+        fprintf(stdout, "write_register(%02x,%02x)\r\n", reg, value);
 
     csn(GPIO_VAL_LOW);
     status = spidev->transfer(W_REGISTER | (RW_MASK & reg));
@@ -232,12 +232,12 @@ void Radio::enableDynamicPayloads(void) {
     // If it didn't work, the features are not enabled
     if (!read_register(FEATURE)) {
         // So enable them and try again
-        printf("ERROR SETTING DYNAMIC PAYLOAD!!!!!!!!!!");
+      fprintf(stderr,"ERROR SETTING DYNAMIC PAYLOAD!!!!!!!!!!");
         write_register(FEATURE, read_register(FEATURE) | _BV(EN_DPL));
 
     }
   if (debug)
-    printf("FEATURE=%i\r\n", read_register(FEATURE));
+   fprintf(stdout,"FEATURE=%i\r\n", read_register(FEATURE));
 
     // Enable dynamic payload on all pipes
     //
@@ -320,14 +320,14 @@ void Radio::printDetails(void) {
     print_byte_register("CONFIG", CONFIG);
     print_byte_register("DYNPD/FEATURE", DYNPD, 2);
 
-    printf("Data Rate\t = %s\n", rf24_datarate_e_str_P[getDataRate()]);
-    printf("Model\t\t = %s\n", rf24_model_e_str_P[isPVariant()]);
-    printf("CRC Length\t = %s\n", rf24_crclength_e_str_P[getCRCLength()]);
-    printf("PA Power\t = %s\n", rf24_pa_dbm_e_str_P[getPALevel()]);
+   fprintf(stdout,"Data Rate\t = %s\n", rf24_datarate_e_str_P[getDataRate()]);
+  fprintf(stdout,"Model\t\t = %s\n", rf24_model_e_str_P[isPVariant()]);
+    fprintf(stdout,"CRC Length\t = %s\n", rf24_crclength_e_str_P[getCRCLength()]);
+   fprintf(stdout,"PA Power\t = %s\n", rf24_pa_dbm_e_str_P[getPALevel()]);
 }
 
 void Radio::print_status(uint8_t status) {
-    printf("STATUS\t\t = 0x%02x RX_DR=%x TX_DS=%x MAX_RT=%x RX_P_NO=%x TX_FULL=%x\r\n",
+  fprintf(stdout,"STATUS\t\t = 0x%02x RX_DR=%x TX_DS=%x MAX_RT=%x RX_P_NO=%x TX_FULL=%x\r\n",
             status,
             (status & _BV(RX_DR)) ? 1 : 0,
             (status & _BV(TX_DS)) ? 1 : 0,
@@ -349,28 +349,28 @@ uint8_t Radio::get_status(void) {
 
 void Radio::print_byte_register(const char* name, uint8_t reg, uint8_t qty) {
     char extra_tab = strlen(name) < 8 ? '\t' : 0;
-    printf("%s\t%c =", name, extra_tab);
+  fprintf(stdout,"%s\t%c =", name, extra_tab);
     while (qty--)
-        printf(" 0x%02x", read_register(reg++));
-    printf("\r\n");
+        fprintf(stdout," 0x%02x", read_register(reg++));
+   fprintf(stdout,"\r\n");
 }
 
 void Radio::print_address_register(const char* name, uint8_t reg, uint8_t qty) {
     char extra_tab = strlen(name) < 8 ? '\t' : 0;
-    printf("%s\t%c =", name, extra_tab);
+  fprintf(stdout,"%s\t%c =", name, extra_tab);
 
     while (qty--) {
         uint8_t buffer[5];
         read_register(reg++, buffer, sizeof buffer);
 
-        printf(" 0x");
+      fprintf(stdout," 0x");
         uint8_t* bufptr = buffer + sizeof buffer;
         while (--bufptr >= buffer)
-            printf("%02x", *bufptr);
+           fprintf(stdout,"%02x", *bufptr);
 
     }
 
-    printf("\r\n");
+   fprintf(stdout,"\r\n");
 }
 
 rf24_datarate_e Radio::getDataRate(void) {
@@ -484,7 +484,7 @@ bool Radio::write(const void* buf, uint8_t len) {
     do {
         status = read_register(OBSERVE_TX, &observe_tx, 1);
         if (debug)
-            printf("%.X ", observe_tx);
+          fprintf(stdout,"%.X ", observe_tx);
     } while (!(status & (_BV(TX_DS) | _BV(MAX_RT))) && (timing->__millis() - sent_at < timeout));
 
     // The part above is what you could recreate with your own interrupt handler,
@@ -503,14 +503,14 @@ bool Radio::write(const void* buf, uint8_t len) {
 
     result = tx_ok;
     if (debug)
-        printf(result ? "...OK." : "...Failed");
+       fprintf(stdout,result ? "...OK." : "...Failed");
 
     // Handle the ack packet
     if (ack_payload_available) {
         ack_payload_length = getDynamicPayloadSize();
         if (debug) {
-            printf("[AckPacket]/");
-            printf("\n%d", ack_payload_length);
+         fprintf(stdout,"[AckPacket]/");
+          fprintf(stdout,"\n%d", ack_payload_length);
         }
     }
 
@@ -549,7 +549,7 @@ uint8_t Radio::write_payload(const void* buf, uint8_t len) {
 
     if (debug)
     {
-    printf("[Writing %u bytes %u blanks]",data_len,blank_len);
+   fprintf(stdout,"[Writing %u bytes %u blanks]",data_len,blank_len);
     }
     csn(GPIO_VAL_LOW);
     status = spidev->transfer(W_TX_PAYLOAD);

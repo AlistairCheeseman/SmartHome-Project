@@ -34,7 +34,7 @@ int main(int argc, char** argv) {
             void *packet = net->getpacket(currentPackLen);
             if (packet && currentPackLen) {
                 if (MQTTSNCheck::verifyPacket(packet, currentPackLen) == true) {
-                    printf("Wireless --> UDP\n");
+                  fprintf(stdout,"Wireless --> UDP\n");
                     udp->sendpacket(packet);
                 }
             }
@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
             void *packet = udp->getpacket(currentPackLen);
             if (packet && currentPackLen) {
                 if (MQTTSNCheck::verifyPacket(packet, currentPackLen) == true) {
-                    printf("UDP --> Wireless\n");
+                  fprintf(stdout,"UDP --> Wireless\n");
                     net->sendpacket(packet, currentPackLen);
                 }
                 currentPackLen = 0;

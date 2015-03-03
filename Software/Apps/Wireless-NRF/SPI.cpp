@@ -79,9 +79,9 @@ void SPI::init() {
     if (ret == -1)
         pabort("can't get max speed hz");
 
-    printf("spi mode: 0x%x\n", mode);
-    printf("bits per word: %d\n", bits);
-    printf("max speed: %d Hz (%d KHz)\n", speed, speed / 1000);
+   fprintf(stdout,"spi mode: 0x%x\n", mode);
+ fprintf(stdout,"bits per word: %d\n", bits);
+  fprintf(stdout,"max speed: %d Hz (%d KHz)\n", speed, speed / 1000);
 
 
 }

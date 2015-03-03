@@ -31,7 +31,7 @@ mqtt::~mqtt() {
 
 void mqtt::on_connect(int rc)
 {
-	printf("Connected with code %d.\n", rc);
+	fprintf(stdout,"Connected with code %d.\n", rc);
 	if(rc == 0){
 		/* Only attempt to subscribe on a successful connect. */
             //subscribe to every topic as all requests will pass through this program.
@@ -52,5 +52,5 @@ void mqtt::on_message(const struct mosquitto_message *message)
 
 void mqtt::on_subscribe(int mid, int qos_count, const int *granted_qos)
 {
-	printf("Subscription succeeded.\n");
+	fprintf(stdout,"Subscription succeeded.\n");
 }
