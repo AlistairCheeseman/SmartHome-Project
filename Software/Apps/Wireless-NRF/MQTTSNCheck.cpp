@@ -13,7 +13,7 @@ bool MQTTSNCheck::verifyPacket(void* payload, uint8_t length) {
         return false;
     }
     if (buf[0] != length) {
-        printf("ERROR: PACKET INVALID: read %d bytes but header states length is %d\n", (int) buf[0], (int) length);
+        printf("ERROR: PACKET INVALID: read %d bytes but header states length is %d\n", (int)length, (int) buf[0]);
         return false;
     }
     for (int q = 0; q < length; q++)
