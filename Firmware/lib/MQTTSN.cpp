@@ -49,7 +49,6 @@ void MQTTSN::tick()
 	
 	if (network->pendingpacket)
 	{//if there is a pending app layer packet that needs to be processed.
-		printf("RECEIVED MESSAGE\n");
 		packet.sanitise();
 		void *payload;
 		uint8_t len;
@@ -75,13 +74,8 @@ void MQTTSN::tick()
 			break;
 			case PUBLISH:
 			// there has been an update to a registered topic. callback to the main program with the data and the topic id.
-			printf("UPDATE TOPIC RECIEVED\n");
-			printf("UPDATE TOPIC RECIEVED\n");
-			printf("UPDATE TOPIC RECIEVED\n");
-			printf("UPDATE TOPIC RECIEVED\n");
 			if ((packet.flags & 0b00000011) == TOPICID_NUM)
 			{
-				
 				//at the moment only working off ID numbers.
 				if (callback)
 				{
@@ -115,6 +109,12 @@ void MQTTSN::tick()
 			this->topicIdResp = packet.topicId;
 			this->currentState = STATE_ACTIVE;
 			break;
+						case UNSUBSCRIBE:
+						
+						break;
+						case UNSUBACK:
+						
+						break;
 			case SUBSCRIBE:
 			//should not recieve a subscribe request as a client.
 			case REGISTER:
@@ -181,17 +181,21 @@ void MQTTSN::disconnect(bool isresponse)
 }
 void MQTTSN::subscribe(unsigned char *topicName, uint8_t topicNameLen)
 {
-	//lookup the topic id.( send REGISTER)
-	//wait for response with ID (REGACK)
-	uint8_t topicid = this->gettopicid(topicName, topicNameLen);
+	int t;
 	//send subscribe, wait for SUBACK
 	packet.sanitise();
 	packet.msgType = SUBSCRIBE;
-	packet.flags = (QOS_NORMAL|TOPICID_NUM);
+	//THE TOPICID FLAGS ARE CUSTOM FOR SUBSCRIBE!!!!!/UNSUBSCRIBE!!!!!	//THE TOPICID FLAGS ARE CUSTOM FOR SUBSCRIBE!!!!!/UNSUBSCRIBE!!!!!
+	packet.flags = (QOS_NORMAL|SUBS_TOPICID_NAME);
 	packet.msgId = getmsgid();
-	packet.topicId = topicid;
+	for (t=0;t<topicNameLen; t++)
+	{
+		packet.topicname[t] = topicName[t];
+	}
+	
+	
 	unsigned char payload[20];
-	packet.gen_packet(payload, 0x00);
+	packet.gen_packet(payload, topicNameLen);
 	network->sendpacket(payload, payload[0]);
 	this->currentState = STATE_WAIT_SUBACK;
 	this->lastTransmission = Timing::millis();
@@ -199,6 +203,8 @@ void MQTTSN::subscribe(unsigned char *topicName, uint8_t topicNameLen)
 void MQTTSN::unsubscribe(unsigned char *topicName, uint8_t topicNameLen)
 {
 	//lookup the topic id.( send REGISTER)
+	
+		//THE TOPICID FLAGS ARE CUSTOM FOR SUBSCRIBE!!!!!/UNSUBSCRIBE!!!!!	//THE TOPICID FLAGS ARE CUSTOM FOR SUBSCRIBE!!!!!/UNSUBSCRIBE!!!!!
 	//wait for response with ID (REGACK)
 	uint8_t topicid = this->gettopicid(topicName, topicNameLen);
 	//send unsubscribe, wait for UNSUBACK
@@ -277,4 +283,8 @@ int MQTTSN::gettopicid(unsigned char *topicNameIn, uint8_t length)
 	uint8_t id = this->topicIdResp;
 	this->topicIdResp = 0; //stop it polluting other things.
 	return id;
+}
+void MQTTSN::setCallback(void(*callbackfunc)(uint16_t topicId, uint8_t *payload,unsigned int payloadLen))
+{
+	this->callback = callbackfunc;
 }

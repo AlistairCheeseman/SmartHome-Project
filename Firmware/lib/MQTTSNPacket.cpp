@@ -108,7 +108,8 @@ bool MQTTSNPacket::load_packet(unsigned char * payload)
 	/* END QOS L2 */
 	else if ((payload[1] == SUBSCRIBE)|(payload[1] == UNSUBSCRIBE))
 	{
-		/*VARIABLE LENGTH MESSAGE (FORCE FIXED) */
+		//todo FIX!
+		//CANNOT USE TOPIC ID FOR SUBS/UNSUBS!!!!
 		//only works for topicID Not topic name. this is to keep packet length short.
 		this->flags = 	payload[2];
 		if (payload[1] == SUBSCRIBE)
@@ -116,7 +117,9 @@ bool MQTTSNPacket::load_packet(unsigned char * payload)
 		if (payload[1] == UNSUBSCRIBE)
 		this->flags = this->flags & 0b00000011;
 		this->msgId	 = (payload[3] << 8)|payload[4];
+		
 		this->topicId	 = (payload[5] << 8)|payload[6] ;
+		
 		return true;
 	}
 	else if (payload[1] == SUBACK)
@@ -305,21 +308,24 @@ void MQTTSNPacket::gen_packet(unsigned char  (&payloadOut)[20],uint8_t varLength
 	}
 	/* END QOS L2 */
 	else if ((msgType == SUBSCRIBE)|(msgType == UNSUBSCRIBE))
-	{
-		/*VARIABLE LENGTH MESSAGE (FORCE FIXED) */
-		//only works for topicID Not topic name. this is to keep packet length short.
+	{//CANNOT USE TOPIC ID FOR SUBS/UNSUBS!!!!
+
+		int t;
 		if (msgType == SUBSCRIBE)
 		this->flags = this->flags & 0b11100011;
 		if (msgType == UNSUBSCRIBE)
 		this->flags = this->flags & 0b00000011;
 		
-		payloadOut[0] = 0x07;
+		payloadOut[0] = 0x05 + varLength;
 		payloadOut[1] = this->msgType;
 		payloadOut[2] = this->flags;
 		payloadOut[3] = (this->msgId >>8);
 		payloadOut[4] = (this->msgId);
-		payloadOut[5] = (this->topicId >>8);
-		payloadOut[6] = this->topicId;
+		for (t= 0; t< varLength; t++)
+		{
+			payloadOut[5+t] = this->topicname[t];
+		}
+		
 		return;
 	}
 	else if (msgType == SUBACK)
