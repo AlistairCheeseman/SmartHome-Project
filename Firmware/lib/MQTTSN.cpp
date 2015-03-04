@@ -104,8 +104,6 @@ void MQTTSN::tick()
 			this->currentState = STATE_ACTIVE;
 			break;
 			case SUBACK:
-			this->currentState = STATE_ACTIVE;
-			break;
 			case REGACK:
 			//write the topic id to the look up table. for the topic.
 			this->topicIdResp = packet.topicId;
@@ -181,7 +179,7 @@ void MQTTSN::disconnect(bool isresponse)
 	
 	this->lastTransmission = Timing::millis();
 }
-void MQTTSN::subscribe(unsigned char *topicName, uint8_t topicNameLen)
+uint16_t MQTTSN::subscribe(unsigned char *topicName, uint8_t topicNameLen)
 {
 	int t;
 	//send subscribe, wait for SUBACK
@@ -201,6 +199,7 @@ void MQTTSN::subscribe(unsigned char *topicName, uint8_t topicNameLen)
 	network->sendpacket(payload, payload[0]);
 	this->currentState = STATE_WAIT_SUBACK;
 	this->lastTransmission = Timing::millis();
+	return this->waitResponse(payload);
 }
 void MQTTSN::unsubscribe(unsigned char *topicName, uint8_t topicNameLen)
 {
@@ -217,11 +216,16 @@ void MQTTSN::unsubscribe(unsigned char *topicName, uint8_t topicNameLen)
 }
 void MQTTSN::publish(unsigned char *topicName,unsigned char *payloaddata, uint8_t topicNameLen, uint8_t payloadlen)
 {
-	int t = 0;
+
 	//lookup the topic id.( send REGISTER)
 	//wait for response with ID (REGACK)
-	uint8_t topicid = this->gettopicid(topicName, topicNameLen);
+	uint16_t topicid = this->gettopicid(topicName, topicNameLen);
 	//send publish, wait for PUBACK
+	this->publish(topicid, payloaddata, payloadlen);
+}
+void MQTTSN::publish(uint16_t topicid,unsigned char *payloaddata, uint8_t payloadlen)
+{
+		int t = 0;
 	packet.sanitise();
 	packet.msgType = PUBLISH;
 	packet.flags = (QOS_NORMAL|TOPICID_NUM);
@@ -236,16 +240,16 @@ void MQTTSN::publish(unsigned char *topicName,unsigned char *payloaddata, uint8_
 	network->sendpacket(payload, payload[0]);
 	this->currentState = STATE_ACTIVE; // only if >QOS0 do we have to set waiting reply.
 	this->lastTransmission = Timing::millis();
+	
 }
 int MQTTSN::getmsgid()
 {
 	this->msgid ++;
 	return this->msgid;
 }
-int MQTTSN::gettopicid(unsigned char *topicNameIn, uint8_t length)
+uint16_t MQTTSN::gettopicid(unsigned char *topicNameIn, uint8_t length)
 {
 	int t = 0;
-	bool hadresponse = false;
 	packet.sanitise();
 	packet.msgType = REGISTER;
 	packet.topicId = 0x00;
@@ -258,6 +262,17 @@ int MQTTSN::gettopicid(unsigned char *topicNameIn, uint8_t length)
 	packet.gen_packet(payload, length);
 	this->currentState = STATE_WAIT_REGISTER;
 	network->sendpacket(payload, payload[0]);
+uint16_t id = waitResponse(payload);
+	this->topicIdResp = 0; //stop it polluting other things.
+	return id;
+}
+void MQTTSN::setCallback(void(*callbackfunc)(uint16_t topicId, uint8_t *payload,unsigned int payloadLen))
+{
+	this->callback = callbackfunc;
+}
+uint16_t MQTTSN::waitResponse(unsigned char  (&payload)[20])
+{
+	bool hadresponse = false;
 	int count = 0;
 	while (!hadresponse)
 	{
@@ -282,11 +297,6 @@ int MQTTSN::gettopicid(unsigned char *topicNameIn, uint8_t length)
 		}
 	}
 	// this is sometimes zero?
-	uint8_t id = this->topicIdResp;
-	this->topicIdResp = 0; //stop it polluting other things.
+	uint16_t id = this->topicIdResp;
 	return id;
-}
-void MQTTSN::setCallback(void(*callbackfunc)(uint16_t topicId, uint8_t *payload,unsigned int payloadLen))
-{
-	this->callback = callbackfunc;
 }

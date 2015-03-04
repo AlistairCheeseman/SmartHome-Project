@@ -30,6 +30,13 @@ void USARTinit(void);
 void setup(void);
 
 
+//for quik publishes we will store the id for the request topic. it stops the need to look the topic up every time before a publish.
+uint16_t pub1id = 0;
+uint16_t pub2id =0;
+
+uint16_t sub3id = 0;
+uint16_t sub4id =0;
+
 
 void callback(uint16_t topicId, uint8_t *payload,unsigned int payloadLen) {
 	printf("\n");
@@ -88,9 +95,22 @@ int main(void)
 		}
 		printf("CONNECTED\n");
 		//subscribe to the topics here, we only need to subscribe to the State requests for outputs as they are the only things that can make it change.
-		app.subscribe((unsigned char*)"d/"MAC_SUFF"/"ID3"/"TOPIC_STATUS_REQUEST, 0x0C);
-		app.subscribe((unsigned char*)"d/"MAC_SUFF"/"ID4"/"TOPIC_STATUS_REQUEST, 0x0C);
-		printf("SUBSCRIBED");
+		
+	sub3id = 	app.subscribe((unsigned char*)"d/"MAC_SUFF"/"ID3"/"TOPIC_STATUS_REQUEST, 0x0C);
+		printf("Subscribed to: %d\n", sub3id);
+		_delay_ms(5);
+		app.tick(); //process the ack.
+	sub4id = 	app.subscribe((unsigned char*)"d/"MAC_SUFF"/"ID4"/"TOPIC_STATUS_REQUEST, 0x0C);
+	printf("Subscribed to: %d\n", sub4id);
+			_delay_ms(5);
+		app.tick(); //process the ack.
+		
+		//need to test this.
+		pub1id = app.gettopicid((unsigned char*)"d/"MAC_SUFF"/"ID1"/"TOPIC_REQUEST, 0x0C);
+		pub2id = app.gettopicid((unsigned char*)"d/"MAC_SUFF"/"ID2"/"TOPIC_REQUEST, 0x0C);
+		printf("ID1 SR mapped to %d\n", pub1id);
+		printf("ID2 SR mapped to %d\n", pub2id);
+		printf("SUBSCRIBED\n");
 		//if we get disconnected stop doing work and wait until reconnected.
 		while(app.currentState != STATE_DISCONNECTED)
 		{
@@ -107,7 +127,8 @@ int main(void)
 					if (id1button == false)
 					{
 						//the button has been pushed., publish a Request.
-						app.publish((unsigned char*)"d/"MAC_SUFF"/"ID1"/"TOPIC_REQUEST,changestate, 0x0C, 0x01);
+						
+						app.publish(pub1id,changestate, 0x01);
 						id1button = true;
 					}
 				}
@@ -127,7 +148,7 @@ int main(void)
 					if (id2button == false)
 					{
 						//the button has been pushed., publish a Request ( we need to know the state though, this will not enable cross mapping but with QOS2 we can have cross mapping, and publish a change value not absolute)
-						app.publish((unsigned char*)"d/"MAC_SUFF"/"ID2"/"TOPIC_REQUEST,changestate, 0x0C, 0x01);
+						app.publish(pub2id,changestate, 0x01);
 						id2button = true;
 					}
 				}
