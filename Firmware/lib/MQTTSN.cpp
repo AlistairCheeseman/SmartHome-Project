@@ -45,8 +45,10 @@ void MQTTSN::pingresponse()
 
 void MQTTSN::tick()
 {
+	//are these delays needed?
+	_delay_ms(50);
 	network->tick();
-	
+	_delay_ms(50);
 	if (network->pendingpacket)
 	{//if there is a pending app layer packet that needs to be processed.
 		packet.sanitise();
@@ -266,7 +268,7 @@ int MQTTSN::gettopicid(unsigned char *topicNameIn, uint8_t length)
 			hadresponse = true;
 		}
 		count++;
-		_delay_ms(500);
+		_delay_ms(100);
 		if (count > 8)
 		{
 			//if we have waited for a bit resend the packet.

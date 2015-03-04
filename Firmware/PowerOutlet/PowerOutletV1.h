@@ -33,6 +33,12 @@
 #define STATUS_LED_1 PORTD5 //OUT1_LED
 #define STATUS_LED_2 PORTD6 //OUT2_LED
 
+#define STATUS_LED_1_DDR DDRD //OUT1_LED
+#define STATUS_LED_2_DDR DDRD //OUT2_LED
+
+#define STATUS_LED_1_PORT PORTD //OUT1_LED PORT - this will be connection status???
+#define STATUS_LED_2_PORT PORTD //OUT2_LED PORT - this will be state change pending????
+
 /* PIN DEFINITIONS */
 //MQTT ID Mappings (ASCII VALUE FOR NUMBER)
 #define ID1 "1"
@@ -52,6 +58,9 @@
 #define ID2_PORT PORTC
 #define ID3_PORT PORTD
 #define ID4_PORT PORTD
+
+#define ID1_PINPORT PINC
+#define ID2_PINPORT PINC
 
 #define ID1_DDR DDRD
 #define ID2_DDR DDRD
