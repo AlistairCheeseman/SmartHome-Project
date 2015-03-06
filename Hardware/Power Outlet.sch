@@ -17988,6 +17988,35 @@ Grid 5.00 mm&lt;p&gt;
 <text x="-5.3048" y="-4.9476" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
 <text x="-5.6858" y="-7.4622" size="1.27" layer="25" ratio="10">&gt;NAME</text>
 </package>
+<package name="W237-102">
+<description>&lt;b&gt;WAGO SCREW CLAMP&lt;/b&gt;</description>
+<wire x1="-3.491" y1="-2.286" x2="-1.484" y2="-0.279" width="0.254" layer="51"/>
+<wire x1="1.488" y1="-2.261" x2="3.469" y2="-0.254" width="0.254" layer="51"/>
+<wire x1="-4.989" y1="-5.461" x2="4.993" y2="-5.461" width="0.1524" layer="21"/>
+<wire x1="4.993" y1="3.734" x2="4.993" y2="3.531" width="0.1524" layer="21"/>
+<wire x1="4.993" y1="3.734" x2="-4.989" y2="3.734" width="0.1524" layer="21"/>
+<wire x1="-4.989" y1="-5.461" x2="-4.989" y2="-3.073" width="0.1524" layer="21"/>
+<wire x1="-4.989" y1="-3.073" x2="-3.389" y2="-3.073" width="0.1524" layer="21"/>
+<wire x1="-3.389" y1="-3.073" x2="-1.611" y2="-3.073" width="0.1524" layer="51"/>
+<wire x1="-1.611" y1="-3.073" x2="1.615" y2="-3.073" width="0.1524" layer="21"/>
+<wire x1="3.393" y1="-3.073" x2="4.993" y2="-3.073" width="0.1524" layer="21"/>
+<wire x1="-4.989" y1="-3.073" x2="-4.989" y2="3.531" width="0.1524" layer="21"/>
+<wire x1="4.993" y1="-3.073" x2="4.993" y2="-5.461" width="0.1524" layer="21"/>
+<wire x1="-4.989" y1="3.531" x2="4.993" y2="3.531" width="0.1524" layer="21"/>
+<wire x1="-4.989" y1="3.531" x2="-4.989" y2="3.734" width="0.1524" layer="21"/>
+<wire x1="4.993" y1="3.531" x2="4.993" y2="-3.073" width="0.1524" layer="21"/>
+<wire x1="1.615" y1="-3.073" x2="3.393" y2="-3.073" width="0.1524" layer="51"/>
+<circle x="-2.5" y="-1.27" radius="1.4986" width="0.1524" layer="51"/>
+<circle x="-2.5" y="2.2098" radius="0.508" width="0.1524" layer="21"/>
+<circle x="2.5038" y="-1.27" radius="1.4986" width="0.1524" layer="51"/>
+<circle x="2.5038" y="2.2098" radius="0.508" width="0.1524" layer="21"/>
+<pad name="1" x="-2.5" y="-1.27" drill="1.1938" shape="long" rot="R90"/>
+<pad name="2" x="2.5" y="-1.27" drill="1.1938" shape="long" rot="R90"/>
+<text x="-5.04" y="-7.62" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
+<text x="-3.8462" y="-5.0038" size="1.27" layer="25" ratio="10">&gt;NAME</text>
+<text x="-4.532" y="0.635" size="1.27" layer="21" ratio="10">1</text>
+<text x="0.421" y="0.635" size="1.27" layer="21" ratio="10">2</text>
+</package>
 </packages>
 <symbols>
 <symbol name="KL">
@@ -18023,6 +18052,29 @@ Grid 5.00 mm&lt;p&gt;
 <attribute name="MPN" value="237-103" constant="no"/>
 <attribute name="OC_FARNELL" value="unknown" constant="no"/>
 <attribute name="OC_NEWARK" value="18M7116" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="W237-102" prefix="X" uservalue="yes">
+<description>&lt;b&gt;WAGO SCREW CLAMP&lt;/b&gt;</description>
+<gates>
+<gate name="-1" symbol="KL" x="0" y="5.08" addlevel="always"/>
+<gate name="-2" symbol="KL+V" x="0" y="0" addlevel="always"/>
+</gates>
+<devices>
+<device name="" package="W237-102">
+<connects>
+<connect gate="-1" pin="KL" pad="1"/>
+<connect gate="-2" pin="KL" pad="2"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="MF" value="" constant="no"/>
+<attribute name="MPN" value="237-102" constant="no"/>
+<attribute name="OC_FARNELL" value="unknown" constant="no"/>
+<attribute name="OC_NEWARK" value="70K9898" constant="no"/>
 </technology>
 </technologies>
 </device>
@@ -18276,10 +18328,6 @@ Source: LITEON, LTV816.pdf</description>
 <part name="H2" library="holes" deviceset="MOUNT-HOLE" device="2.8"/>
 <part name="H3" library="holes" deviceset="MOUNT-HOLE" device="2.8"/>
 <part name="H4" library="holes" deviceset="MOUNT-HOLE" device="2.8"/>
-<part name="X4" library="con-wago-500" deviceset="W237-103" device=""/>
-<part name="X5" library="con-wago-500" deviceset="W237-103" device=""/>
-<part name="X6" library="con-wago-500" deviceset="W237-103" device=""/>
-<part name="EARTH" library="supply2" deviceset="GND1" device=""/>
 <part name="OK1" library="optocoupler" deviceset="LTV816" device="S"/>
 <part name="OK2" library="optocoupler" deviceset="LTV816" device="S"/>
 <part name="SUPPLY1" library="supply2" deviceset="VCC" device=""/>
@@ -18294,6 +18342,11 @@ Source: LITEON, LTV816.pdf</description>
 <part name="SUPPLY5" library="supply2" deviceset="VCC" device=""/>
 <part name="R7" library="rcl" deviceset="R-EU_" device="R1206W" value="10k"/>
 <part name="R8" library="rcl" deviceset="R-EU_" device="R1206W" value="10k"/>
+<part name="X1" library="con-wago-500" deviceset="W237-102" device="" value="VIN"/>
+<part name="X2" library="con-wago-500" deviceset="W237-102" device="" value="VOUT2"/>
+<part name="X3" library="con-wago-500" deviceset="W237-102" device="" value="VOUT1"/>
+<part name="X7" library="con-wago-500" deviceset="W237-103" device="" value="EARTH"/>
+<part name="EARTH1" library="supply2" deviceset="GND1" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -18337,16 +18390,6 @@ Source: LITEON, LTV816.pdf</description>
 <instance part="H2" gate="G$1" x="228.6" y="2.54"/>
 <instance part="H3" gate="G$1" x="228.6" y="-2.54"/>
 <instance part="H4" gate="G$1" x="228.6" y="-7.62"/>
-<instance part="X4" gate="-1" x="-58.42" y="55.88"/>
-<instance part="X4" gate="-2" x="-58.42" y="50.8"/>
-<instance part="X4" gate="-3" x="-58.42" y="45.72"/>
-<instance part="X5" gate="-1" x="-58.42" y="40.64"/>
-<instance part="X5" gate="-2" x="-58.42" y="35.56"/>
-<instance part="X5" gate="-3" x="-58.42" y="30.48"/>
-<instance part="X6" gate="-1" x="-58.42" y="25.4"/>
-<instance part="X6" gate="-2" x="-58.42" y="20.32"/>
-<instance part="X6" gate="-3" x="-58.42" y="15.24"/>
-<instance part="EARTH" gate="G$1" x="-48.26" y="5.08"/>
 <instance part="OK1" gate="G$1" x="119.38" y="33.02"/>
 <instance part="OK2" gate="G$1" x="119.38" y="15.24"/>
 <instance part="SUPPLY1" gate="G$1" x="142.24" y="48.26"/>
@@ -18361,6 +18404,16 @@ Source: LITEON, LTV816.pdf</description>
 <instance part="SUPPLY5" gate="G$1" x="193.04" y="48.26"/>
 <instance part="R7" gate="G$1" x="134.62" y="35.56" rot="R180"/>
 <instance part="R8" gate="G$1" x="134.62" y="17.78" rot="R180"/>
+<instance part="X1" gate="-1" x="-78.74" y="50.8"/>
+<instance part="X1" gate="-2" x="-78.74" y="45.72"/>
+<instance part="X2" gate="-1" x="-78.74" y="38.1"/>
+<instance part="X2" gate="-2" x="-78.74" y="33.02"/>
+<instance part="X3" gate="-1" x="-78.74" y="22.86"/>
+<instance part="X3" gate="-2" x="-78.74" y="17.78"/>
+<instance part="X7" gate="-1" x="-81.28" y="7.62"/>
+<instance part="X7" gate="-2" x="-81.28" y="2.54"/>
+<instance part="X7" gate="-3" x="-81.28" y="-2.54"/>
+<instance part="EARTH1" gate="G$1" x="-71.12" y="-10.16"/>
 </instances>
 <busses>
 </busses>
@@ -18390,20 +18443,21 @@ Source: LITEON, LTV816.pdf</description>
 <junction x="5.08" y="60.96"/>
 <pinref part="R1" gate="1" pin="1"/>
 <wire x1="-2.54" y1="63.5" x2="-2.54" y2="60.96" width="0.1524" layer="91"/>
-<pinref part="X4" gate="-2" pin="KL"/>
-<wire x1="-53.34" y1="50.8" x2="-50.8" y2="50.8" width="0.1524" layer="91"/>
-<wire x1="-50.8" y1="50.8" x2="-35.56" y2="50.8" width="0.1524" layer="91"/>
+<wire x1="-68.58" y1="50.8" x2="-35.56" y2="50.8" width="0.1524" layer="91"/>
 <wire x1="-35.56" y1="50.8" x2="-35.56" y2="60.96" width="0.1524" layer="91"/>
 <wire x1="-35.56" y1="60.96" x2="-2.54" y2="60.96" width="0.1524" layer="91"/>
 <junction x="-2.54" y="60.96"/>
-<pinref part="X5" gate="-2" pin="KL"/>
-<wire x1="-53.34" y1="35.56" x2="-50.8" y2="35.56" width="0.1524" layer="91"/>
-<wire x1="-50.8" y1="35.56" x2="-50.8" y2="50.8" width="0.1524" layer="91"/>
-<pinref part="X6" gate="-2" pin="KL"/>
-<wire x1="-53.34" y1="20.32" x2="-50.8" y2="20.32" width="0.1524" layer="91"/>
-<wire x1="-50.8" y1="20.32" x2="-50.8" y2="35.56" width="0.1524" layer="91"/>
-<junction x="-50.8" y="35.56"/>
-<junction x="-50.8" y="50.8"/>
+<pinref part="X3" gate="-2" pin="KL"/>
+<wire x1="-73.66" y1="17.78" x2="-68.58" y2="17.78" width="0.1524" layer="91"/>
+<pinref part="X2" gate="-2" pin="KL"/>
+<wire x1="-73.66" y1="33.02" x2="-68.58" y2="33.02" width="0.1524" layer="91"/>
+<wire x1="-68.58" y1="33.02" x2="-68.58" y2="17.78" width="0.1524" layer="91"/>
+<pinref part="X1" gate="-2" pin="KL"/>
+<wire x1="-73.66" y1="45.72" x2="-68.58" y2="45.72" width="0.1524" layer="91"/>
+<wire x1="-68.58" y1="45.72" x2="-68.58" y2="33.02" width="0.1524" layer="91"/>
+<junction x="-68.58" y="33.02"/>
+<wire x1="-68.58" y1="45.72" x2="-68.58" y2="50.8" width="0.1524" layer="91"/>
+<junction x="-68.58" y="45.72"/>
 </segment>
 </net>
 <net name="+3V3" class="0">
@@ -18798,10 +18852,8 @@ Source: LITEON, LTV816.pdf</description>
 <pinref part="F1" gate="1" pin="1"/>
 <wire x1="-30.48" y1="76.2" x2="-40.64" y2="76.2" width="0.1524" layer="91"/>
 <wire x1="-40.64" y1="76.2" x2="-40.64" y2="55.88" width="0.1524" layer="91"/>
-<pinref part="X4" gate="-1" pin="KL"/>
 <wire x1="-40.64" y1="55.88" x2="-45.72" y2="55.88" width="0.1524" layer="91"/>
 <pinref part="K2" gate="2" pin="P"/>
-<wire x1="-45.72" y1="55.88" x2="-53.34" y2="55.88" width="0.1524" layer="91"/>
 <wire x1="-27.94" y1="45.72" x2="-45.72" y2="45.72" width="0.1524" layer="91"/>
 <wire x1="-45.72" y1="45.72" x2="-45.72" y2="55.88" width="0.1524" layer="91"/>
 <pinref part="K1" gate="2" pin="P"/>
@@ -18809,22 +18861,25 @@ Source: LITEON, LTV816.pdf</description>
 <wire x1="-45.72" y1="27.94" x2="-45.72" y2="45.72" width="0.1524" layer="91"/>
 <junction x="-45.72" y="45.72"/>
 <junction x="-45.72" y="55.88"/>
+<pinref part="X1" gate="-1" pin="KL"/>
+<wire x1="-73.66" y1="50.8" x2="-73.66" y2="55.88" width="0.1524" layer="91"/>
+<wire x1="-73.66" y1="55.88" x2="-45.72" y2="55.88" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="GND1" class="0">
 <segment>
-<pinref part="X4" gate="-3" pin="KL"/>
-<wire x1="-53.34" y1="45.72" x2="-48.26" y2="45.72" width="0.1524" layer="91"/>
-<pinref part="X6" gate="-3" pin="KL"/>
-<wire x1="-48.26" y1="45.72" x2="-48.26" y2="30.48" width="0.1524" layer="91"/>
-<wire x1="-48.26" y1="30.48" x2="-48.26" y2="15.24" width="0.1524" layer="91"/>
-<wire x1="-48.26" y1="15.24" x2="-48.26" y2="7.62" width="0.1524" layer="91"/>
-<wire x1="-53.34" y1="15.24" x2="-48.26" y2="15.24" width="0.1524" layer="91"/>
-<junction x="-48.26" y="15.24"/>
-<pinref part="EARTH" gate="G$1" pin="GND1"/>
-<pinref part="X5" gate="-3" pin="KL"/>
-<wire x1="-53.34" y1="30.48" x2="-48.26" y2="30.48" width="0.1524" layer="91"/>
-<junction x="-48.26" y="30.48"/>
+<pinref part="EARTH1" gate="G$1" pin="GND1"/>
+<pinref part="X7" gate="-3" pin="KL"/>
+<wire x1="-71.12" y1="-7.62" x2="-71.12" y2="-2.54" width="0.1524" layer="91"/>
+<wire x1="-71.12" y1="-2.54" x2="-76.2" y2="-2.54" width="0.1524" layer="91"/>
+<pinref part="X7" gate="-2" pin="KL"/>
+<wire x1="-76.2" y1="2.54" x2="-71.12" y2="2.54" width="0.1524" layer="91"/>
+<wire x1="-71.12" y1="2.54" x2="-71.12" y2="-2.54" width="0.1524" layer="91"/>
+<pinref part="X7" gate="-1" pin="KL"/>
+<wire x1="-76.2" y1="7.62" x2="-71.12" y2="7.62" width="0.1524" layer="91"/>
+<wire x1="-71.12" y1="7.62" x2="-71.12" y2="2.54" width="0.1524" layer="91"/>
+<junction x="-71.12" y="2.54"/>
+<junction x="-71.12" y="-2.54"/>
 </segment>
 </net>
 <net name="N$11" class="0">
@@ -18833,10 +18888,9 @@ Source: LITEON, LTV816.pdf</description>
 <wire x1="-20.32" y1="50.8" x2="-20.32" y2="53.34" width="0.1524" layer="91"/>
 <wire x1="-20.32" y1="53.34" x2="-12.7" y2="53.34" width="0.1524" layer="91"/>
 <wire x1="-12.7" y1="53.34" x2="-12.7" y2="38.1" width="0.1524" layer="91"/>
-<wire x1="-12.7" y1="38.1" x2="-33.02" y2="38.1" width="0.1524" layer="91"/>
-<wire x1="-33.02" y1="38.1" x2="-33.02" y2="40.64" width="0.1524" layer="91"/>
-<pinref part="X5" gate="-1" pin="KL"/>
-<wire x1="-33.02" y1="40.64" x2="-53.34" y2="40.64" width="0.1524" layer="91"/>
+<wire x1="-12.7" y1="38.1" x2="-38.1" y2="38.1" width="0.1524" layer="91"/>
+<pinref part="X2" gate="-1" pin="KL"/>
+<wire x1="-73.66" y1="38.1" x2="-38.1" y2="38.1" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$14" class="0">
@@ -18845,10 +18899,10 @@ Source: LITEON, LTV816.pdf</description>
 <wire x1="-20.32" y1="33.02" x2="-20.32" y2="35.56" width="0.1524" layer="91"/>
 <wire x1="-20.32" y1="35.56" x2="-12.7" y2="35.56" width="0.1524" layer="91"/>
 <wire x1="-12.7" y1="35.56" x2="-12.7" y2="20.32" width="0.1524" layer="91"/>
-<wire x1="-12.7" y1="20.32" x2="-43.18" y2="20.32" width="0.1524" layer="91"/>
-<wire x1="-43.18" y1="20.32" x2="-43.18" y2="25.4" width="0.1524" layer="91"/>
-<pinref part="X6" gate="-1" pin="KL"/>
-<wire x1="-43.18" y1="25.4" x2="-53.34" y2="25.4" width="0.1524" layer="91"/>
+<wire x1="-12.7" y1="20.32" x2="-45.72" y2="20.32" width="0.1524" layer="91"/>
+<wire x1="-45.72" y1="20.32" x2="-45.72" y2="22.86" width="0.1524" layer="91"/>
+<wire x1="-45.72" y1="22.86" x2="-73.66" y2="22.86" width="0.1524" layer="91"/>
+<pinref part="X3" gate="-1" pin="KL"/>
 </segment>
 </net>
 <net name="N$15" class="0">
