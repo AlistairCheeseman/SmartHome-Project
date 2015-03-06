@@ -39,36 +39,70 @@ uint16_t sub4id =0;
 
 
 void callback(uint16_t topicId, uint8_t *payload,unsigned int payloadLen) {
+	//update the new state to the server.
+	unsigned char changestate[3] ={(unsigned char) 0x31};
 	printf("\n");
 	//todo: lookup topic id and find what topic it corresponds to.
 	printf("Received topic update on ID: %d\n", topicId);
 	printf("Payload :%c \n", payload[0]);
 	printf("\n");
-	/*switch (topicId)
+	if (topicId == sub3id)
 	{
-	case 1:*/
-	switch (payload[0])
-	{
-		case 0x31:
-		//turn on.
-		ID3_PORT |= (1<<ID3_PIN);
-		break;
-		case 0x30:
-		//turn off
-		ID3_PORT &= ~(1<<ID3_PIN);
-		break;
-		case 0x43:
-		//flip states.
-		ID3_PORT ^= (1<<ID3_PIN);
-		break;
+		printf("RECEIVED SR FOR OUT ID3\n");
+		
+		switch (payload[0])
+		{
+			case 0x31:
+			//turn on.
+			ID3_PORT |= (1<<ID3_PIN);
+			break;
+			case 0x30:
+			//turn off
+			ID3_PORT &= ~(1<<ID3_PIN);
+			break;
+			case 0x43:
+			//flip states.
+			ID3_PORT ^= (1<<ID3_PIN);
+			break;
+		}
+		
+		
+
+		if (!(ID3_PORT & (1<< ID3_PIN)))
+		{
+			changestate[0] = 0x30;
+		}
+		app.publish((unsigned char*)"d/"MAC_SUFF"/"ID3"/"TOPIC_STATUS_UPDATE,changestate, 0x0C, 0x01);
 	}
-	//update the new state to the server.
-	unsigned char changestate[3] ={(unsigned char) 0x31};
-	if (!(ID3_PORT & (1<< ID3_PIN)))
+	else if(topicId == sub4id)
 	{
-		changestate[0] = 0x30;
+		printf("RECEIVED SR FOR OUT ID4\n");
+		switch (payload[0])
+		{
+			case 0x31:
+			//turn on.
+			ID4_PORT |= (1<<ID4_PIN);
+			break;
+			case 0x30:
+			//turn off
+			ID4_PORT &= ~(1<<ID4_PIN);
+			break;
+			case 0x43:
+			//flip states.
+			ID4_PORT ^= (1<<ID4_PIN);
+			break;
+		}
+		
+		//update the new state to the server.
+		if (!(ID4_PORT & (1<< ID4_PIN)))
+		{
+			changestate[0] = 0x30;
+		}
+		app.publish((unsigned char*)"d/"MAC_SUFF"/"ID4"/"TOPIC_STATUS_UPDATE,changestate, 0x0C, 0x01);
+		
 	}
-	app.publish((unsigned char*)"d/"MAC_SUFF"/"ID3"/"TOPIC_STATUS_UPDATE,changestate, 0x0C, 0x01);
+	
+	
 }
 
 //NOTE:: app.tick() must be called to handle any replies, and in turn update any status!
@@ -96,13 +130,13 @@ int main(void)
 		printf("CONNECTED\n");
 		//subscribe to the topics here, we only need to subscribe to the State requests for outputs as they are the only things that can make it change.
 		
-	sub3id = 	app.subscribe((unsigned char*)"d/"MAC_SUFF"/"ID3"/"TOPIC_STATUS_REQUEST, 0x0C);
+		sub3id = 	app.subscribe((unsigned char*)"d/"MAC_SUFF"/"ID3"/"TOPIC_STATUS_REQUEST, 0x0C);
 		printf("Subscribed to: %d\n", sub3id);
 		_delay_ms(5);
 		app.tick(); //process the ack.
-	sub4id = 	app.subscribe((unsigned char*)"d/"MAC_SUFF"/"ID4"/"TOPIC_STATUS_REQUEST, 0x0C);
-	printf("Subscribed to: %d\n", sub4id);
-			_delay_ms(5);
+		sub4id = 	app.subscribe((unsigned char*)"d/"MAC_SUFF"/"ID4"/"TOPIC_STATUS_REQUEST, 0x0C);
+		printf("Subscribed to: %d\n", sub4id);
+		_delay_ms(5);
 		app.tick(); //process the ack.
 		
 		//need to test this.

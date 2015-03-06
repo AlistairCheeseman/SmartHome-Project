@@ -46,7 +46,7 @@ void MQTTSN::pingresponse()
 void MQTTSN::tick()
 {
 	//are these delays needed?
-	_delay_ms(50);
+//	_delay_ms(50);
 	network->tick();
 	_delay_ms(50);
 	if (network->pendingpacket)
