@@ -16,7 +16,7 @@ include "functions.php";
         $results = $statement->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($results);
     } elseif ($DBView == "Rooms") {
-        $statement = $db->prepare("SELECT Name  FROM 'Rooms'");
+        $statement = $db->prepare("SELECT Name, '3' as sensorC, 1 as Id  FROM 'Rooms'");
         $statement->execute();
         $results = $statement->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($results);
