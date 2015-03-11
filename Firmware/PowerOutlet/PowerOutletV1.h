@@ -11,8 +11,8 @@
 
 
 
-#define CSN PORTB2
-#define CE PORTB1
+#define CSN PORTB1
+#define CE PORTB2
 
 #define F_CPU 8000000UL
 
