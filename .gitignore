@@ -5,6 +5,7 @@
 *.s#?
 *.b#?
 *.l#?
+*.epf
 
 # Eagle project file
 # It contains a serial number and references to the file structure
