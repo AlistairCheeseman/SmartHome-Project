@@ -19719,7 +19719,7 @@ Source: LITEON, LTV816.pdf</description>
 <part name="U$1" library="VTX214001103" deviceset="VTX-214-001-103" device=""/>
 <part name="F1" library="fuse" deviceset="FUSE" device="SH22,5A" value="230V 70mA"/>
 <part name="R1" library="varistor" deviceset="P594" device=""/>
-<part name="C1" library="rcl" deviceset="CPOL-EU" device="E2,5-6E" value="10u"/>
+<part name="C1" library="rcl" deviceset="CPOL-EU" device="E2,5-6E" value="47u"/>
 <part name="+3V1" library="supply1" deviceset="+3V3" device=""/>
 <part name="GND1" library="supply1" deviceset="GND" device=""/>
 <part name="C2" library="rcl" deviceset="C-EU" device="050-030X075" value="0.1u/275V"/>
@@ -19730,13 +19730,13 @@ Source: LITEON, LTV816.pdf</description>
 <part name="LED1" library="led" deviceset="LED" device="5MM" value="OUT2"/>
 <part name="LED2" library="led" deviceset="LED" device="5MM" value="OUT1"/>
 <part name="IC1" library="ic-package" deviceset="DIL28" device="-3" value="ATMega 328p-pu"/>
-<part name="Q1" library="crystal" deviceset="CRYSTAL" device="HC49S" value="16MHz"/>
+<part name="Q1" library="crystal" deviceset="CRYSTAL" device="HC49S" value="8MHz"/>
 <part name="R2" library="rcl" deviceset="R-EU_" device="R1206W" value="10k"/>
-<part name="R3" library="rcl" deviceset="R-EU_" device="R1206W" value="330R"/>
-<part name="R4" library="rcl" deviceset="R-EU_" device="R1206W" value="330R"/>
+<part name="R3" library="rcl" deviceset="R-EU_" device="R1206W" value="3k3"/>
+<part name="R4" library="rcl" deviceset="R-EU_" device="R1206W" value="3k3"/>
 <part name="C3" library="rcl" deviceset="C-EU" device="C1206K" value="22p"/>
 <part name="C4" library="rcl" deviceset="C-EU" device="C1206K" value="22p"/>
-<part name="C5" library="rcl" deviceset="C-EU" device="C1206K" value="1n"/>
+<part name="C5" library="rcl" deviceset="C-EU" device="C1206K" value="0.1u"/>
 <part name="+3V2" library="supply1" deviceset="+3V3" device=""/>
 <part name="GND2" library="supply1" deviceset="GND" device=""/>
 <part name="GND3" library="supply1" deviceset="GND" device=""/>
@@ -19755,16 +19755,16 @@ Source: LITEON, LTV816.pdf</description>
 <part name="OK2" library="optocoupler" deviceset="LTV816" device="S"/>
 <part name="SUPPLY1" library="supply2" deviceset="VCC" device=""/>
 <part name="GND8" library="supply1" deviceset="GND" device=""/>
-<part name="R5" library="rcl" deviceset="R-EU_" device="R1206W" value="10k"/>
-<part name="R6" library="rcl" deviceset="R-EU_" device="R1206W" value="10k"/>
+<part name="R5" library="rcl" deviceset="R-EU_" device="R1206W" value="100R"/>
+<part name="R6" library="rcl" deviceset="R-EU_" device="R1206W" value="100R"/>
 <part name="SUPPLY2" library="supply2" deviceset="VCC" device=""/>
 <part name="L1" library="rcl" deviceset="L-EU" device="L3225P"/>
 <part name="C6" library="rcl" deviceset="C-EU" device="C1206K" value="1n/2Kv"/>
 <part name="SUPPLY3" library="supply2" deviceset="AGND" device=""/>
 <part name="SUPPLY4" library="supply2" deviceset="AGND" device=""/>
 <part name="SUPPLY5" library="supply2" deviceset="VCC" device=""/>
-<part name="R7" library="rcl" deviceset="R-EU_" device="R1206W" value="10k"/>
-<part name="R8" library="rcl" deviceset="R-EU_" device="R1206W" value="10k"/>
+<part name="R7" library="rcl" deviceset="R-EU_" device="R1206W" value="100R"/>
+<part name="R8" library="rcl" deviceset="R-EU_" device="R1206W" value="100R"/>
 <part name="X1" library="con-wago-500" deviceset="W237-102" device="" value="VIN"/>
 <part name="X2" library="con-wago-500" deviceset="W237-102" device="" value="VOUT2"/>
 <part name="X3" library="con-wago-500" deviceset="W237-102" device="" value="VOUT1"/>
