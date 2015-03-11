@@ -334,6 +334,7 @@ rm php-5.6.5.tar.gz
 cd php-5.6.5
 #need to test
 sed -i -e 's|my $installbuilddir = "/apache24/build";|my $installbuilddir = "/remote/arm/targetfs2/apache24/build";|g' ${TARGETFS}/apache24/bin/apxs
+sed -i -e 's|includedir = ${prefix}/include|includedir = /remote/arm/targetfs2/apache24/include|g' ${TARGETFS}/apache24/build/config_vars.mk
 #nano ${TARGETFS}/apache24/bin/apxs
 ./configure --host=$TARGET --prefix='' --with-libxml-dir=/remote/arm/tools/build/sysroot --with-sqlite3 --enable-pdo --enable-json --with-pdo-sqlite --disable-all --with-apxs2=${TARGETFS}/apache24/bin/apxs --enable-session
 LDFLAGS='-ldl' make
