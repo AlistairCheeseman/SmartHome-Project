@@ -13,4 +13,5 @@ define('DB_PASSWORD', 'k3pR69J');
 define('DB_HOST','192.168.3.1');
 //if using sqlite then theese variables must be set
 define('DB_CONNECTION', 'sqlite:/var/db/smarthome');
+define('REDIRECTS', true); //set to true for debug.(does not return to page to allow you to view the url variables
 ?>
