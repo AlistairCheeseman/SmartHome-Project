@@ -34,7 +34,7 @@ function createDB($db) {
     $db->exec("CREATE TABLE 'Devices' ('Id' TEXT PRIMARY KEY NOT NULL, 'TypeId' INTEGER, 'Name' TEXT, 'RoomId' INTEGER, FOREIGN KEY(TypeId) REFERENCES Dev_Types(Id), FOREIGN KEY(RoomId) REFERENCES Rooms(Id))");
     $db->exec("CREATE TABLE 'Sensors' ('Id' INTEGER PRIMARY KEY NOT NULL, 'DevId' TEXT NOT NULL, 'ControlId' INTEGER NOT NULL, 'MapTopic' TEXT,'SRDevTopic' TEXT, 'CurrentValue' TEXT, FOREIGN KEY(DevId) REFERENCES Devices(Id), FOREIGN KEY(ControlId) REFERENCES Dev_Controls(Id), UNIQUE (ControlId, DevId), UNIQUE(MapTopic))");
     $db->exec("CREATE TABLE 'Sensor_Histories' ('Id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'SensorId' INTEGER NOT NULL, 'moment' DATETIME, 'value' TEXT, FOREIGN KEY(SensorId) REFERENCES Sensors(Id))");
-    $db->exec("CREATE VIEW 'DefaultMaps' AS SELECT t1.Id, t2.TopicName as room, t3.TopicName as DeviceType, t4.TopicName as control, t4.ControlId as controlId FROM Devices t1 INNER JOIN Rooms t2 ON t1.RoomId = t2.Id INNER JOIN Dev_Types t3 on t1.TypeId = t3.Id INNER JOIN Dev_Controls t4 on t3.Id = t4.Id");
+    $db->exec("CREATE VIEW 'DefaultMaps' AS SELECT t1.Id, t2.TopicName as room, t3.TopicName as DeviceType, t4.TopicName as control, t4.ControlId as controlId FROM Devices t1 INNER JOIN Rooms t2 ON t1.RoomId = t2.Id INNER JOIN Dev_Types t3 on t1.TypeId = t3.Id INNER JOIN Dev_Controls t4 on t3.Id = t4.TypeId");
 }
 
 function connectDB() {
