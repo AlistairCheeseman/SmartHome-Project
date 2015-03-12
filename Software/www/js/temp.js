@@ -5,7 +5,7 @@
  */
 
  $(document).ready(function (){
-                $.getJSON('get_data.php?view=Rooms', function (json)
+                $.getJSON('/get_data.php?view=Rooms', function (json)
                 {
                     $.each(json, function(key,value) {
                 var row = $("<tr />");
