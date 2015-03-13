@@ -121,7 +121,7 @@ function getDevInfo() {
                 document.getElementById("devidlist").selectedIndex = i;
             }
         }
-      for (var i = 0; i < document.getElementById("roomidlist").length; i++) {
+        for (var i = 0; i < document.getElementById("roomidlist").length; i++) {
             if (document.getElementById("roomidlist").options[i].value == $rid) {
                 document.getElementById("roomidlist").selectedIndex = i;
             }
@@ -133,4 +133,40 @@ function getDevInfo() {
         alert(error);
     });
 
+}
+function getSensorList()
+{
+    var vars = {};
+    vars = getvars();
+    var devid = vars['devid'];
+    $query = "";
+    if (devid)
+    {
+        $query = "/get_data.php?view=Sensors&devid=" + devid.toString();
+    }
+    else
+    {
+        $query = "/get_data.php?view=Sensors";
+    }
+    $.getJSON($query, function (json)
+    {
+        $.each(json, function (key, value) {
+            var row = $("<tr />");
+            $("#listDataTable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
+            row.append($("<td>" + value['Name'] + "</td>"));
+            row.append($("<td>" + value['Device'] + "</td>"));
+             row.append($("<td>" + value['Type'] + "</td>"));
+            row.append($("<td>" + value['CurrentValue'] + "</td>"));
+            if (value['SRDevTopic'])
+            {
+                row.append($("<td>" + value['SRDevTopic'] + "</td>"));
+            }
+            else
+            {
+                row.append($("<td>" + value['MapTopic'] + "</td>"));
+            }
+            row.append($("<td>" + "<a href='/sensors/edit?id=" + value['Id'] + "'>" + "Edit" + "</a>" + "</td>"));
+            row.append($("<td><a href='/sensors/delete?id=" + value['Id'] + "' >Delete</a></td>"));
+        });
+    });
 }

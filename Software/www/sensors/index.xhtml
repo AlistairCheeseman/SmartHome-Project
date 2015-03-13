@@ -9,6 +9,15 @@
         <link rel="stylesheet" href="/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/css/css.css"   /> 
         <script src="/js/bootstrap.min.js"></script>
+        
+         <script type="text/javascript" src="/js/functions.js" ></script>
+        <script type="text/javascript" >
+            $(document).ready(function () {
+                    $.ajaxSetup({ cache:false }); // turn off ajax CACHING
+              getSensorList();
+            });
+
+        </script>
     </head>
     <body>
         <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -33,6 +42,23 @@
                 </div>
             </div>
         </nav>
+        
+         <div class="container">
+            <div id="container">
+                <table id="listDataTable"  class="table table-striped">
+                    <tr>
+                        <th>Name</th>
+                        <th>Device</th>
+                        <th>Type</th>
+                        <th>Current Value</th>
+                        <th>Mapping</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </table>
+                <p><a href="/sensors/new">Add a New sensor</a></p>
+            </div>
+        </div>
         <div id="footer">
             <div class="container">
                 <p class="muted credit">Cand No: 79087 - Smart Home for 3rd Year MEng Electronic Engineering Project - University Of Sussex Engineering 2015.</p>

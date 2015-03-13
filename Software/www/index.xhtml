@@ -9,6 +9,7 @@
         <script type="text/javascript">
             $(document).ready(function ()
             {
+                    $.ajaxSetup({ cache:false }); // turn off ajax CACHING
                 powerVals = [];
                 powerAngle = [];
                 $.getJSON('get_data.php?view=power', function (json)

@@ -12,6 +12,7 @@
         <script type="text/javascript" src="/js/functions.js" ></script>
         <script type="text/javascript" >
             $(document).ready(function () {
+                    $.ajaxSetup({ cache:false }); // turn off ajax CACHING
                 //need to turn off async requests otherwise list cannot populate before the slected value is specified.
          $.ajaxSetup({
         async: false
