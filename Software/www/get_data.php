@@ -36,28 +36,41 @@ if ($DBView == "power") {
     $statement->execute();
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode($results);
-}
-    elseif ($DBView == "DevTypes") {
-        $statement = $db->prepare("SELECT * FROM Dev_Types");
+} elseif ($DBView == "DevTypes") {
+    $statement = $db->prepare("SELECT * FROM Dev_Types");
     $statement->execute();
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode($results);
-}elseif ($DBView == "Dev") {
+} elseif ($DBView == "Dev") {
     $devid = $_GET['id'];
-    $query = "SELECT * FROM Devices where Id='" . $devid. "'";
-        $statement = $db->prepare($query);
+    $query = "SELECT * FROM Devices where Id='" . $devid . "'";
+    $statement = $db->prepare($query);
     $statement->execute();
     $results = $statement->fetch(PDO::FETCH_ASSOC);
     echo json_encode($results);
-}elseif ($DBView == "Sensors") {
+} elseif ($DBView == "Sensors") {
+    $filter = $_GET['filter'];
+
     $devid = $_GET['devid'];
-    if ($devid)
-    {
-         $query = "SELECT t1.Id, t1.Name as Name, t2.Name as Device, t1.CurrentValue, t1.SRDevTopic, t1.MapTopic, t3.Name as Type FROM Sensors t1 INNER JOIN Devices t2 ON t2.id = t1.DevId INNER JOIN Dev_Controls t3 ON t3.ControlId = t1.ControlId AND t3.TypeId = t2.TypeId where DevId='" . $devid. "'";
+    if ($devid) {
+        $query = "SELECT t1.Id, t1.Name as Name, t2.Name as Device, t1.CurrentValue, t1.SRDevTopic, t1.MapTopic, t3.Name as Type FROM Sensors t1 INNER JOIN Devices t2 ON t2.id = t1.DevId INNER JOIN Dev_Controls t3 ON t3.ControlId = t1.ControlId AND t3.TypeId = t2.TypeId where DevId='" . $devid . "'";
+    } else {
+        $query = "SELECT t1.Id, t1.Name as Name, t2.Name as Device, t1.CurrentValue, t1.SRDevTopic, t1.MapTopic, t3.Name as Type FROM Sensors t1 INNER JOIN Devices t2 ON t2.id = t1.DevId INNER JOIN Dev_Controls t3 ON t3.ControlId = t1.ControlId AND t3.TypeId = t2.TypeId";
     }
-    else
-    {
-    $query = "SELECT t1.Id, t1.Name as Name, t2.Name as Device, t1.CurrentValue, t1.SRDevTopic, t1.MapTopic, t3.Name as Type FROM Sensors t1 INNER JOIN Devices t2 ON t2.id = t1.DevId INNER JOIN Dev_Controls t3 ON t3.ControlId = t1.ControlId AND t3.TypeId = t2.TypeId";
+
+    if ($filter) {
+        if ($filter == "output")
+        {
+            $query = $query . " where t3.ControlTypeId = 1";
+        }
+        if ($filter == "sensors")
+        {
+           $query = $query . " where t3.ControlTypeId = 2"; 
+        }
+                if ($filter == "request")
+        {
+           $query = $query . " where t3.ControlTypeId = 3"; 
+        }
     }
     $statement = $db->prepare($query);
     $statement->execute();

@@ -15,6 +15,8 @@
             $(document).ready(function () {
                     $.ajaxSetup({ cache:false }); // turn off ajax CACHING
               getSensorList();
+               getOutSensorList();
+                getReqSensorList();
             });
 
         </script>
@@ -37,6 +39,8 @@
                         <li class="active"><a href="/sensors">Sensors</a></li>
                         <li><a href="/rooms">Rooms</a></li>
                         <li><a href="/devices">Devices</a></li>
+                                                <li><a href="/rules">Rules</a></li>
+                        <li><a href="/settings">Settings</a></li>
                         <li><a href="/licensing">Licensing</a></li>
                     </ul>
                 </div>
@@ -45,7 +49,8 @@
         
          <div class="container">
             <div id="container">
-                <table id="listDataTable"  class="table table-striped">
+                <h2>Output Devices</h2>
+                <table id="listOutDataTable"  class="table table-striped">
                     <tr>
                         <th>Name</th>
                         <th>Device</th>
@@ -56,6 +61,31 @@
                         <th></th>
                     </tr>
                 </table>
+                <h2>Sensors</h2>
+                  <table id="listSenDataTable"  class="table table-striped">
+                    <tr>
+                        <th>Name</th>
+                        <th>Device</th>
+                        <th>Type</th>
+                        <th>Current Value</th>
+                        <th>Mapping</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </table>
+                <h2>Buttons / Requestors</h2>
+                  <table id="listReqDataTable"  class="table table-striped">
+                    <tr>
+                        <th>Name</th>
+                        <th>Device</th>
+                        <th>Type</th>
+                        
+                        <th>Mapping</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </table>
+                
                 <p><a href="/sensors/new">Add a New sensor</a></p>
             </div>
         </div>

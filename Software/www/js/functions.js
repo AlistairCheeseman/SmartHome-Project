@@ -142,21 +142,92 @@ function getSensorList()
     $query = "";
     if (devid)
     {
-        $query = "/get_data.php?view=Sensors&devid=" + devid.toString();
+        $query = "/get_data.php?view=Sensors&filter=sensors&devid=" + devid.toString();
     }
     else
     {
-        $query = "/get_data.php?view=Sensors";
+        $query = "/get_data.php?view=Sensors&filter=sensors";
     }
     $.getJSON($query, function (json)
     {
         $.each(json, function (key, value) {
             var row = $("<tr />");
-            $("#listDataTable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
+            $("#listSenDataTable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
             row.append($("<td>" + value['Name'] + "</td>"));
             row.append($("<td>" + value['Device'] + "</td>"));
-             row.append($("<td>" + value['Type'] + "</td>"));
+            row.append($("<td>" + value['Type'] + "</td>"));
             row.append($("<td>" + value['CurrentValue'] + "</td>"));
+            if (value['SRDevTopic'])
+            {
+                row.append($("<td>" + value['SRDevTopic'] + "</td>"));
+            }
+            else
+            {
+                row.append($("<td>" + value['MapTopic'] + "</td>"));
+            }
+            row.append($("<td>" + "<a href='/sensors/edit?id=" + value['Id'] + "'>" + "Edit" + "</a>" + "</td>"));
+            row.append($("<td><a href='/sensors/delete?id=" + value['Id'] + "' >Delete</a></td>"));
+        });
+    });
+}
+function getOutSensorList() 
+{
+ var vars = {};
+    vars = getvars();
+    var devid = vars['devid'];
+    $query = "";
+    if (devid)
+    {
+        $query = "/get_data.php?view=Sensors&filter=output&devid=" + devid.toString();
+    }
+    else
+    {
+        $query = "/get_data.php?view=Sensors&filter=output";
+    }
+    $.getJSON($query, function (json)
+    {
+        $.each(json, function (key, value) {
+            var row = $("<tr />");
+            $("#listOutDataTable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
+            row.append($("<td>" + value['Name'] + "</td>"));
+            row.append($("<td>" + value['Device'] + "</td>"));
+            row.append($("<td>" + value['Type'] + "</td>"));
+            row.append($("<td>" + value['CurrentValue'] + "</td>"));
+            if (value['SRDevTopic'])
+            {
+                row.append($("<td>" + value['SRDevTopic'] + "</td>"));
+            }
+            else
+            {
+                row.append($("<td>" + value['MapTopic'] + "</td>"));
+            }
+            row.append($("<td>" + "<a href='/sensors/edit?id=" + value['Id'] + "'>" + "Edit" + "</a>" + "</td>"));
+            row.append($("<td><a href='/sensors/delete?id=" + value['Id'] + "' >Delete</a></td>"));
+        });
+    });
+}
+function getReqSensorList()
+{
+ var vars = {};
+    vars = getvars();
+    var devid = vars['devid'];
+    $query = "";
+    if (devid)
+    {
+        $query = "/get_data.php?view=Sensors&filter=request&devid=" + devid.toString();
+    }
+    else
+    {
+        $query = "/get_data.php?view=Sensors&filter=request";
+    }
+    $.getJSON($query, function (json)
+    {
+        $.each(json, function (key, value) {
+            var row = $("<tr />");
+            $("#listReqDataTable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
+            row.append($("<td>" + value['Name'] + "</td>"));
+            row.append($("<td>" + value['Device'] + "</td>"));
+            row.append($("<td>" + value['Type'] + "</td>"));
             if (value['SRDevTopic'])
             {
                 row.append($("<td>" + value['SRDevTopic'] + "</td>"));
