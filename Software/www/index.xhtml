@@ -6,10 +6,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>SmartHome - Home</title>
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+           <script type="text/javascript" src="/js/functions.js" ></script>
         <script type="text/javascript">
             $(document).ready(function ()
             {
-                    $.ajaxSetup({ cache:false }); // turn off ajax CACHING
+                $.ajaxSetup({cache: false}); // turn off ajax CACHING
                 powerVals = [];
                 powerAngle = [];
                 $.getJSON('get_data.php?view=power', function (json)
@@ -78,17 +79,7 @@
                             });
                 });
             });
-            function stringToDate(s) {
-                s = s.split(/[-: ]/);
-                return new Date(s[0], s[1] - 1, s[2], s[3], s[4], s[5]);
-            }
-            function stringToUnixDate(s) {
-                s = s.split(/[-: ]/);
-                return dateToUnix(s[0], s[1], s[2], s[3], s[4], s[5]);
-            }
-            function dateToUnix(year, month, day, hour, minute, second) {
-                return ((new Date(Date.UTC(year, month - 1, day, hour, minute, second))).getTime() / 1000.0);
-            }
+           
 
         </script>
         <link rel="stylesheet" href="/css/bootstrap.min.css" />
@@ -113,6 +104,8 @@
                         <li><a href="/sensors">Sensors</a></li>
                         <li><a href="/rooms">Rooms</a></li>
                         <li><a href="/devices">Devices</a></li>
+                        <li><a href="/rules">Rules</a></li>
+                        <li><a href="/settings">Settings</a></li>
                         <li><a href="/licensing">Licensing</a></li>
                     </ul>
                 </div>

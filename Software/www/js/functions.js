@@ -156,7 +156,7 @@ function getSensorList()
             row.append($("<td>" + value['Name'] + "</td>"));
             row.append($("<td>" + value['Device'] + "</td>"));
             row.append($("<td>" + value['Type'] + "</td>"));
-            row.append($("<td>" + value['CurrentValue'] + "</td>"));
+            row.append($("<td>" + "<a href='/sensors/history?id=" + value['Id'] + "'>" + value['CurrentValue'] + "</a>" + "</td>"));
             if (value['SRDevTopic'])
             {
                 row.append($("<td>" + value['SRDevTopic'] + "</td>"));
@@ -170,9 +170,9 @@ function getSensorList()
         });
     });
 }
-function getOutSensorList() 
+function getOutSensorList()
 {
- var vars = {};
+    var vars = {};
     vars = getvars();
     var devid = vars['devid'];
     $query = "";
@@ -192,7 +192,7 @@ function getOutSensorList()
             row.append($("<td>" + value['Name'] + "</td>"));
             row.append($("<td>" + value['Device'] + "</td>"));
             row.append($("<td>" + value['Type'] + "</td>"));
-            row.append($("<td>" + value['CurrentValue'] + "</td>"));
+            row.append($("<td>" + "<a href='/sensors/history?id=" + value['Id'] + "'>" + value['CurrentValue'] + "</a>" + "</td>"));
             if (value['SRDevTopic'])
             {
                 row.append($("<td>" + value['SRDevTopic'] + "</td>"));
@@ -208,7 +208,7 @@ function getOutSensorList()
 }
 function getReqSensorList()
 {
- var vars = {};
+    var vars = {};
     vars = getvars();
     var devid = vars['devid'];
     $query = "";
@@ -241,3 +241,79 @@ function getReqSensorList()
         });
     });
 }
+
+function showSensorHistory()
+{
+    var vars = {};
+    vars = getvars();
+    var sensorid = vars['id'];
+    var sensortype = vars['type'];
+    //sensorGraph
+    //listDataTable
+    data = [];
+
+    $.getJSON("/get_data.php?view=SensorHist&id=" + sensorid, function (json)
+    {
+        $.each(json, function (key, value) {
+            moment = stringToDate(value['moment']).getTime();
+       // moment = Date.parse(value['moment']); 
+        data.push([moment, parseInt(value['value'])]);
+
+
+
+            var row = $("<tr />");
+            $("#listDataTable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
+            row.append($("<td>" + value['moment'] + "</td>"));
+            row.append($("<td>" + value['value'] + "</td>"));
+        });
+        $('#sensorGraph').highcharts(
+                {
+                    title: {
+                        text: 'Power Consumption'
+                    },
+                    xAxis: {
+                        type: 'datetime'
+                    },
+                    yAxis: [{// Primary yAxis
+                            labels: {
+                                format: '{value}',
+                                style: {
+                                    color: Highcharts.getOptions().colors[1]
+                                }
+                            },
+                            title: {
+                                text: 'Power Angle',
+                                style: {
+                                    color: Highcharts.getOptions().colors[1]
+                                }
+
+                            },
+                            opposite: true,
+                            min: 0,
+                            max: 1
+
+                        }],
+                    series: [{
+                            name: 'Power Usage',
+                            yAxis: 0,
+                            data: data,
+                            step: true
+                        }]
+                });
+    });
+
+}
+
+
+
+ function stringToDate(s) {
+                s = s.split(/[-: ]/);
+                return new Date(s[0], s[1] - 1, s[2], s[3], s[4], s[5]);
+            }
+            function stringToUnixDate(s) {
+                s = s.split(/[-: ]/);
+                return dateToUnix(s[0], s[1], s[2], s[3], s[4], s[5]);
+            }
+            function dateToUnix(year, month, day, hour, minute, second) {
+                return ((new Date(Date.UTC(year, month - 1, day, hour, minute, second))).getTime() / 1000.0);
+            }

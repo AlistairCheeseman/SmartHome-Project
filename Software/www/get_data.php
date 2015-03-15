@@ -76,4 +76,11 @@ if ($DBView == "power") {
     $statement->execute();
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode($results);
+}elseif ($DBView == "SensorHist") {
+    $sensorid = $_GET['id'];
+        $query = "SELECT * FROM Sensor_Histories where SensorId='" . $sensorid . "'";
+    $statement = $db->prepare($query);
+    $statement->execute();
+    $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode($results);
 }
