@@ -7331,9 +7331,9 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 </classes>
 <parts>
 <part name="IC1" library="atmel" deviceset="ATMEGA644" device="A"/>
-<part name="Q1" library="crystal" deviceset="CRYSTAL" device="HC49UP"/>
-<part name="C1" library="rcl" deviceset="C-EU" device="C1206K"/>
-<part name="C2" library="rcl" deviceset="C-EU" device="C1206K"/>
+<part name="Q1" library="crystal" deviceset="CRYSTAL" device="HC49UP" value="8MHz"/>
+<part name="C1" library="rcl" deviceset="C-EU" device="C1206K" value="22p"/>
+<part name="C2" library="rcl" deviceset="C-EU" device="C1206K" value="22p"/>
 <part name="P+1" library="supply1" deviceset="VCC" device=""/>
 <part name="GND1" library="supply1" deviceset="GND" device=""/>
 <part name="U$1" library="Header" deviceset="2X4SMDHEADER" device=""/>
@@ -7341,10 +7341,10 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <part name="G1" library="battery" deviceset="CR2032H" device=""/>
 <part name="GND3" library="supply1" deviceset="GND" device=""/>
 <part name="P+2" library="supply1" deviceset="VCC" device=""/>
-<part name="R2" library="rcl" deviceset="R-EU_" device="R1206"/>
+<part name="R2" library="rcl" deviceset="R-EU_" device="R1206" value="10k"/>
 <part name="P+3" library="supply1" deviceset="VCC" device=""/>
 <part name="GND4" library="supply1" deviceset="GND" device=""/>
-<part name="C3" library="rcl" deviceset="C-EU" device="C1206K"/>
+<part name="C3" library="rcl" deviceset="C-EU" device="C1206K" value="0.1u"/>
 </parts>
 <sheets>
 <sheet>
