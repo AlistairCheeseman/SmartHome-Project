@@ -42,3 +42,5 @@
 
 /Firmware/PowerOutlet/Debug/
 /Firmware/PowerOutlet/Release/
+/Firmware/*/Debug/
+/Firmware/*/Release/
