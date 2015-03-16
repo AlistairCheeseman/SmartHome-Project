@@ -16801,7 +16801,8 @@ BLOCK</description>
 <segment>
 <pinref part="Q1" gate="G$1" pin="2"/>
 <wire x1="142.24" y1="63.5" x2="142.24" y2="73.66" width="0.1524" layer="91"/>
-<wire x1="142.24" y1="73.66" x2="134.62" y2="71.12" width="0.1524" layer="91"/>
+<wire x1="142.24" y1="73.66" x2="134.62" y2="73.66" width="0.1524" layer="91"/>
+<wire x1="134.62" y1="73.66" x2="134.62" y2="71.12" width="0.1524" layer="91"/>
 <pinref part="C8" gate="G$1" pin="1"/>
 <pinref part="IC2" gate="G$1" pin="9"/>
 <wire x1="167.64" y1="73.66" x2="142.24" y2="73.66" width="0.1524" layer="91"/>
