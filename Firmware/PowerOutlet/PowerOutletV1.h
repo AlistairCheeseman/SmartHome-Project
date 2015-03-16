@@ -10,16 +10,22 @@
 #define POWEROUTLETV1_H_
 
 
-
-#define CSN PORTB1
-#define CE PORTB2
-
-#define F_CPU 8000000UL
-
-#define HIGH 1
-#define LOW 0
-#define OUTPUT 1
-#define INPUT 0
+//check the global compile time variables have been defined.
+#ifndef HIGH
+# warning "HIGH LEVEL NOT DEFINED"
+#endif
+#ifndef LOW
+# warning "LOW LEVEL NOT DEFINED"
+#endif
+#ifndef CSN
+#warning "CSN PIN NOT DEFINED"
+#endif
+#ifndef CE
+#warning "CSN PIN NOT DEFINED"
+#endif
+#ifndef F_CPU
+#warning "CPU Speed NOT DEFINED"
+#endif
 
 
 #define TOPIC_STATUS_UPDATE "S"

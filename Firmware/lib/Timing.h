@@ -24,8 +24,6 @@
 // about - 8 and 16 MHz - this doesn't lose precision.)
 #define FRACT_INC ((MICROSECONDS_PER_TIMER0_OVERFLOW % 1000) >> 3)
 #define FRACT_MAX (1000 >> 3)
-//temp hack for variables. (F_CPU)
-#include "../PowerOutlet/PowerOutletV1.h"
 #include <util/delay.h>
 #define delay(x) _delay_ms(x)
 #define delayMicroseconds(x) _delay_us(x)

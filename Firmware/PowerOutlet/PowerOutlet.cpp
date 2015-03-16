@@ -6,22 +6,23 @@
 */
 
 
-
 #include <stdio.h>
 #include <math.h>
 #include <avr/io.h>
 #include <avr/pgmspace.h>
 
-#include "Timing.h"
+
 #include "PowerOutletV1.h"
 #define BAUD 9600
 #include <util/setbaud.h>
-
+#include "Timing.h"
 #include "MQTTSN.h"
 #include "SensorNet.h"
+#include "RF24.h"
 
 FILE * usart0_str;
-SensorNet network;
+RF24 radio;
+SensorNet network(radio);
 MQTTSN app(network,(uint8_t) 0x28);
 
 int USART0SendByte (char c, FILE *stream);
