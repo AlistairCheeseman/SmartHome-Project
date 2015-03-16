@@ -9,8 +9,9 @@
 #include "SensorNet.h"
 
 // default constructor
-SensorNet::SensorNet()
+SensorNet::SensorNet(RF24& radio)
 {
+	this->radio = &radio;
 } //SensorNet
 
 // default destructor
@@ -24,25 +25,25 @@ void SensorNet::setup()
 	pipes[0] = 0xF0F0F0F0E1LL;
 	pipes[1] = 0xF0F0F0F0D2LL;
 
-	radio.begin();
-	radio.enableDynamicPayloads();
-	radio.setRetries(15, 15);
-	radio.openWritingPipe(pipes[1]);
-	radio.openReadingPipe(1, pipes[0]);
-	radio.startListening();
-	radio.printDetails();
+	radio->begin();
+	radio->enableDynamicPayloads();
+	radio->setRetries(15, 15);
+	radio->openWritingPipe(pipes[1]);
+	radio->openReadingPipe(1, pipes[0]);
+	radio->startListening();
+	radio->printDetails();
 }
 void SensorNet::tick()
 {
 	//force a 200ms wait incase we have just transmitted
 	_delay_ms(200);
 	// if there is data ready
-	if ( radio.available() )
+	if ( radio->available() )
 	{
 		// Dump the payloads until we've gotten everything
-		uint8_t len = radio.getDynamicPayloadSize();
+		uint8_t len = radio->getDynamicPayloadSize();
 					// Fetch the payload, and see if this was the last one.
-			radio.read(receive_payload, len );
+			radio->read(receive_payload, len );
 			this->receive_size = len;
 			this->pendingpacket = true;
 	}	
@@ -54,11 +55,11 @@ void SensorNet::sendpacket(const void* payload, const uint8_t len)
 	//this->tick(); //process any pending packets
 	
 	// First, stop listening so we can talk
-	radio.stopListening();
+	radio->stopListening();
 	// Send the final one back.
-	radio.write(payload, len );
+	radio->write(payload, len );
 	// Now, resume listening so we catch the next packets.
-	radio.startListening();
+	radio->startListening();
 }
 void *SensorNet::getpacket(uint8_t *len)
 {

@@ -16,7 +16,7 @@ class SensorNet
 public:
 protected:
 private:
-RF24 radio;
+RF24* radio;
 uint64_t pipes[2];
 static const int max_payload_size = 32;
 char receive_payload[max_payload_size + 1]; // +1 to allow room for a terminating NULL char
@@ -25,7 +25,7 @@ bool debug;
 
 //functions
 public:
-	SensorNet();
+	SensorNet(RF24& radio);
 	~SensorNet();
 	void tick(void);
 	void setup(void);
