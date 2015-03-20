@@ -43,21 +43,46 @@ int main(void)
 	printf("Topic ID: %d\n", id);
 	while(1)
 	{
-		for (int c = 0; c<60;c++) 
+		for (int c = 0; c<60;c++)
 		{
-				delay(500); // wait one second
-				app.tick();
-				delay(500);
+			delay(500); // wait one second
+			app.tick();
+			delay(500);
 		}//every 60 ticks (60 seconds of waits too)
-	//int power = calcPwr();
+		//int power = calcPwr();
 		int power = 80; // just for testing
-				char powerS[5];
-				itoa(power, powerS, 10);
-				unsigned char powerUS[5];
-				for (int count= 0; count <6; count++)
-				powerUS[count] = (unsigned char) powerS[count];
-				app.publish(id, powerUS, 5);
+		char powerS[6]; // maximum wattage (100A ( current meter max) * 300V (we definetley don't want any rms higher than that.)) 30000 (5+1 digits)
+		itoa(power, powerS, 10);
+		unsigned char powerUS[6];
+		if (power > 0)
+		{
+			int numbchars = 1;
+			powerUS[0] = (unsigned char) powerS[0];
+			if (power > 9)
+			{
+				powerUS[1] = (unsigned char) powerS[1];
+				numbchars++;
+			}
+			if (power > 99)
+			{
+				powerUS[2] = (unsigned char) powerS[2];
+				numbchars++;
+			}
+			if (power > 999)
+			{
+				powerUS[3] = (unsigned char) powerS[3];
+				numbchars++;
+			}
+			if (power > 9999)
+			{
+				powerUS[4] = (unsigned char) powerS[4];
+				numbchars++;
+			}
+			app.publish(id, powerUS, numbchars);
+		}
 	}
+	
+	
 }
 int calcPwr(void)
 {
