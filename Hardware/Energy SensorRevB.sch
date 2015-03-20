@@ -18004,7 +18004,7 @@ BLOCK</description>
 <part name="R13" library="rcl" deviceset="R-EU_" device="0207/7" value="1k"/>
 <part name="C4" library="rcl" deviceset="CPOL-EU" device="E3.5-8" value="10u"/>
 <part name="C5" library="rcl" deviceset="C-EU" device="C1206K" value="100n"/>
-<part name="L1" library="rcl" deviceset="L-EU" device="L3230M"/>
+<part name="L1" library="rcl" deviceset="L-EU" device="L3230M" value="10u"/>
 </parts>
 <sheets>
 <sheet>
