@@ -9,12 +9,14 @@
 #include "MQTTSN.h"
 
 // default constructor
-MQTTSN::MQTTSN(SensorNet& snetwork, uint8_t clientId)
+MQTTSN::MQTTSN(SensorNet& snetwork, uint8_t clientId, uint32_t MAC)
 {
 	this->clientId = clientId;
 	this->network = &snetwork;
 	this->currentState = STATE_DISCONNECTED;
 	this->msgid = 0x00;
+	this->macId = MAC;
+	this->destId = 0x000000; //default base station id.
 } //MQTTSN
 
 // default destructor
@@ -27,7 +29,7 @@ void MQTTSN::ping()
 	packet.msgType = PINGREQ;
 	unsigned char payload[20];
 	packet.gen_packet(payload, 0x00);
-	network->sendpacket(payload, payload[0]);
+	network->sendpacket(payload, payload[0], macId, destId);
 	this->currentState = STATE_WAIT_PINGRESP;
 	
 	this->lastTransmission = Timing::millis();
@@ -38,7 +40,7 @@ void MQTTSN::pingresponse()
 	packet.msgType = PINGRESP;
 	unsigned char payload[20];
 	packet.gen_packet(payload, 0x00);
-	network->sendpacket(payload, payload[0]);
+	network->sendpacket(payload, payload[0], macId, destId);
 	
 	this->lastTransmission = Timing::millis();
 }
@@ -49,12 +51,16 @@ void MQTTSN::tick()
 //	_delay_ms(50);
 	network->tick();
 	_delay_ms(50);
+	uint32_t destId;
+	uint32_t sourceId;
 	if (network->pendingpacket)
 	{//if there is a pending app layer packet that needs to be processed.
 		packet.sanitise();
 		void *payload;
 		uint8_t len;
-		payload = network->getpacket(&len);
+		payload = network->getpacket(&len, &sourceId, &destId);
+		
+		
 		uint8_t* current = reinterpret_cast<uint8_t*> (payload);
 		packet.load_packet(current);
 		switch (packet.msgType)
@@ -140,17 +146,23 @@ void MQTTSN::tick()
 	}
 	
 	//after any packet processing has finished. check that the timeout is not near, if it is, buzz the server.
-	if (this->currentState == STATE_ACTIVE)
+	if ((this->currentState == STATE_ACTIVE) | (this->currentState==STATE_WAIT_PINGRESP))
 	{
+		
 		unsigned long timenow = Timing::millis();
 		timenow = timenow - this->lastTransmission;
 		timenow = timenow / 1000;
-		if (timenow > KEEPALIVE_THRESHOLD)
+		if (timenow > KEEPALIVE_THRESHOLD && this->currentState==STATE_ACTIVE)
 		{
 			//sendping
 			this->ping();
 		}
+		if (timenow > KEEPALIVE && this->currentState==STATE_WAIT_PINGRESP) // the timeout period has expired. the server now believes we are disconnected, update to reflect this.
+		{
+			this->currentState = STATE_DISCONNECTED;
+		}
 	}
+
 }
 void MQTTSN::connect()
 {
@@ -161,9 +173,8 @@ void MQTTSN::connect()
 	packet.clientId =this->clientId;
 	unsigned char payload[20];
 	packet.gen_packet(payload, 0x00);
-	network->sendpacket(payload, payload[0]);
+	network->sendpacket(payload, payload[0], macId, destId);
 	this->currentState = STATE_WAIT_CONNACK;
-	
 	this->lastTransmission = Timing::millis();
 }
 void MQTTSN::disconnect(bool isresponse)
@@ -172,7 +183,7 @@ void MQTTSN::disconnect(bool isresponse)
 	packet.msgType = DISCONNECT;
 	unsigned char payload[20];
 	packet.gen_packet(payload, 0x00);
-	network->sendpacket(payload, payload[0]);
+	network->sendpacket(payload, payload[0], macId, destId);
 	
 	if (isresponse != true)
 	this->currentState = STATE_WAIT_DISCONNECT;
@@ -196,7 +207,7 @@ uint16_t MQTTSN::subscribe(unsigned char *topicName, uint8_t topicNameLen)
 	
 	unsigned char payload[20];
 	packet.gen_packet(payload, topicNameLen);
-	network->sendpacket(payload, payload[0]);
+	network->sendpacket(payload, payload[0], macId, destId);
 	this->currentState = STATE_WAIT_SUBACK;
 	this->lastTransmission = Timing::millis();
 	return this->waitResponse(payload);
@@ -237,7 +248,7 @@ void MQTTSN::publish(uint16_t topicid,unsigned char *payloaddata, uint8_t payloa
 	}
 	unsigned char payload[20];
 	packet.gen_packet(payload, payloadlen);
-	network->sendpacket(payload, payload[0]);
+	network->sendpacket(payload, payload[0], macId, destId);
 	this->currentState = STATE_ACTIVE; // only if >QOS0 do we have to set waiting reply.
 	this->lastTransmission = Timing::millis();
 	
@@ -261,7 +272,7 @@ uint16_t MQTTSN::gettopicid(unsigned char *topicNameIn, uint8_t length)
 	unsigned char payload[20];
 	packet.gen_packet(payload, length);
 	this->currentState = STATE_WAIT_REGISTER;
-	network->sendpacket(payload, payload[0]);
+	network->sendpacket(payload, payload[0], macId, destId);
 uint16_t id = waitResponse(payload);
 	this->topicIdResp = 0; //stop it polluting other things.
 	return id;
@@ -287,7 +298,7 @@ uint16_t MQTTSN::waitResponse(unsigned char  (&payload)[20])
 		if (count > 8)
 		{
 			//if we have waited for a bit resend the packet.
-			network->sendpacket(payload, payload[0]);
+			network->sendpacket(payload, payload[0], macId, destId);
 			count = 0;
 			if (this->currentState == STATE_DISCONNECTED)
 			{

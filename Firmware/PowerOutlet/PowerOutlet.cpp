@@ -23,12 +23,14 @@
 FILE * usart0_str;
 RF24 radio;
 SensorNet network(radio);
-MQTTSN app(network,(uint8_t) 0x28);
+MQTTSN app(network,(uint8_t) 0x28, (uint32_t) MAC_SUFF_HEX);
 
 int USART0SendByte (char c, FILE *stream);
 int USART0ReceiveByte(FILE *stream);
 void USARTinit(void);
 void setup(void);
+void connectedLed(uint8_t level);
+void pendingLed(uint8_t level);
 
 
 //for quik publishes we will store the id for the request topic. it stops the need to look the topic up every time before a publish.
@@ -109,6 +111,7 @@ void callback(uint16_t topicId, uint8_t *payload,unsigned int payloadLen) {
 //NOTE:: app.tick() must be called to handle any replies, and in turn update any status!
 int main(void)
 {
+		_delay_ms(2000); // wait two seconds for power supply to stabilize.THIS IS COMPULSORY OR CONFIG IN SETUP GOES MAD!
 	setup();
 	//0x43 = flip states.
 	//0x31 = turn on.
@@ -118,17 +121,22 @@ int main(void)
 	bool id1button = false;
 	bool id2button = false;
 	app.connect(); //this is to speed up boot up times as we don't want the 2 second delay on clean boot.
+	
 	app.tick();
 	while(1)
 	{
 		printf("CONNECTING\n");
+		pendingLed(HIGH);
 		while (app.currentState != STATE_ACTIVE)
 		{
 			_delay_ms(2000); //dont spam the network with reconnections.
 			app.connect();
+			_delay_ms(500); //wait for response.
 			app.tick();
 		}
+		connectedLed(HIGH);
 		printf("CONNECTED\n");
+		
 		//subscribe to the topics here, we only need to subscribe to the State requests for outputs as they are the only things that can make it change.
 		
 		sub3id = 	app.subscribe((unsigned char*)"d/"MAC_SUFF"/"ID3"/"TOPIC_STATUS_REQUEST, 0x0C);
@@ -146,9 +154,20 @@ int main(void)
 		printf("ID1 SR mapped to %d\n", pub1id);
 		printf("ID2 SR mapped to %d\n", pub2id);
 		printf("SUBSCRIBED\n");
+		pendingLed(LOW);
 		//if we get disconnected stop doing work and wait until reconnected.
 		while(app.currentState != STATE_DISCONNECTED)
 		{
+			if ((app.currentState & STATE_WAIT_MASK) > 0)
+			{ // we are waiting for something
+					pendingLed(HIGH);
+			}
+			else
+			{
+					pendingLed(LOW);
+				
+			}
+			
 			app.tick(); // process the radio no matter if connected to a MQTT server or not. this is to help the network layer communications.
 			//printf("main loop\n");
 			_delay_ms(10); // wait a bit to ensure we don't over do the tick.
@@ -195,6 +214,9 @@ int main(void)
 			
 		}
 		printf("DISCONNECTED\n");
+		connectedLed(LOW);
+		pendingLed(LOW); // we don't have any pending packets anymore
+		
 	}
 }
 void setup(void)
@@ -262,4 +284,30 @@ void USARTinit(void)
 	
 	usart0_str = fdevopen(USART0SendByte, USART0ReceiveByte);
 	stdin=stdout=usart0_str;
+}
+void connectedLed(uint8_t level)
+{
+	if (level == HIGH)
+	{
+		STATUS_LED_1_PORT |= (1<<STATUS_LED_1);
+	}
+	else
+	{
+		
+		STATUS_LED_1_PORT &= ~(1<<STATUS_LED_1);
+	}
+	
+}
+void pendingLed(uint8_t level)
+{
+	if (level == HIGH)
+	{
+		STATUS_LED_2_PORT |= (1<<STATUS_LED_2);
+	}
+	else
+	{
+		
+		STATUS_LED_2_PORT &= ~(1<<STATUS_LED_2);
+	}
+	
 }
