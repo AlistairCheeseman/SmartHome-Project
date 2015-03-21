@@ -8,49 +8,85 @@
 #include <cstdlib>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdint.h>
 #include "SensorNet.h"
 #include "UDP.h"
 #include "MQTTSNCheck.h"
 
 using namespace std;
 SensorNet* net;
-UDP* udp;
+UDP* udp[6];
+uint32_t clients[6];
 
 /*
  * 
  */
 int main(int argc, char** argv) {
     net = new SensorNet();
-    udp = new UDP("127.0.0.1", "1884");
+    //create all client connections.
+    udp[0] = new UDP("127.0.0.1", "1884");
+    udp[1] = new UDP("127.0.0.1", "1884");
+    udp[2] = new UDP("127.0.0.1", "1884");
+    udp[3] = new UDP("127.0.0.1", "1884");
+    udp[4] = new UDP("127.0.0.1", "1884");
+    udp[5] = new UDP("127.0.0.1", "1884");
+
+    clients[0] = 0x000000;
+    clients[1] = 0x000000;
+    clients[2] = 0x000000;
+    clients[3] = 0x000000;
+    clients[4] = 0x000000;
+    clients[5] = 0x000000;
 
     int fd = -1;
     int sock = -1;
     uint8_t currentPackLen = 0;
+    uint32_t destId = 0;
+    uint32_t sourceId = 0;
     while (1) {
         net->tick();
-         
-     /* Process WIRELESS PACKETS*/
+
+        /* Process WIRELESS PACKETS*/
         if (net->pendingpacket == true) {
-            void *packet = net->getpacket(currentPackLen);
-            if (packet && currentPackLen) {
-                if (MQTTSNCheck::verifyPacket(packet, currentPackLen) == true) {
-                  fprintf(stdout,"Wireless --> UDP\n");
-                    udp->sendpacket(packet);
+            void *packet = net->getpacket(currentPackLen, sourceId, destId);
+            if (packet && currentPackLen && destId == 0x000000) { //check packet is for the central server has a length and has some data.
+                if (MQTTSNCheck::verifyPacket(packet, currentPackLen) == true) { //check it is a valid mqtt packet.
+                    fprintf(stdout, "Wireless --> UDP\n");
+                    fprintf(stdout, "Source: %.6x\nDest  :%.6x\n", sourceId, destId);
+                    uint8_t connection = 0;
+                    for (int t = 0; t <= 5; t++) {
+                        if (clients[t] == 0x000000) {
+                            fprintf(stdout, "added new client to table.\n");
+                            // if the client address is 0x000000 it is un used! - make it in use!
+                            
+                            clients[t] = sourceId;
+                        }
+                        // loop through all the connections to find which client we should be connecting to.
+                        if (clients[t] == sourceId) {
+                            connection = t;
+                            break;
+                        }
+                    }
+                    udp[connection]->sendpacket(packet);
+                    fprintf(stdout, "\n");
                 }
             }
         }
-        
-        
-        /*Process UDP Packets */
-          //UDP packed recieving is really slowing it down. need to find better way to check packets.
-        if (udp->pendingpacket() == true) {
-            void *packet = udp->getpacket(currentPackLen);
-            if (packet && currentPackLen) {
-                if (MQTTSNCheck::verifyPacket(packet, currentPackLen) == true) {
-                  fprintf(stdout,"UDP --> Wireless\n");
-                    net->sendpacket(packet, currentPackLen);
+        /*Process UDP Packets */ // loop through every udp connection
+        for (int t = 0; t <= 5; t++) {
+            currentPackLen = 0;
+            //UDP packed recieving is really slowing it down. need to find better way to check packets.
+            if (udp[t]->pendingpacket() == true) {
+                void *packet = udp[t]->getpacket(currentPackLen); // get the headerless mqttsn packet
+                if (packet && currentPackLen) { // check it's a mqtt packet.
+                    if (MQTTSNCheck::verifyPacket(packet, currentPackLen) == true) {
+                        fprintf(stdout, "UDP --> Wireless\n");
+                     fprintf(stdout, "Source: %.6x\nDest  :%.6x\n", 0x000000,  clients[t]);
+                        net->sendpacket(packet, currentPackLen, 0x000000, clients[t]);
+                         fprintf(stdout, "\n");
+                    }
+                    currentPackLen = 0;
                 }
-                currentPackLen = 0;
             }
         }
     }
