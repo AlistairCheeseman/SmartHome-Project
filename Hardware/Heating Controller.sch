@@ -7677,6 +7677,12 @@ Source: www.bourns.com .. 6000_series.pdf</description>
 <text x="-2.54" y="-2.54" size="1.778" layer="96">&gt;VALUE</text>
 <pin name="GND" x="0" y="2.54" visible="off" length="short" direction="sup" rot="R270"/>
 </symbol>
+<symbol name="AGND">
+<wire x1="-1.905" y1="0" x2="1.905" y2="0" width="0.254" layer="94"/>
+<wire x1="-1.0922" y1="-0.508" x2="1.0922" y2="-0.508" width="0.254" layer="94"/>
+<text x="-2.54" y="-5.08" size="1.778" layer="96" rot="R90">&gt;VALUE</text>
+<pin name="AGND" x="0" y="2.54" visible="off" length="short" direction="sup" rot="R270"/>
+</symbol>
 </symbols>
 <devicesets>
 <deviceset name="+3V3" prefix="+3V3">
@@ -7696,6 +7702,19 @@ Source: www.bourns.com .. 6000_series.pdf</description>
 <description>&lt;b&gt;SUPPLY SYMBOL&lt;/b&gt;</description>
 <gates>
 <gate name="1" symbol="GND" x="0" y="0"/>
+</gates>
+<devices>
+<device name="">
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="AGND" prefix="AGND">
+<description>&lt;b&gt;SUPPLY SYMBOL&lt;/b&gt;</description>
+<gates>
+<gate name="VR1" symbol="AGND" x="0" y="0"/>
 </gates>
 <devices>
 <device name="">
@@ -19642,9 +19661,9 @@ Source: www.farnell.com/datasheets/247.pdf</description>
 <part name="LED2" library="led" deviceset="LED" device="5MM" value="WATER"/>
 <part name="IC1" library="ic-package" deviceset="DIL28" device="-3" value="ATMega 328p-pu"/>
 <part name="Q1" library="crystal" deviceset="CRYSTAL" device="HC49S" value="16MHz"/>
-<part name="R2" library="rcl" deviceset="R-EU_" device="R1206W" value="10k"/>
-<part name="R3" library="rcl" deviceset="R-EU_" device="R1206W" value="330R"/>
-<part name="R4" library="rcl" deviceset="R-EU_" device="R1206W" value="330R"/>
+<part name="R2" library="rcl" deviceset="R-EU_" device="R1206" value="10k"/>
+<part name="R3" library="rcl" deviceset="R-EU_" device="R1206" value="330R"/>
+<part name="R4" library="rcl" deviceset="R-EU_" device="R1206" value="330R"/>
 <part name="C3" library="rcl" deviceset="C-EU" device="C1206K" value="22p"/>
 <part name="C4" library="rcl" deviceset="C-EU" device="C1206K" value="22p"/>
 <part name="C5" library="rcl" deviceset="C-EU" device="C1206K" value="1n"/>
@@ -19670,14 +19689,16 @@ Source: www.farnell.com/datasheets/247.pdf</description>
 <part name="GND8" library="supply1" deviceset="GND" device=""/>
 <part name="SUPPLY1" library="supply2" deviceset="VCC" device=""/>
 <part name="SUPPLY3" library="supply2" deviceset="VCC" device=""/>
-<part name="R5" library="rcl" deviceset="R-EU_" device="R1206W"/>
-<part name="R6" library="rcl" deviceset="R-EU_" device="R1206W"/>
-<part name="R7" library="rcl" deviceset="R-EU_" device="R1206W"/>
-<part name="R8" library="rcl" deviceset="R-EU_" device="R1206W"/>
-<part name="GND6" library="supply1" deviceset="GND" device=""/>
-<part name="L1" library="rcl" deviceset="L-EU" device="L1812"/>
-<part name="L2" library="rcl" deviceset="L-EU" device="L1812"/>
+<part name="R5" library="rcl" deviceset="R-EU_" device="R1206"/>
+<part name="R6" library="rcl" deviceset="R-EU_" device="R1206"/>
+<part name="R7" library="rcl" deviceset="R-EU_" device="R1206"/>
+<part name="R8" library="rcl" deviceset="R-EU_" device="R1206"/>
+<part name="L1" library="rcl" deviceset="L-EU" device="L3230M"/>
+<part name="L2" library="rcl" deviceset="L-EU" device="L3230M"/>
 <part name="SUPPLY2" library="supply2" deviceset="VCC" device=""/>
+<part name="L3" library="rcl" deviceset="L-EU" device="L3230M"/>
+<part name="AGND1" library="supply1" deviceset="AGND" device=""/>
+<part name="AGND2" library="supply1" deviceset="AGND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -19738,10 +19759,12 @@ Source: www.farnell.com/datasheets/247.pdf</description>
 <instance part="R6" gate="G$1" x="93.98" y="25.4" rot="R180"/>
 <instance part="R7" gate="G$1" x="134.62" y="40.64" rot="R180"/>
 <instance part="R8" gate="G$1" x="134.62" y="25.4" rot="R180"/>
-<instance part="GND6" gate="1" x="157.48" y="5.08"/>
 <instance part="L1" gate="G$1" x="60.96" y="76.2" rot="R90"/>
 <instance part="L2" gate="G$1" x="96.52" y="76.2" rot="R90"/>
 <instance part="SUPPLY2" gate="G$1" x="106.68" y="81.28"/>
+<instance part="L3" gate="G$1" x="96.52" y="60.96" rot="R90"/>
+<instance part="AGND1" gate="VR1" x="106.68" y="55.88"/>
+<instance part="AGND2" gate="VR1" x="157.48" y="5.08"/>
 </instances>
 <busses>
 </busses>
@@ -19847,6 +19870,9 @@ Source: www.farnell.com/datasheets/247.pdf</description>
 <wire x1="71.12" y1="60.96" x2="53.34" y2="60.96" width="0.1524" layer="91"/>
 <wire x1="53.34" y1="60.96" x2="50.8" y2="63.5" width="0.1524" layer="91"/>
 <junction x="71.12" y="60.96"/>
+<pinref part="L3" gate="G$1" pin="1"/>
+<wire x1="91.44" y1="60.96" x2="83.82" y2="60.96" width="0.1524" layer="91"/>
+<junction x="83.82" y="60.96"/>
 </segment>
 <segment>
 <pinref part="GND2" gate="1" pin="GND"/>
@@ -19912,24 +19938,6 @@ Source: www.farnell.com/datasheets/247.pdf</description>
 <wire x1="109.22" y1="35.56" x2="106.68" y2="35.56" width="0.1524" layer="91"/>
 <wire x1="106.68" y1="35.56" x2="106.68" y2="20.32" width="0.1524" layer="91"/>
 <junction x="106.68" y="20.32"/>
-</segment>
-<segment>
-<pinref part="IC2" gate="A" pin="GND"/>
-<wire x1="160.02" y1="10.16" x2="157.48" y2="10.16" width="0.1524" layer="91"/>
-<wire x1="157.48" y1="10.16" x2="157.48" y2="7.62" width="0.1524" layer="91"/>
-<pinref part="IC2" gate="A" pin="I5"/>
-<wire x1="160.02" y1="17.78" x2="157.48" y2="17.78" width="0.1524" layer="91"/>
-<wire x1="157.48" y1="17.78" x2="157.48" y2="15.24" width="0.1524" layer="91"/>
-<pinref part="IC2" gate="A" pin="I6"/>
-<wire x1="157.48" y1="15.24" x2="157.48" y2="12.7" width="0.1524" layer="91"/>
-<wire x1="157.48" y1="12.7" x2="157.48" y2="10.16" width="0.1524" layer="91"/>
-<wire x1="160.02" y1="15.24" x2="157.48" y2="15.24" width="0.1524" layer="91"/>
-<pinref part="IC2" gate="A" pin="I7"/>
-<wire x1="160.02" y1="12.7" x2="157.48" y2="12.7" width="0.1524" layer="91"/>
-<junction x="157.48" y="15.24"/>
-<junction x="157.48" y="12.7"/>
-<junction x="157.48" y="10.16"/>
-<pinref part="GND6" gate="1" pin="GND"/>
 </segment>
 </net>
 <net name="N$4" class="0">
@@ -20325,6 +20333,32 @@ Source: www.farnell.com/datasheets/247.pdf</description>
 <wire x1="50.8" y1="73.66" x2="53.34" y2="76.2" width="0.1524" layer="91"/>
 <pinref part="L1" gate="G$1" pin="1"/>
 <wire x1="53.34" y1="76.2" x2="55.88" y2="76.2" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="AGND" class="0">
+<segment>
+<pinref part="L3" gate="G$1" pin="2"/>
+<pinref part="AGND1" gate="VR1" pin="AGND"/>
+<wire x1="101.6" y1="60.96" x2="106.68" y2="60.96" width="0.1524" layer="91"/>
+<wire x1="106.68" y1="60.96" x2="106.68" y2="58.42" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="IC2" gate="A" pin="GND"/>
+<wire x1="160.02" y1="10.16" x2="157.48" y2="10.16" width="0.1524" layer="91"/>
+<wire x1="157.48" y1="10.16" x2="157.48" y2="7.62" width="0.1524" layer="91"/>
+<pinref part="IC2" gate="A" pin="I5"/>
+<wire x1="160.02" y1="17.78" x2="157.48" y2="17.78" width="0.1524" layer="91"/>
+<wire x1="157.48" y1="17.78" x2="157.48" y2="15.24" width="0.1524" layer="91"/>
+<pinref part="IC2" gate="A" pin="I6"/>
+<wire x1="157.48" y1="15.24" x2="157.48" y2="12.7" width="0.1524" layer="91"/>
+<wire x1="157.48" y1="12.7" x2="157.48" y2="10.16" width="0.1524" layer="91"/>
+<wire x1="160.02" y1="15.24" x2="157.48" y2="15.24" width="0.1524" layer="91"/>
+<pinref part="IC2" gate="A" pin="I7"/>
+<wire x1="160.02" y1="12.7" x2="157.48" y2="12.7" width="0.1524" layer="91"/>
+<junction x="157.48" y="15.24"/>
+<junction x="157.48" y="12.7"/>
+<junction x="157.48" y="10.16"/>
+<pinref part="AGND2" gate="VR1" pin="AGND"/>
 </segment>
 </net>
 </nets>
