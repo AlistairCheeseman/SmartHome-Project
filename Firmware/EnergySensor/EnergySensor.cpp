@@ -31,7 +31,7 @@ int calcPwr(void);
 FILE * usart0_str;
 RF24 radio;
 SensorNet network(radio);
-MQTTSN app(network,(uint8_t) 0x27);
+MQTTSN app(network,(uint8_t) 0x27, MAC_SUFF_HEX);
 
 
 int main(void)
