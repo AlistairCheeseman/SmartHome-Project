@@ -9129,10 +9129,10 @@ Source: www.bourns.com .. 6000_series.pdf</description>
 <part name="R2" library="rcl" deviceset="R-EU_" device="R1206" value="10k"/>
 <part name="P+3" library="supply1" deviceset="VCC" device=""/>
 <part name="GND4" library="supply1" deviceset="GND" device=""/>
-<part name="C3" library="rcl" deviceset="C-EU" device="C1206K" value="0.1u"/>
+<part name="C3" library="rcl" deviceset="C-EU" device="C1206K" value="1u"/>
 <part name="P+4" library="supply1" deviceset="VCC" device=""/>
 <part name="L1" library="rcl" deviceset="L-EU" device="L3216C" value="10u"/>
-<part name="C4" library="rcl" deviceset="C-EU" device="C1206"/>
+<part name="C4" library="rcl" deviceset="C-EU" device="C1206" value="100n"/>
 <part name="GND5" library="supply1" deviceset="GND" device=""/>
 <part name="G2" library="battery" deviceset="SL-160AA/PR" device=""/>
 <part name="G3" library="battery" deviceset="SL-160AA/PR" device=""/>
