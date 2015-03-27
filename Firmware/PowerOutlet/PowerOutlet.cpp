@@ -34,12 +34,15 @@ void pendingLed(uint8_t level);
 
 
 //for quik publishes we will store the id for the request topic. it stops the need to look the topic up every time before a publish.
+//topic to publish a Request to
 uint16_t pub1id = 0;
-uint16_t pub2id =0;
-
+uint16_t pub2id = 0;
+//topic we will get SR from
 uint16_t sub3id = 0;
-uint16_t sub4id =0;
-
+uint16_t sub4id = 0;
+//where we send the updated status.
+uint16_t pubS3id = 0;
+uint16_t pubS4id = 0;
 
 void callback(uint16_t topicId, uint8_t *payload,unsigned int payloadLen) {
 	//update the new state to the server.
@@ -75,7 +78,9 @@ void callback(uint16_t topicId, uint8_t *payload,unsigned int payloadLen) {
 		{
 			changestate[0] = 0x30;
 		}
-		app.publish((unsigned char*)"d/"MAC_SUFF"/"ID3"/"TOPIC_STATUS_UPDATE,changestate, 0x0C, 0x01);
+		app.publish(pubS3id, changestate, 0x01);
+		
+	//	app.publish((unsigned char*)"d/"MAC_SUFF"/"ID3"/"TOPIC_STATUS_UPDATE,changestate, 0x0C, 0x01);
 	}
 	else if(topicId == sub4id)
 	{
@@ -101,7 +106,8 @@ void callback(uint16_t topicId, uint8_t *payload,unsigned int payloadLen) {
 		{
 			changestate[0] = 0x30;
 		}
-		app.publish((unsigned char*)"d/"MAC_SUFF"/"ID4"/"TOPIC_STATUS_UPDATE,changestate, 0x0C, 0x01);
+		app.publish(pubS4id, changestate, 0x01);
+		//app.publish((unsigned char*)"d/"MAC_SUFF"/"ID4"/"TOPIC_STATUS_UPDATE,changestate, 0x0C, 0x01);
 		
 	}
 	
@@ -113,6 +119,7 @@ int main(void)
 {
 		_delay_ms(2000); // wait two seconds for power supply to stabilize.THIS IS COMPULSORY OR CONFIG IN SETUP GOES MAD!
 	setup();
+	_delay_ms(1000); //wait for a bit.
 	//0x43 = flip states.
 	//0x31 = turn on.
 	//0x30 = turn off.
@@ -148,11 +155,19 @@ int main(void)
 		_delay_ms(5);
 		app.tick(); //process the ack.
 		
+		
+		
+		
 		//need to test this.
 		pub1id = app.gettopicid((unsigned char*)"d/"MAC_SUFF"/"ID1"/"TOPIC_REQUEST, 0x0C);
 		pub2id = app.gettopicid((unsigned char*)"d/"MAC_SUFF"/"ID2"/"TOPIC_REQUEST, 0x0C);
+		pubS3id = app.gettopicid((unsigned char*)"d/"MAC_SUFF"/"ID3"/"TOPIC_STATUS_UPDATE, 0x0C);
+		pubS4id = app.gettopicid((unsigned char*)"d/"MAC_SUFF"/"ID4"/"TOPIC_STATUS_UPDATE, 0x0C);
+		
 		printf("ID1 SR mapped to %d\n", pub1id);
 		printf("ID2 SR mapped to %d\n", pub2id);
+				printf("ID3 STATE mapped to %d\n", pubS3id);
+				printf("ID4 STATE mapped to %d\n", pubS4id);
 		printf("SUBSCRIBED\n");
 		pendingLed(LOW);
 		//if we get disconnected stop doing work and wait until reconnected.
@@ -173,7 +188,7 @@ int main(void)
 			_delay_ms(10); // wait a bit to ensure we don't over do the tick.
 			if (!(ID1_PINPORT & (1<<ID1_PIN))) // pullup so we want to check if it is low.
 			{
-				_delay_ms(2);
+				_delay_ms(1);
 				//kinda debounce.
 				if (!(ID1_PINPORT & (1<<ID1_PIN)))
 				{
