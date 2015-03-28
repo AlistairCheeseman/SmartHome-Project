@@ -159,8 +159,33 @@ char* SQL::getSRDEVTopic(char* mac, char* id) {
             }
         }
     }
-    char *output = new char[200];
-    sprintf(output, "d/%s/P", SRTopic);
+    
+    
+    char *output = new char[200]; // final output variable
+    output[0] = NULL; //ensure that it is sanitised before processing.
+            char* currentTopic = strtok(SRTopic, ";"); // variable to hold each iteration of the raw publish topic.
+            while (currentTopic != NULL) { // loop for each publish topic
+                int i, j;
+                char * formattedTopic = new char[15]; 
+                sprintf(formattedTopic,"d/%s/P;", currentTopic); // format the string and add the ; back in.
+                
+                 for (j=0; formattedTopic[j] !=NULL; j++) // get the length of the formatted string
+                    ;
+                for (i=0; output[i] !=NULL; i++) // get the current length of the output.
+                    ;
+                 char * newout  =(char*) calloc(i + j +1, sizeof(char*)); // create a var to hold the new output string.
+                 memcpy(newout, output, i*sizeof(char*));
+                 memcpy(newout +i, formattedTopic, j*sizeof(char*));
+                 newout[i+j] = NULL;
+                 memcpy(output, newout, (i + j +1)*sizeof(char*));
+               currentTopic = strtok(NULL, ";");
+            }
+
+
+
+    
+   // sprintf(output, "d/%s/P", SRTopic);
+            fprintf(stdout, "%s\n", output);
     return output;
 }
 
