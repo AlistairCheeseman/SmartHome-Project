@@ -24,59 +24,8 @@
 
                         //   powerVals.push([ Date.parse(value['moment']), parseFloat(value['powerReading']) ]);
                         powerVals.push([moment, parseFloat(value['powerReading'])]);
-                    });
-                    $('#container').highcharts(
-                            {
-                                title: {
-                                    text: 'Power Consumption'
-                                },
-                                xAxis: {
-                                    type: 'datetime'
-                                },
-                                yAxis: [{// Primary yAxis
-                                        labels: {
-                                            format: '{value}',
-                                            style: {
-                                                color: Highcharts.getOptions().colors[1]
-                                            }
-                                        },
-                                        title: {
-                                            text: 'Power Angle',
-                                            style: {
-                                                color: Highcharts.getOptions().colors[1]
-                                            }
-
-                                        },
-                                        opposite: true,
-                                        min: 0,
-                                        max: 1
-
-                                    }, {// Secondary yAxis
-                                        gridLineWidth: 0,
-                                        title: {
-                                            text: 'Power',
-                                            style: {
-                                                color: Highcharts.getOptions().colors[0]
-                                            }
-                                        },
-                                        labels: {
-                                            format: '{value}W',
-                                            style: {
-                                                color: Highcharts.getOptions().colors[0]
-                                            }
-                                        },
-                                        min: 0
-                                    }],
-                                series: [{
-                                        name: 'Power Usage',
-                                        yAxis: 1,
-                                        data: powerVals
-                                    }, {
-                                        name: 'Power Angle',
-                                        data: powerAngle,
-                                        yAxis: 0
-                                    }]
-                            });
+                    });                    
+                   drawPowerGraphFull(powerVals, powerAngle);
                 });
             });
            

@@ -59,55 +59,69 @@ if ($DBView == "power") {
     }
 
     if ($filter) {
-        if ($filter == "output")
-        {
+        if ($filter == "output") {
             $query = $query . " where t3.ControlTypeId = 1";
         }
-        if ($filter == "sensors")
-        {
-           $query = $query . " where t3.ControlTypeId = 2"; 
+        if ($filter == "sensors") {
+            $query = $query . " where t3.ControlTypeId = 2";
         }
-                if ($filter == "request")
-        {
-           $query = $query . " where t3.ControlTypeId = 3"; 
+        if ($filter == "request") {
+            $query = $query . " where t3.ControlTypeId = 3";
         }
     }
     $statement = $db->prepare($query);
     $statement->execute();
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode($results);
-}elseif ($DBView == "SensorHist") {
+} elseif ($DBView == "SensorHist") {
     $sensorid = $_GET['id'];
-        $query = "SELECT * FROM Sensor_Histories where SensorId='" . $sensorid . "'";
+    $query = "SELECT * FROM Sensor_Histories where SensorId='" . $sensorid . "'";
     $statement = $db->prepare($query);
     $statement->execute();
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode($results);
-}
-elseif ($DBView == "MDevMaps") {
+} elseif ($DBView == "MDevMaps") {
     $query = "select dm.Id as Id, dm.room as room, dm.DeviceType as DeviceType, dm.control as control, dm.controlId as controlId, DC.ControlTypeId as ControlTypeId from DefaultMaps dm INNER JOIN Devices devs ON devs.Id = dm.Id INNER JOIN Dev_Controls DC ON (DC.ControlId = dm.controlId AND DC.TypeId = devs.TypeId) where not exists (select 1 from sensors s where s.DevId = dm.Id AND s.ControlId = dm.ControlId)";
-      $filter = $_GET['filter'];
-    if ($filter == "true")
-        {
-      $devId = $_GET['devId'];
+    $filter = $_GET['filter'];
+    if ($filter == "true") {
+        $devId = $_GET['devId'];
         $controlId = $_GET['controlId'];
-           $query = $query . " AND dm.Id = '". $devId . "' AND dm.controlId = " . $controlId; 
-        } 
+        $query = $query . " AND dm.Id = '" . $devId . "' AND dm.controlId = " . $controlId;
+    }
     $statement = $db->prepare($query);
     $statement->execute();
-      if ($filter == "true")
-        {
-            $results = $statement->fetch(PDO::FETCH_ASSOC);
-        }
-          else
-        {
-    $results = $statement->fetchAll(PDO::FETCH_ASSOC);
-        }
-        echo json_encode($results);
-}
-elseif ($DBView == "Sensor") {
+    if ($filter == "true") {
+        $results = $statement->fetch(PDO::FETCH_ASSOC);
+    } else {
+        $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+    echo json_encode($results);
+} elseif ($DBView == "Sensor") {
     $sensorId = $_GET['Id'];
-    $query = "select * from Sensors where Id = ". $sensorId;
+    $query = "select * from Sensors where Id = " . $sensorId;
+    $statement = $db->prepare($query);
+    $statement->execute();
+    $results = $statement->fetch(PDO::FETCH_ASSOC);
+    echo json_encode($results);
+} elseif ($DBView == "Rules") {
+    $filter = $_GET['filter'];
+
+    $query = "select ato.Id, ato.Name, ato.Condition, at.Description as Type, ato.Topic, ato.Payload, ato.lastExec, ast.Description as state from automation ato 
+INNER JOIN auto_Types at ON at.Id = ato.TypeId 
+INNER JOIN auto_state ast ON ast.Id = ato.stateId";
+    if ($filter == "user") {
+        $query = $query . " where ato.stateId == 1 OR ato.stateId == 0";
+    }
+    if ($filter == "suggested") {
+        $query = $query . " where ato.stateId != 1 AND ato.stateId != 0";
+    }
+    $statement = $db->prepare($query);
+    $statement->execute();
+    $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode($results);
+} elseif ($DBView == "Rule") {
+    $ruleId = $_GET['Id'];
+    $query = "select * from automation where Id = " . $ruleId;
     $statement = $db->prepare($query);
     $statement->execute();
     $results = $statement->fetch(PDO::FETCH_ASSOC);

@@ -5,22 +5,19 @@
  */
 
 
-function getid()
-{
+function getid() {
     var vars = {};
     vars = getvars();
     document.getElementById('id').value = vars['id'];
 }
-function getvars()
-{
+function getvars() {
     var vars = {};
     var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
         vars[key] = value;
     });
     return vars;
 }
-function getRoomlist()
-{
+function getRoomlist() {
     $.getJSON('/get_data.php?view=Rooms', function (json)
     {
         $.each(json, function (key, value) {
@@ -33,8 +30,7 @@ function getRoomlist()
         });
     });
 }
-function getDevList()
-{
+function getDevList() {
     var vars = {};
     vars = getvars();
     $roomid = vars['roomid'];
@@ -80,8 +76,7 @@ function getroomdata() {
     });
 
 }
-function populateRoomList()
-{
+function populateRoomList() {
     $.getJSON('/get_data.php?view=Rooms', function (json)
     {
         var $select = $("#roomidlist");
@@ -90,8 +85,7 @@ function populateRoomList()
         });
     });
 }
-function populateDevTypeList()
-{
+function populateDevTypeList() {
     $.getJSON('/get_data.php?view=DevTypes', function (json)
     {
         var $select = $("#devidlist");
@@ -134,8 +128,7 @@ function getDevInfo() {
     });
 
 }
-function getSensorList()
-{
+function getSensorList() {
     var vars = {};
     vars = getvars();
     var devid = vars['devid'];
@@ -170,8 +163,7 @@ function getSensorList()
         });
     });
 }
-function getOutSensorList()
-{
+function getOutSensorList() {
     var vars = {};
     vars = getvars();
     var devid = vars['devid'];
@@ -209,8 +201,7 @@ function getOutSensorList()
         });
     });
 }
-function getReqSensorList()
-{
+function getReqSensorList() {
     var vars = {};
     vars = getvars();
     var devid = vars['devid'];
@@ -244,70 +235,47 @@ function getReqSensorList()
         });
     });
 }
-
-function showSensorHistory()
-{
+function showSensorHistory() {
     var vars = {};
     vars = getvars();
     var sensorid = vars['id'];
+    //todo: need to get the sensor type to show the appropriate graph.
     var sensortype = vars['type'];
-    //sensorGraph
-    //listDataTable
-    data = [];
 
+
+
+    data = [];
+    data2 = [];
     $.getJSON("/get_data.php?view=SensorHist&id=" + sensorid, function (json)
     {
         $.each(json, function (key, value) {
             moment = stringToDate(value['moment']).getTime();
             // moment = Date.parse(value['moment']); 
             data.push([moment, parseInt(value['value'])]);
-
-
-
             var row = $("<tr />");
             $("#listDataTable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
             row.append($("<td>" + value['moment'] + "</td>"));
             row.append($("<td>" + value['value'] + "</td>"));
         });
-        $('#sensorGraph').highcharts(
-                {
-                    title: {
-                        text: 'Usage'
-                    },
-                    xAxis: {
-                        type: 'datetime'
-                    },
-                    yAxis: [{// Primary yAxis
-                            labels: {
-                                format: '{value}',
-                                style: {
-                                    color: Highcharts.getOptions().colors[1]
-                                }
-                            },
-                            title: {
-                                text: 'On/Off',
-                                style: {
-                                    color: Highcharts.getOptions().colors[1]
-                                }
-
-                            },
-                            min: 0,
-                            max: 1
-
-                        }],
-                    series: [{
-                            name: 'Power Usage',
-                            yAxis: 0,
-                            data: data,
-                            step: true
-                        }]
-                });
+        if (sensortype == "power")
+        {
+            if (data2 != null) {
+                drawPowerGraphFull(data);
+            }
+            else
+            {
+                drawPowerGraphSingle(data);
+            }
+        } else if (sensortype == "onoff")
+        {
+            drawDigitalGraph(data)
+        }
+        else
+        {
+            drawPlainGraph(data);
+        }
     });
-
 }
-
-
-
 function stringToDate(s) {
     s = s.split(/[-: ]/);
     return new Date(s[0], s[1] - 1, s[2], s[3], s[4], s[5]);
@@ -319,10 +287,7 @@ function stringToUnixDate(s) {
 function dateToUnix(year, month, day, hour, minute, second) {
     return ((new Date(Date.UTC(year, month - 1, day, hour, minute, second))).getTime() / 1000.0);
 }
-
-
-function populateMDevMapSelectLists()
-{
+function populateMDevMapSelectLists() {
     //  var vars = {};
     // vars = getvars();
     // $roomid = vars['roomid'];
@@ -389,9 +354,7 @@ function populateMDevMapSelectLists()
 
 
 }
-
-function  getsensordata()
-{
+function getsensordata() {
     var vars = {};
     vars = getvars();
     $id = vars['id'];
@@ -461,4 +424,199 @@ function  getsensordata()
     document.getElementById('sensorNametxt').value = vars['Name'];
 
 }
-          
+function getARuleList() {
+    var vars = {};
+    vars = getvars();
+    $query = "/get_data.php?view=Rules&filter=user";
+    $.getJSON($query, function (json)
+    {
+        $.each(json, function (key, value) {
+            var row = $("<tr />");
+            $("#RulelistDataTable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
+            row.append($("<td>" + value['Name'] + "</td>"));
+            row.append($("<td>" + value['lastExec'] + "</td>"));
+            row.append($("<td>" + value['Type'] + "</td>"));
+            row.append($("<td>" + value['Condition'] + "</td>"));
+            row.append($("<td>" + value['state'] + "</td>"));
+            row.append($("<td>" + value['Topic'] + "</td>"));
+            row.append($("<td>" + value['Payload'] + "</td>"));
+
+            row.append($("<td>" + "<a href='/rules/edit?id=" + value['Id'] + "'>" + "Edit" + "</a>" + "</td>"));
+            row.append($("<td><a href='/rules/delete?id=" + value['Id'] + "' >Delete</a></td>"));
+        });
+    });
+}
+function getSRuleList() {
+    var vars = {};
+    vars = getvars();
+    $query = "/get_data.php?view=Rules&filter=suggested";
+    $.getJSON($query, function (json)
+    {
+        $.each(json, function (key, value) {
+            var row = $("<tr />");
+            $("#SRulelistDataTable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
+            row.append($("<td>" + value['Name'] + "</td>"));
+            row.append($("<td>" + value['Type'] + "</td>"));
+            row.append($("<td>" + value['Condition'] + "</td>"));
+            row.append($("<td>" + value['state'] + "</td>"));
+            row.append($("<td>" + value['Topic'] + "</td>"));
+            row.append($("<td>" + value['Payload'] + "</td>"));
+
+            row.append($("<td>" + "<a href='/rules/edit?id=" + value['Id'] + "'>" + "Edit" + "</a>" + "</td>"));
+            row.append($("<td><a href='/rules/delete?id=" + value['Id'] + "' >Delete</a></td>"));
+        });
+    });
+}
+function drawDigitalGraph(data) {
+    $('#sensorGraph').highcharts(
+            {
+                title: {
+                    text: 'Usage'
+                },
+                legend: {
+                    enabled: false
+                },
+                xAxis: {
+                    type: 'datetime'
+                },
+                yAxis: [{// Primary yAxis
+                        labels: {
+                            format: '{value}',
+                            style: {
+                                color: Highcharts.getOptions().colors[1]
+                            }
+                        },
+                        title: {
+                            text: 'On/Off',
+                            style: {
+                                color: Highcharts.getOptions().colors[1]
+                            }
+
+                        },
+                        min: 0,
+                        max: 1
+                    }],
+                series: [{
+                        name: 'Power Usage',
+                        yAxis: 0,
+                        data: data,
+                        step: true
+                    }]
+            });
+}
+function drawPowerGraphFull(powerVals, powerAngle) {
+    $('#container').highcharts(
+            {
+                title: {
+                    text: 'Power Consumption'
+                },
+                xAxis: {
+                    type: 'datetime'
+                },
+                yAxis: [{// Primary yAxis
+                        labels: {
+                            format: '{value}',
+                            style: {
+                                color: Highcharts.getOptions().colors[1]
+                            }
+                        },
+                        title: {
+                            text: 'Power Angle',
+                            style: {
+                                color: Highcharts.getOptions().colors[1]
+                            }
+
+                        },
+                        opposite: true,
+                        min: 0,
+                        max: 1
+
+                    }, {// Secondary yAxis
+                        gridLineWidth: 0,
+                        title: {
+                            text: 'Power',
+                            style: {
+                                color: Highcharts.getOptions().colors[0]
+                            }
+                        },
+                        labels: {
+                            format: '{value}W',
+                            style: {
+                                color: Highcharts.getOptions().colors[0]
+                            }
+                        },
+                        min: 0
+                    }],
+                series: [{
+                        name: 'Power Usage',
+                        yAxis: 1,
+                        data: powerVals
+                    }, {
+                        name: 'Power Angle',
+                        data: powerAngle,
+                        yAxis: 0
+                    }]
+            });
+}
+function drawPowerGraphSingle(powerVals) {
+    $('#container').highcharts(
+            {
+                title: {
+                    text: 'Power Consumption'
+                },
+                xAxis: {
+                    type: 'datetime'
+                },
+                yAxis: [{
+                        gridLineWidth: 0,
+                        title: {
+                            text: 'Power',
+                            style: {
+                                color: Highcharts.getOptions().colors[0]
+                            }
+                        },
+                        labels: {
+                            format: '{value}W',
+                            style: {
+                                color: Highcharts.getOptions().colors[0]
+                            }
+                        },
+                        min: 0
+                    }],
+                series: [{
+                        name: 'Power Usage',
+                        data: powerVals
+                    }]
+            });
+}
+function drawPlainGraph(data) {
+    $('#sensorGraph').highcharts(
+            {
+                title: {
+                    text: 'Usage'
+                },
+                legend: {
+                    enabled: false
+                },
+                xAxis: {
+                    type: 'datetime'
+                },
+                yAxis: [{// Primary yAxis
+                        labels: {
+                            format: '{value}',
+                            style: {
+                                color: Highcharts.getOptions().colors[1]
+                            }
+                        },
+                        title: {
+                            enabled: false
+                        }
+                    }],
+                series: [{
+                        name: 'Power Usage',
+                        yAxis: 0,
+                        data: data,
+                        step: true
+                    }]
+            });
+}
