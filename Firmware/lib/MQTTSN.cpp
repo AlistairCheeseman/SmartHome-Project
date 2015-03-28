@@ -287,14 +287,15 @@ uint16_t MQTTSN::waitResponse(unsigned char  (&payload)[20])
 	int count = 0;
 	while (!hadresponse)
 	{
+		_delay_ms(200); // increase to allow for response before resend as looping too quick and missing response..
 		this->tick();
 		if (this->currentState == STATE_ACTIVE)
 		{
 			//WE HAVE RESPONSE !;
 			hadresponse = true;
+			break;
 		}
 		count++;
-		_delay_ms(100);
 		if (count > 8)
 		{
 			//if we have waited for a bit resend the packet.
