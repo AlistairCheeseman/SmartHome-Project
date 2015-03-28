@@ -193,8 +193,8 @@ function getOutSensorList()
             row.append($("<td>" + value['Device'] + "</td>"));
             row.append($("<td>" + value['Type'] + "</td>"));
             row.append($("<td>" + "<a href='/sensors/history?id=" + value['Id'] + "'>" + value['CurrentValue'] + "</a>" + "</td>"));
-            row.append($("<td>" + "<a href='/set_data?action=on&amp;id=" + value['Id'] + "'>on</a>/"+ "<a href='/set_data?action=off&amp;id=" + value['Id'] + "'>off</a>" + "</td>"));
-          
+            row.append($("<td>" + "<a href='/set_data?action=on&amp;id=" + value['Id'] + "'>on</a>/" + "<a href='/set_data?action=off&amp;id=" + value['Id'] + "'>off</a>" + "</td>"));
+
             if (value['SRDevTopic'])
             {
                 row.append($("<td>" + value['SRDevTopic'] + "</td>"));
@@ -203,7 +203,7 @@ function getOutSensorList()
             {
                 row.append($("<td>" + value['MapTopic'] + "</td>"));
             }
-            
+
             row.append($("<td>" + "<a href='/sensors/edit?id=" + value['Id'] + "'>" + "Edit" + "</a>" + "</td>"));
             row.append($("<td><a href='/sensors/delete?id=" + value['Id'] + "' >Delete</a></td>"));
         });
@@ -259,8 +259,8 @@ function showSensorHistory()
     {
         $.each(json, function (key, value) {
             moment = stringToDate(value['moment']).getTime();
-       // moment = Date.parse(value['moment']); 
-        data.push([moment, parseInt(value['value'])]);
+            // moment = Date.parse(value['moment']); 
+            data.push([moment, parseInt(value['value'])]);
 
 
 
@@ -272,7 +272,7 @@ function showSensorHistory()
         $('#sensorGraph').highcharts(
                 {
                     title: {
-                        text: 'Power Consumption'
+                        text: 'Usage'
                     },
                     xAxis: {
                         type: 'datetime'
@@ -285,13 +285,12 @@ function showSensorHistory()
                                 }
                             },
                             title: {
-                                text: 'Power Angle',
+                                text: 'On/Off',
                                 style: {
                                     color: Highcharts.getOptions().colors[1]
                                 }
 
                             },
-                            opposite: true,
                             min: 0,
                             max: 1
 
@@ -309,14 +308,157 @@ function showSensorHistory()
 
 
 
- function stringToDate(s) {
-                s = s.split(/[-: ]/);
-                return new Date(s[0], s[1] - 1, s[2], s[3], s[4], s[5]);
-            }
-            function stringToUnixDate(s) {
-                s = s.split(/[-: ]/);
-                return dateToUnix(s[0], s[1], s[2], s[3], s[4], s[5]);
-            }
-            function dateToUnix(year, month, day, hour, minute, second) {
-                return ((new Date(Date.UTC(year, month - 1, day, hour, minute, second))).getTime() / 1000.0);
-            }
+function stringToDate(s) {
+    s = s.split(/[-: ]/);
+    return new Date(s[0], s[1] - 1, s[2], s[3], s[4], s[5]);
+}
+function stringToUnixDate(s) {
+    s = s.split(/[-: ]/);
+    return dateToUnix(s[0], s[1], s[2], s[3], s[4], s[5]);
+}
+function dateToUnix(year, month, day, hour, minute, second) {
+    return ((new Date(Date.UTC(year, month - 1, day, hour, minute, second))).getTime() / 1000.0);
+}
+
+
+function populateMDevMapSelectLists()
+{
+    //  var vars = {};
+    // vars = getvars();
+    // $roomid = vars['roomid'];
+    document.getElementById("outputlist").style.display = 'none';
+    document.getElementById("selectlistlbl").style.display = 'none';
+    document.getElementById('topicMaptxt').type = "hidden";
+    document.getElementById('topicMaplbl').style.display = 'none';
+
+    $.getJSON('/get_data.php?view=MDevMaps', function (json)
+    {
+        var $selectdev = $("#Devidlist");
+        $.each(json, function (key, value) {
+            $selectdev.append("<option value='" + value['Id'] + "/" + value['controlId'] + "'>" + value['Id'] + "/" + value['controlId'] + " (" + value['DeviceType'] + "/" + value['control'] + ")</option>");
+        });
+        var $change = $selectdev.on('change', function () {
+            var vars = {};
+            var $selectId = document.getElementById("Devidlist").selectedIndex;
+            var $rawid = document.getElementById("Devidlist").options[$selectId].value;
+            var $keys = $rawid.split("/");
+            $.getJSON('/get_data.php?view=MDevMaps&filter=true&devId=' + $keys[0] + '&controlId=' + $keys[1], function (json)
+            {
+                $.each(json, function (key, value) {
+                    vars[key] = value;
+                });
+                var $room = vars['room'];
+                var $deviceType = vars['DeviceType'];
+                var $control = vars['control'];
+                var $controlType = vars['ControlTypeId'];
+                document.getElementById('controlTId').value = $controlType;
+                if ($controlType == 3)
+                {
+
+// load up all the devices that can be controlled.
+                    $.getJSON("/get_data.php?view=Sensors&filter=output", function (json)
+                    {
+                        var $select = $("#outputlist");
+                        $.each(json, function (key, value) {
+                            $select.append("<option value='" + value['DevId'] + "/" + value['ControlId'] + "'>" + value['Name'] + "</option>");
+                        });
+                    });
+                    //hide manual entry of the topic map as it will be handled by the multiple select list.
+                    document.getElementById('topicMaptxt').type = "hidden";
+                    document.getElementById('topicMaplbl').style.display = 'none';
+
+                    //make sure we can see the select list.
+                    document.getElementById("outputlist").style.display = 'block';
+                    document.getElementById("selectlistlbl").style.display = 'block';
+                }
+                else
+                {
+                    //load up the default value for a mapping layer value.
+                    document.getElementById('topicMaptxt').value = $room + "/" + $deviceType + "/" + $control;
+                    //ensure the text box is visible
+                    document.getElementById('topicMaplbl').style.display = 'block';
+                    document.getElementById('topicMaptxt').type = "text";
+                    //hide the multiple select list
+                    document.getElementById("outputlist").style.display = 'none';
+                    document.getElementById("selectlistlbl").style.display = 'none';
+                }
+            });
+        });
+
+    });
+
+
+}
+
+function  getsensordata()
+{
+    var vars = {};
+    vars = getvars();
+    $id = vars['id'];
+    document.getElementById('id').value
+    $url = '/get_data.php?view=Sensor&Id=' + $id.toString();
+    $.getJSON($url, function (json)
+    {
+        $.each(json, function (key, value) {
+            vars[key] = value;
+        });
+    }).error(function (error) {
+        alert(error);
+    });
+
+
+    if (vars['MapTopic'] == null)//SR TOPIC
+    {
+        //hide the topic map box and ensure the value is set to default.
+        //todo: need to make it so that the SRDevTopic is set by selecting a device from a drop down box.
+        //then need to make it so that you can select multiple devices.
+        document.getElementById('topicMaptxt').type = "hidden";
+        document.getElementById('topicMaplbl').style.display = 'none';
+        document.getElementById("outputlist").style.display = 'block';
+        document.getElementById("selectlistlbl").style.display = 'block';
+
+        //  document.getElementById('topicMaptxt').value = vars['SRDevTopic'];
+        // load up all the devices that can be controlled.
+        $.getJSON("/get_data.php?view=Sensors&filter=output", function (json)
+        {
+            var $select = $("#outputlist");
+            $.each(json, function (key, value) {
+                $select.append("<option value='" + value['DevId'] + "/" + value['ControlId'] + "'>" + value['Name'] + "</option>");
+            });
+        });
+
+
+        var $longSRTopic = vars['SRDevTopic'];
+        var $SRArray = $longSRTopic.split(";");
+
+
+
+        $.each($SRArray, function (index, item) {
+            //you're filtering options, not the list itself
+            $("#outputlist > option").filter(function () {
+                return $(this).val() == item;
+            }).prop('selected', true); //use .prop, not .attr
+        });
+
+
+
+
+        document.getElementById('TopicTypetxt').value = "SR";
+
+    }
+    else
+    {
+        //ensure the text box is visible
+        document.getElementById('topicMaplbl').style.display = 'block';
+        document.getElementById('topicMaptxt').type = "text";
+        //hide the multiple select list
+        document.getElementById("outputlist").style.display = 'none';
+        document.getElementById("selectlistlbl").style.display = 'none';
+
+        document.getElementById('topicMaptxt').value = vars['MapTopic'];
+        document.getElementById('TopicTypetxt').value = "MAP";
+    }
+    document.getElementById('sensorNametxt').value = vars['Name'];
+
+}
+          

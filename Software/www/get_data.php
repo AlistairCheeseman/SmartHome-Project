@@ -53,9 +53,9 @@ if ($DBView == "power") {
 
     $devid = $_GET['devid'];
     if ($devid) {
-        $query = "SELECT t1.Id, t1.Name as Name, t2.Name as Device, t1.CurrentValue, t1.SRDevTopic, t1.MapTopic, t3.Name as Type FROM Sensors t1 INNER JOIN Devices t2 ON t2.id = t1.DevId INNER JOIN Dev_Controls t3 ON t3.ControlId = t1.ControlId AND t3.TypeId = t2.TypeId where DevId='" . $devid . "'";
+        $query = "SELECT t1.Id, t1.Name as Name, t2.Name as Device, t1.CurrentValue, t1.SRDevTopic, t1.MapTopic, t3.Name as Type, t1.DevId as DevId, t1.ControlId as ControlId FROM Sensors t1 INNER JOIN Devices t2 ON t2.id = t1.DevId INNER JOIN Dev_Controls t3 ON t3.ControlId = t1.ControlId AND t3.TypeId = t2.TypeId where DevId='" . $devid . "'";
     } else {
-        $query = "SELECT t1.Id, t1.Name as Name, t2.Name as Device, t1.CurrentValue, t1.SRDevTopic, t1.MapTopic, t3.Name as Type FROM Sensors t1 INNER JOIN Devices t2 ON t2.id = t1.DevId INNER JOIN Dev_Controls t3 ON t3.ControlId = t1.ControlId AND t3.TypeId = t2.TypeId";
+        $query = "SELECT t1.Id, t1.Name as Name, t2.Name as Device, t1.CurrentValue, t1.SRDevTopic, t1.MapTopic, t3.Name as Type, t1.DevId as DevId, t1.ControlId as ControlId FROM Sensors t1 INNER JOIN Devices t2 ON t2.id = t1.DevId INNER JOIN Dev_Controls t3 ON t3.ControlId = t1.ControlId AND t3.TypeId = t2.TypeId";
     }
 
     if ($filter) {
@@ -82,5 +82,34 @@ if ($DBView == "power") {
     $statement = $db->prepare($query);
     $statement->execute();
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode($results);
+}
+elseif ($DBView == "MDevMaps") {
+    $query = "select dm.Id as Id, dm.room as room, dm.DeviceType as DeviceType, dm.control as control, dm.controlId as controlId, DC.ControlTypeId as ControlTypeId from DefaultMaps dm INNER JOIN Devices devs ON devs.Id = dm.Id INNER JOIN Dev_Controls DC ON (DC.ControlId = dm.controlId AND DC.TypeId = devs.TypeId) where not exists (select 1 from sensors s where s.DevId = dm.Id AND s.ControlId = dm.ControlId)";
+      $filter = $_GET['filter'];
+    if ($filter == "true")
+        {
+      $devId = $_GET['devId'];
+        $controlId = $_GET['controlId'];
+           $query = $query . " AND dm.Id = '". $devId . "' AND dm.controlId = " . $controlId; 
+        } 
+    $statement = $db->prepare($query);
+    $statement->execute();
+      if ($filter == "true")
+        {
+            $results = $statement->fetch(PDO::FETCH_ASSOC);
+        }
+          else
+        {
+    $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+        }
+        echo json_encode($results);
+}
+elseif ($DBView == "Sensor") {
+    $sensorId = $_GET['Id'];
+    $query = "select * from Sensors where Id = ". $sensorId;
+    $statement = $db->prepare($query);
+    $statement->execute();
+    $results = $statement->fetch(PDO::FETCH_ASSOC);
     echo json_encode($results);
 }

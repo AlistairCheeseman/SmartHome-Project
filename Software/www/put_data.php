@@ -47,12 +47,12 @@ try {
         }
     } elseif ($table == "devs") {
         if ($action == "new") {
-             $id = $_GET['Id'];
+            $id = $_GET['Id'];
             $Name = $_GET['Name'];
             $Roomid = intval($_GET['roomid']);
             $devtypeid = intval($_GET['devid']);
 
-           $db->exec("INSERT INTO 'Devices' ('Id', 'TypeId', 'Name', 'RoomId') VALUES ('" . $id . "','" . $devtypeid . "','" . $Name . "','". $Roomid ."')");
+            $db->exec("INSERT INTO 'Devices' ('Id', 'TypeId', 'Name', 'RoomId') VALUES ('" . $id . "','" . $devtypeid . "','" . $Name . "','" . $Roomid . "')");
             $db = null;
             if (REDIRECTS) {
                 header('Location: /devices');
@@ -67,7 +67,7 @@ try {
             }
             echo "success";
         } elseif ($action == "edit") {
-            $id = $_GET['id']; 
+            $id = $_GET['id'];
             $Name = $_GET['Name'];
             $Roomid = intval($_GET['roomid']);
             $devtypeid = intval($_GET['devid']);
@@ -75,6 +75,56 @@ try {
             $db = null;
             if (REDIRECTS) {
                 header('Location: /devices');
+            }
+            echo "success";
+        }
+    } elseif ($table == "sensors") {
+        if ($action == "new") {
+            $rawid = $_GET['devid']; // get the raw device id (MAC/ID)
+            list($macId, $controlId) = explode("/", $rawid); // split it into the correct parameters.
+            $controlIdType = intval($_GET['controlTypeId']); // this tells us where the mapping topic has been stored.
+            $sensorName = $_GET['sensorName']; // get the name for the sensor.
+            if ($controlIdType == 3) {
+                $SRArray = "";
+                foreach ($_GET['outputmap'] as $selectedOption)
+                    $SRArray = $SRArray . $selectedOption . ";";
+                ////this is a  SR Topic not a map topic
+                $db->exec("INSERT INTO 'Sensors' ('DevId', 'ControlId', 'SRDevTopic', 'Name') VALUES ('" . $macId . "','" . $controlId . "','" . $SRArray . "','" . $sensorName . "')");
+            } else {
+                $mapTopic = $_GET['topicMap'];
+                $db->exec("INSERT INTO 'Sensors' ('DevId', 'ControlId', 'MapTopic', 'Name') VALUES ('" . $macId . "','" . $controlId . "','" . $mapTopic . "','" . $sensorName . "')");
+            }
+            $db = null;
+            if (REDIRECTS) {
+                header('Location: /sensors');
+            }
+            echo "success";
+        } elseif ($action == "delete") {
+            $id = $_GET['id'];
+            $db->exec("DELETE FROM 'Sensors' where Id = '" . $id . "'");
+            $db = null;
+            if (REDIRECTS) {
+                header('Location: /sensors');
+            }
+            echo "success";
+        } elseif ($action == "edit") {
+            $id = $_GET['id'];
+            $Name = $_GET['sensorName'];
+            $topicType = $_GET['TopicType'];
+
+            if ($topicType == "SR") {
+                $SRArray = "";
+                foreach ($_GET['outputmap'] as $selectedOption)
+                    $SRArray = $SRArray . $selectedOption . ";";
+                $db->exec("UPDATE 'Sensors' SET Name='" . $Name . "', SRDevTopic='" . $SRArray . "' WHERE Id='" . $id . "'");
+            } else {
+                $topicMap = $_GET['topicMap'];
+                $db->exec("UPDATE 'Sensors' SET Name='" . $Name . "', MapTopic='" . $topicMap . "' WHERE Id='" . $id . "'");
+            }
+
+            $db = null;
+            if (REDIRECTS) {
+                header('Location: /sensors');
             }
             echo "success";
         }
