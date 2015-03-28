@@ -31,12 +31,13 @@ void SensorNet::setup()
 	radio->openWritingPipe(pipes[1]);
 	radio->openReadingPipe(1, pipes[0]);
 	radio->startListening();
+		_delay_ms(1000); //wait for a bit.
 	radio->printDetails();
 }
 void SensorNet::tick()
 {
 	//force a 200ms wait incase we have just transmitted
-	_delay_ms(300); //increased as avergage packet size has increased by six bytes.
+	_delay_ms(150); //increased as avergage packet size has increased by six bytes.
 	// if there is data ready
 	if ( radio->available() )
 	{
@@ -92,7 +93,7 @@ void SensorNet::sendpacket(const void* payload, const uint8_t len,const uint32_t
 	    }
 	
 	
-		_delay_ms(200); //slow down transmission to allow recieve
+//		_delay_ms(200); //slow down transmission to allow recieve
 	//think this is causing lost packets as sensor data doesn't end up processed.
 	//this->tick(); //process any pending packets
 	
