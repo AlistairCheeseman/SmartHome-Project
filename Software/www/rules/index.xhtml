@@ -3,21 +3,13 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="UTF-8" />
-        <title>SmartHome - Rooms</title>
+        <title>SmartHome - Rules</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
         <link rel="stylesheet" href="/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/css/css.css"   /> 
         <script src="/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="/css/lavish-bootstrap.css"   /> 
-        <script type="text/javascript" src="/js/functions.js" ></script>
-        <script type="text/javascript" >
-            $(document).ready(function () {
-                    $.ajaxSetup({ cache:false }); // turn off ajax CACHING
-                getRoomlist();
-            });
-
-        </script>
+        <link rel="stylesheet" href="/css/lavish-bootstrap.css"   /> 
     </head>
     <body>
         <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -35,31 +27,20 @@
                     <ul class="nav navbar-nav">
                         <li><a href="/">Home</a></li>
                         <li><a href="/sensors">Sensors</a></li>
-                        <li class="active"><a href="/rooms">Rooms</a></li>
+                        <li><a href="/rooms">Rooms</a></li>
                         <li><a href="/devices">Devices</a></li>
-                        <li><a href="/rules">Rules</a></li>
+                        <li class="active"><a href="/rules">Rules</a></li>
                         <li><a href="/settings">Settings</a></li>
                         <li><a href="/licensing">Licensing</a></li>
-
                     </ul>
                 </div>
             </div>
         </nav>
         <div class="container">
-            <div id="container">
-                <h1>Rooms</h1>
-                <table id="listDataTable"  class="table table-striped">
-                    <tr>
-                        <th>Room Name</th>
-                        <th>Number of Devices</th>
-                        <th> </th>
-                        <th> </th>
-                    </tr>
-                </table>
-                <p><a href="/rooms/new">Add a New room</a></p>
-            </div>
+          <div class="container">
+              <h1>Rules</h1>
         </div>
-
+        </div>
         <div id="footer">
             <div class="container">
                 <p class="muted credit">Cand No: 79087 - Smart Home for 3rd Year MEng Electronic Engineering Project - University Of Sussex Engineering 2015.</p>
