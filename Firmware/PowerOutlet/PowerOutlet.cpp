@@ -79,8 +79,8 @@ void callback(uint16_t topicId, uint8_t *payload,unsigned int payloadLen) {
 			changestate[0] = 0x30;
 		}
 		app.publish(pubS3id, changestate, 0x01);
-		
-	//	app.publish((unsigned char*)"d/"MAC_SUFF"/"ID3"/"TOPIC_STATUS_UPDATE,changestate, 0x0C, 0x01);
+		printf("updated status\n");
+		//	app.publish((unsigned char*)"d/"MAC_SUFF"/"ID3"/"TOPIC_STATUS_UPDATE,changestate, 0x0C, 0x01);
 	}
 	else if(topicId == sub4id)
 	{
@@ -107,6 +107,7 @@ void callback(uint16_t topicId, uint8_t *payload,unsigned int payloadLen) {
 			changestate[0] = 0x30;
 		}
 		app.publish(pubS4id, changestate, 0x01);
+		printf("updated status\n");
 		//app.publish((unsigned char*)"d/"MAC_SUFF"/"ID4"/"TOPIC_STATUS_UPDATE,changestate, 0x0C, 0x01);
 		
 	}
@@ -117,7 +118,7 @@ void callback(uint16_t topicId, uint8_t *payload,unsigned int payloadLen) {
 //NOTE:: app.tick() must be called to handle any replies, and in turn update any status!
 int main(void)
 {
-		_delay_ms(2000); // wait two seconds for power supply to stabilize.THIS IS COMPULSORY OR CONFIG IN SETUP GOES MAD!
+	_delay_ms(2000); // wait two seconds for power supply to stabilize.THIS IS COMPULSORY OR CONFIG IN SETUP GOES MAD!
 	setup();
 	_delay_ms(1000); //wait for a bit.
 	//0x43 = flip states.
@@ -136,38 +137,49 @@ int main(void)
 		pendingLed(HIGH);
 		while (app.currentState != STATE_ACTIVE)
 		{
-			_delay_ms(2000); //dont spam the network with reconnections.
+			//_delay_ms(2000); //dont spam the network with reconnections.
 			app.connect();
-			_delay_ms(500); //wait for response.
+			_delay_ms(2500); //wait for response.
 			app.tick();
 		}
 		connectedLed(HIGH);
 		printf("CONNECTED\n");
+		unsigned char offstate[1] ={(unsigned char) 0x30};
+		//need to test this.
+		pub1id = app.gettopicid((unsigned char*)"d/"MAC_SUFF"/"ID1"/"TOPIC_REQUEST, 0x0C);
+		_delay_ms(5);
+		pub2id = app.gettopicid((unsigned char*)"d/"MAC_SUFF"/"ID2"/"TOPIC_REQUEST, 0x0C);
+		_delay_ms(5);
+		pubS3id = app.gettopicid((unsigned char*)"d/"MAC_SUFF"/"ID3"/"TOPIC_STATUS_UPDATE, 0x0C);
+		_delay_ms(5);
+		pubS4id = app.gettopicid((unsigned char*)"d/"MAC_SUFF"/"ID4"/"TOPIC_STATUS_UPDATE, 0x0C);
+		_delay_ms(5);
+		
+		
+		app.publish(pubS3id, offstate, 0x01); //set  current state to off.
+		app.publish(pubS4id, offstate, 0x01); //set  current state to off.
 		
 		//subscribe to the topics here, we only need to subscribe to the State requests for outputs as they are the only things that can make it change.
 		
 		sub3id = 	app.subscribe((unsigned char*)"d/"MAC_SUFF"/"ID3"/"TOPIC_STATUS_REQUEST, 0x0C);
-		printf("Subscribed to: %d\n", sub3id);
+		
 		_delay_ms(5);
 		app.tick(); //process the ack.
 		sub4id = 	app.subscribe((unsigned char*)"d/"MAC_SUFF"/"ID4"/"TOPIC_STATUS_REQUEST, 0x0C);
-		printf("Subscribed to: %d\n", sub4id);
+
 		_delay_ms(5);
 		app.tick(); //process the ack.
 		
 		
 		
 		
-		//need to test this.
-		pub1id = app.gettopicid((unsigned char*)"d/"MAC_SUFF"/"ID1"/"TOPIC_REQUEST, 0x0C);
-		pub2id = app.gettopicid((unsigned char*)"d/"MAC_SUFF"/"ID2"/"TOPIC_REQUEST, 0x0C);
-		pubS3id = app.gettopicid((unsigned char*)"d/"MAC_SUFF"/"ID3"/"TOPIC_STATUS_UPDATE, 0x0C);
-		pubS4id = app.gettopicid((unsigned char*)"d/"MAC_SUFF"/"ID4"/"TOPIC_STATUS_UPDATE, 0x0C);
 		
 		printf("ID1 SR mapped to %d\n", pub1id);
 		printf("ID2 SR mapped to %d\n", pub2id);
-				printf("ID3 STATE mapped to %d\n", pubS3id);
-				printf("ID4 STATE mapped to %d\n", pubS4id);
+		printf("ID3 STATE mapped to %d\n", pubS3id);
+		printf("ID4 STATE mapped to %d\n", pubS4id);
+		printf("Subscribed to: %d\n", sub3id);
+		printf("Subscribed to: %d\n", sub4id);
 		printf("SUBSCRIBED\n");
 		pendingLed(LOW);
 		//if we get disconnected stop doing work and wait until reconnected.
@@ -175,17 +187,17 @@ int main(void)
 		{
 			if ((app.currentState & STATE_WAIT_MASK) > 0)
 			{ // we are waiting for something
-					pendingLed(HIGH);
+				pendingLed(HIGH);
 			}
 			else
 			{
-					pendingLed(LOW);
+				pendingLed(LOW);
 				
 			}
-			
+				_delay_ms(90); // wait a bit to ensure we don't over do the tick and to allow time to recieve.
 			app.tick(); // process the radio no matter if connected to a MQTT server or not. this is to help the network layer communications.
 			//printf("main loop\n");
-			_delay_ms(10); // wait a bit to ensure we don't over do the tick.
+		
 			if (!(ID1_PINPORT & (1<<ID1_PIN))) // pullup so we want to check if it is low.
 			{
 				_delay_ms(1);
@@ -201,7 +213,6 @@ int main(void)
 						id1button = true;
 					}
 				}
-				app.tick();
 			}
 			else
 			{
@@ -209,7 +220,7 @@ int main(void)
 			}
 			if (!(ID2_PINPORT & (1<<ID2_PIN)))
 			{
-				_delay_ms(2);
+				_delay_ms(1);
 				//kinda debounce.
 				if (!(ID2_PINPORT & (1<<ID2_PIN)))
 				{
