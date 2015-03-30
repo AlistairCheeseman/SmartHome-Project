@@ -17,6 +17,7 @@ using namespace std;
 SensorNet* net;
 UDP* udp[6];
 uint32_t clients[6];
+uint8_t nexthop[6];
 
 /*
  * 
@@ -30,13 +31,26 @@ int main(int argc, char** argv) {
     udp[3] = new UDP("127.0.0.1", "1884");
     udp[4] = new UDP("127.0.0.1", "1884");
     udp[5] = new UDP("127.0.0.1", "1884");
-
-    clients[0] = 0x000000;
-    clients[1] = 0x000000;
-    clients[2] = 0x000000;
-    clients[3] = 0x000000;
+    // these will dynamically populate however, setting to fixed values for the time being to allow simple routing.
+    clients[0] = 0x87865E; // power outlet
+    clients[1] = 0xAEAEAE; // energy sensor
+    clients[2] = 0x898989; // heating controller
+    clients[3] = 0x6E6E6E; // environment sensor
     clients[4] = 0x000000;
     clients[5] = 0x000000;
+
+
+    //this is hardcoded. will be dynamic in future, assume turned on in correct order for the clients[] assignments.
+    nexthop[0] = 1;
+    nexthop[1] = 2;
+    nexthop[2] = 3;
+    nexthop[3] = 4;
+
+
+
+
+
+
 
     int fd = -1;
     int sock = -1;
@@ -58,7 +72,7 @@ int main(int argc, char** argv) {
                         if (clients[t] == 0x000000) {
                             fprintf(stdout, "added new client to table.\n");
                             // if the client address is 0x000000 it is un used! - make it in use!
-                            
+
                             clients[t] = sourceId;
                         }
                         // loop through all the connections to find which client we should be connecting to.
@@ -81,9 +95,10 @@ int main(int argc, char** argv) {
                 if (packet && currentPackLen) { // check it's a mqtt packet.
                     if (MQTTSNCheck::verifyPacket(packet, currentPackLen) == true) {
                         fprintf(stdout, "UDP --> Wireless\n");
-                     fprintf(stdout, "Source: %.6x\nDest  :%.6x\n", 0x000000,  clients[t]);
-                        net->sendpacket(packet, currentPackLen, 0x000000, clients[t]);
-                         fprintf(stdout, "\n");
+                        fprintf(stdout, "Source: %.6x\nDest  : %.6x\n", 0x000000, clients[t]);
+                        fprintf(stdout, "Next Hop : %3d\n", nexthop[t]);
+                        net->sendpacket(packet, currentPackLen, 0x000000, clients[t],nexthop[t]);
+                        fprintf(stdout, "\n");
                     }
                     currentPackLen = 0;
                 }

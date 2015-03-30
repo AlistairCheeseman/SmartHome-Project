@@ -21,7 +21,7 @@ public:
     void tick(void);
     void setup(void);
         bool pendingpacket;
-    void sendpacket(const void* payload, const uint8_t len, uint32_t sourceId, uint32_t destId);
+    void sendpacket(const void* payload, const uint8_t len, uint32_t sourceId, uint32_t destId, uint8_t nextHopId);
     void *getpacket(uint8_t& len, uint32_t& sourceId, uint32_t& destId);
     
 private:
@@ -29,7 +29,7 @@ private:
     Timing* timing;
     Radio* radio;
    
-  uint64_t pipes[2];
+  uint64_t pipes[6];
    static const int min_payload_size = 4;
    static const int max_payload_size = 32;
    static const int payload_size_increments_by = 2;
