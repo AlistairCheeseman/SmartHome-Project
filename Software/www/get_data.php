@@ -98,7 +98,7 @@ if ($DBView == "power") {
     echo json_encode($results);
 } elseif ($DBView == "Sensor") {
     $sensorId = $_GET['Id'];
-    $query = "select * from Sensors where Id = " . $sensorId;
+    $query = "select sen.Id, sen.DevId, sen.ControlId, sen.MapTopic, sen.SRDevTopic, sen.CurrentValue, sen.Name, DC.ControlTypeId from Sensors sen INNER JOIN Devices dev ON (sen.DevId = dev.Id) INNER JOIN Dev_Controls DC ON (sen.ControlId = DC.ControlId  AND dev.TypeId = DC.TypeId) where sen.Id = " . $sensorId;
     $statement = $db->prepare($query);
     $statement->execute();
     $results = $statement->fetch(PDO::FETCH_ASSOC);
