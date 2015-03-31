@@ -30,7 +30,9 @@
 //INDIVIDUAL DEVICE ID
 #define MAC_SUFF "AEAEAE"
 #define MAC_SUFF_HEX 0xAEAEAE
-
+//this should be assigned dynamically but for time being will be manual
+#define THIS_LEVEL 1
+#define THIS_DEV 2
 
 #define STATUS_LED_1 PORTD5 //OUT1_LED
 #define STATUS_LED_2 PORTD6 //OUT2_LED
