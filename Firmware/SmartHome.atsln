@@ -5,6 +5,8 @@ Project("{E66E83B9-2572-4076-B26E-6BE79FF3018A}") = "PowerOutlet", "PowerOutlet\
 EndProject
 Project("{E66E83B9-2572-4076-B26E-6BE79FF3018A}") = "EnergySensor", "EnergySensor\EnergySensor.cppproj", "{31A7C404-4B79-4F90-9BDE-2F8A193DD4AE}"
 EndProject
+Project("{E66E83B9-2572-4076-B26E-6BE79FF3018A}") = "EnvironmentSensor", "EnvironmentSensor\EnvironmentSensor.cppproj", "{32A93415-1F29-4C14-A21D-4E61B7D7C929}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -19,6 +21,10 @@ Global
 		{31A7C404-4B79-4F90-9BDE-2F8A193DD4AE}.Debug|AVR.Build.0 = Debug|AVR
 		{31A7C404-4B79-4F90-9BDE-2F8A193DD4AE}.Release|AVR.ActiveCfg = Release|AVR
 		{31A7C404-4B79-4F90-9BDE-2F8A193DD4AE}.Release|AVR.Build.0 = Release|AVR
+		{32A93415-1F29-4C14-A21D-4E61B7D7C929}.Debug|AVR.ActiveCfg = Debug|AVR
+		{32A93415-1F29-4C14-A21D-4E61B7D7C929}.Debug|AVR.Build.0 = Debug|AVR
+		{32A93415-1F29-4C14-A21D-4E61B7D7C929}.Release|AVR.ActiveCfg = Release|AVR
+		{32A93415-1F29-4C14-A21D-4E61B7D7C929}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
