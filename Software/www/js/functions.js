@@ -149,7 +149,7 @@ function getSensorList() {
             row.append($("<td>" + value['Name'] + "</td>"));
             row.append($("<td>" + value['Device'] + "</td>"));
             row.append($("<td>" + value['Type'] + "</td>"));
-            row.append($("<td>" + "<a href='/sensors/history?id=" + value['Id'] + "'>" + value['CurrentValue'] + "</a>" + "</td>"));
+            row.append($("<td>" + "<a href='/sensors/history?id=" + value['Id'] + "&amp;type="+ value['ControlTypeId']+"'>" + value['CurrentValue'] + "</a>" + "</td>"));
             if (value['SRDevTopic'])
             {
                 row.append($("<td>" + value['SRDevTopic'] + "</td>"));
@@ -184,8 +184,8 @@ function getOutSensorList() {
             row.append($("<td>" + value['Name'] + "</td>"));
             row.append($("<td>" + value['Device'] + "</td>"));
             row.append($("<td>" + value['Type'] + "</td>"));
-            row.append($("<td>" + "<a href='/sensors/history?id=" + value['Id'] + "'>" + value['CurrentValue'] + "</a>" + "</td>"));
-            row.append($("<td>" + "<a href='/set_data?action=on&amp;id=" + value['Id'] + "'>on</a>/" + "<a href='/set_data?action=off&amp;id=" + value['Id'] + "'>off</a>" + "</td>"));
+            row.append($("<td>" + "<a href='/sensors/history?id=" + value['Id'] + "&amp;type="+ value['ControlTypeId']+"'>" + value['CurrentValue'] + "</a>" + "</td>"));
+            row.append($("<td>" + "<a href='/set_data?action=on&amp;id=" + value['Id'] + "&amp;type=" + value['ControlTypeId'] +"'>on</a>/" + "<a href='/set_data?action=off&amp;id=" + value['Id'] + "'>off</a>" + "</td>"));
 
             if (value['SRDevTopic'])
             {
