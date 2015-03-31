@@ -249,7 +249,7 @@ void setup(void)
 {
 	USARTinit(); //enable serial output;
 	Timing::init();// start the timer - used for the millis function (rough time since powered on);
-	network.setup(); //ensure network is setup before any MQTT work is done.
+	network.setup(THIS_LEVEL, THIS_DEV); //ensure network is setup before any MQTT work is done.
 	app.setCallback(callback); // give the MQTT layer the functuion we will use to process entries.
 	//setup outputs
 	ID3_DDR |= (1<<ID3_PIN);  //relay 1
