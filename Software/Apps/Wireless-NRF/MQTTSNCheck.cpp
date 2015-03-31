@@ -17,7 +17,6 @@ bool MQTTSNCheck::verifyPacket(void *(&payload), uint8_t &length) {
        fprintf(stderr, "ERROR: PACKET INVALID: read %d bytes but header states length is %d\n", (int)length, (int) buf[0]);
         return false;
     }
-   
     
 /*route to fix a bug in RSMB Server. where publish is padded with a LOT of unneeded bits causing packet size to be more than doubled.*/
     if (buf[1] == 0x0C)
@@ -26,8 +25,9 @@ bool MQTTSNCheck::verifyPacket(void *(&payload), uint8_t &length) {
         {
             //if it is bigger than the minmum length
             int end = 0;
-            for (int t = 8; t<length; t++) // loop from the 2nd data byte to the last.
-            {  end ++;
+            for (int t = 7; t<length; t++) // loop from the 2nd data byte to the last.
+            {  
+                end ++;
                 if (buf[t] == 0x00)
                 {
                     //ITS A NULL BYTE!
