@@ -437,6 +437,10 @@ void MQTTSNPacket::sanitise()
 	this->data[4] = 0x00;
 	this->data[5] = 0x00;
 	this->data[6] = 0x00;
+	this->data[7] = 0x00;
+	this->data[8] = 0x00;
+	this->data[9] = 0x00;
+	this->data[10] = 0x00;
 	
 	this->topicname[0] = 0x00;
 	this->topicname[1] = 0x00;

@@ -88,7 +88,7 @@ class MQTTSNPacket
 		//for better ADC resolution the size may have to be increased.
 		//to keep message size down the data payload(data) has been restricted to 0-254. this means there are 255 commands but will need to be decoded. There are two main types of data. 1/0 (on/off) or 0-254 (analogue read.)
 		//increased to allow compound data. (5 chars + /0)
-		unsigned char data[6];
+		unsigned char data[10];
 		unsigned char topicname[16];
 		unsigned char willMsg[3];
 		unsigned char willTopic[16];
