@@ -241,32 +241,34 @@ function showSensorHistory() {
     var sensorid = vars['id'];
     //todo: need to get the sensor type to show the appropriate graph.
     var sensortype = vars['type'];
-
-
-
     data = [];
     data2 = [];
     $.getJSON("/get_data.php?view=SensorHist&id=" + sensorid, function (json)
     {
         $.each(json, function (key, value) {
             moment = stringToDate(value['moment']).getTime();
-            // moment = Date.parse(value['moment']); 
-            data.push([moment, parseInt(value['value'])]);
+            if (sensortype == "2") {
+                var raw = value['value'];
+              var array =   raw.split(",");
+                    data.push([moment, (parseInt(array[0])/10)]);
+                     data2.push([moment, (parseFloat(array[1])/100)]);
+            } else {
+                data.push([moment, parseInt(value['value'])]);
+            }
+
             var row = $("<tr />");
             $("#listDataTable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
             row.append($("<td>" + value['moment'] + "</td>"));
             row.append($("<td>" + value['value'] + "</td>"));
         });
-        if (sensortype == "power")
+        if (sensortype == "2")
         {
-            if (data2 != null) {
-                drawPowerGraphFull(data);
-            }
-            else
-            {
+            if (data2.length == 0) {
                 drawPowerGraphSingle(data);
+            } else {
+                drawPowerGraphFull(data, data2);
             }
-        } else if (sensortype == "onoff")
+        } else if (sensortype == "1")
         {
             drawDigitalGraph(data)
         }
@@ -505,7 +507,7 @@ function drawDigitalGraph(data) {
             });
 }
 function drawPowerGraphFull(powerVals, powerAngle) {
-    $('#container').highcharts(
+    $('#sensorGraph').highcharts(
             {
                 title: {
                     text: 'Power Consumption'
@@ -550,7 +552,10 @@ function drawPowerGraphFull(powerVals, powerAngle) {
                 series: [{
                         name: 'Power Usage',
                         yAxis: 1,
-                        data: powerVals
+                        data: powerVals,
+                        tooltip: {
+                            valueSuffix: 'W'
+                        }
                     }, {
                         name: 'Power Angle',
                         data: powerAngle,
@@ -559,7 +564,7 @@ function drawPowerGraphFull(powerVals, powerAngle) {
             });
 }
 function drawPowerGraphSingle(powerVals) {
-    $('#container').highcharts(
+    $('#sensorGraph').highcharts(
             {
                 title: {
                     text: 'Power Consumption'
@@ -585,7 +590,10 @@ function drawPowerGraphSingle(powerVals) {
                     }],
                 series: [{
                         name: 'Power Usage',
-                        data: powerVals
+                        data: powerVals,
+                        tooltip: {
+                            valueSuffix: 'W'
+                        }
                     }]
             });
 }
@@ -613,7 +621,7 @@ function drawPlainGraph(data) {
                         }
                     }],
                 series: [{
-                        name: 'Power Usage',
+                        name: 'Sensor History',
                         yAxis: 0,
                         data: data,
                         step: true
