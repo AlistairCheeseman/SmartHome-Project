@@ -8,7 +8,7 @@
 
 
 #include <avr/io.h>
-
+#include <string.h>
 
 
 #include "EnergySensorRevA.h"
@@ -26,7 +26,7 @@ int USART0SendByte (char c, FILE *stream);
 int USART0ReceiveByte(FILE *stream);
 void USARTinit(void);
 void setup(void);
-int calcPwr(void);
+void calcPwr(double &power, double &pf);
 
 FILE * usart0_str;
 RF24 radio;
@@ -39,52 +39,64 @@ int main(void)
 	delay(2000); // wait two seconds for power supply to stabilize.THIS IS COMPULSORY OR CONFIG IN SETUP GOES MAD!
 	setup();
 
-	int id = app.gettopicid((unsigned char*)"d/"MAC_SUFF"/"ID1"/"TOPIC_STATUS_UPDATE, 0x0C);
-	printf("Topic ID: %d\n", id);
+	/*int id = app.gettopicid((unsigned char*)"d/"MAC_SUFF"/"ID1"/"TOPIC_STATUS_UPDATE, 0x0C);
+	printf("Topic ID: %d\n", id);*/
 	while(1)
 	{
 		for (int c = 0; c<60;c++)
 		{
-			delay(500); // wait one second
-			app.tick();
-			delay(500);
+		delay(500); // wait one second
+		delay(500);
 		}//every 60 ticks (60 seconds of waits too)
-		//int power = calcPwr();
-		int power = 80; // just for testing
-		char powerS[6]; // maximum wattage (100A ( current meter max) * 300V (we definetley don't want any rms higher than that.)) 30000 (5+1 digits)
-		itoa(power, powerS, 10);
-		unsigned char powerUS[6];
-		if (power > 0)
+		
+		//average three readings.
+		double pow1, pow2,pow3;
+		double pf1, pf2, pf3;
+		calcPwr(pow1, pf1);
+		calcPwr(pow2, pf2);
+		calcPwr(pow3, pf3);
+		double averagePower =(pow1+pow2+pow3) /3;
+		double averagePF = (pf1+pf2+pf3)/3;
+		
+		
+		unsigned int temp =(unsigned int) (averagePower *10.0); // shift to the left by 1dp and by putting into int the extra values are lost.
+		averagePower = temp /10.0; //shift back and put into the original value.
+		
+		temp =(unsigned int)(averagePF * 100.0); // shift to the left by 2dp and by putting into int the extra values are lost.
+		averagePF = temp /100.0;
+		
+		
+		
+	char power [7];// maximum wattage (100A ( current meter max) * 300V (we definetley don't want any rms higher than that.)) 30000.0 (6+1 digits)
+	char pf [4]; // 0.01 precision + 1
+		
+	int	avPFShift = averagePF * 100; // shift to left 2dp. will give 0.01 precision.
+	int avPowerShift = averagePower * 10; // shift left 1dp. will give 0.1W precision
+		itoa(avPowerShift,power, 10);
+		itoa(avPFShift, pf, 10);
+		app.connect();
+		while (app.currentState != STATE_ACTIVE)
 		{
-			int numbchars = 1;
-			powerUS[0] = (unsigned char) powerS[0];
-			if (power > 9)
-			{
-				powerUS[1] = (unsigned char) powerS[1];
-				numbchars++;
-			}
-			if (power > 99)
-			{
-				powerUS[2] = (unsigned char) powerS[2];
-				numbchars++;
-			}
-			if (power > 999)
-			{
-				powerUS[3] = (unsigned char) powerS[3];
-				numbchars++;
-			}
-			if (power > 9999)
-			{
-				powerUS[4] = (unsigned char) powerS[4];
-				numbchars++;
-			}
-			app.publish(id, powerUS, numbchars);
+			//_delay_ms(2000); //dont spam the network with reconnections.
+			app.connect();
+			_delay_ms(2500); //wait for response.
+			app.tick();
 		}
+		char  payload [10];
+		sprintf((char*)payload,"%s,%s", power, pf);
+		payload [10] = 0x00;
+		
+		uint8_t plen = (unsigned)strlen(payload);
+		
+		uint16_t topicid = app.gettopicid((unsigned char*)"d/"MAC_SUFF"/"ID1"/"TOPIC_STATUS_UPDATE, 0x0C);
+		printf("%s\n",payload);
+		printf("%d\n", plen);
+		app.publish(topicid,(unsigned char*)payload,plen);
+	app.disconnect(false);
 	}
 	
-	
 }
-int calcPwr(void)
+void calcPwr(double &power, double &pf)
 {
 	unsigned int timeout = 2000;
 	//how many zero crossings to measure
@@ -150,25 +162,29 @@ int calcPwr(void)
 		if (numberOfSamples==1) lastVCross = checkVCross;
 		if (lastVCross != checkVCross) currentCrossCount++;
 	}
-	int Tout  = sqrt(summedV / numberOfSamples)  * (3.30/1024) * 14.77;
-	int Mout  = Tout * 15.6;
-	double AAvg = ((sqrt(summedA / numberOfSamples) * (3.30/1024.0))) * 90  ;
+	int Tout  = (sqrt(summedV / numberOfSamples))  * (3.30/1024) * 248.528; //was 230.412
 	
-	int AAvgm = (AAvg) * 1000;
+	double rmsARaw =(sqrt(summedA / numberOfSamples)-2.9);
+
+	if (rmsARaw < 0)
+	rmsARaw =0;
 	
-	int pwr = AAvg * Mout;
-	printf("Voltage (RMS)         : %dV\n", Mout);
-	printf("Average Current       : %dA\n", AAvgm);
-	printf("Apparent Power        : %dW\n", pwr);
-	
-	return pwr;
+	double AAvg = (rmsARaw * (3.30/1024.0)) * 90.9  ;
+power =AAvg * Tout;
+int raw = AAvg;
+
+
+	printf("Current (RMS)         : %d\n", raw);
+		power = AAvg * Tout;
+//	printf("Voltage (RMS)         : %dV\n", Tout);
+	pf = 1;
 }
 void setup(void)
 {
 	USARTinit(); //enable serial output;
 	Timing::init();// start the timer - used for the millis function (rough time since powered on);
 	adc_init();
-	network.setup(); //ensure network is setup before any MQTT work is done.
+	network.setup(THIS_LEVEL, THIS_DEV); //ensure network is setup before any MQTT work is done.
 }
 void adc_init()
 {
