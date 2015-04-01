@@ -32,11 +32,11 @@ void SensorNet::setup(void) {
     radio->enableDynamicPayloads();
     radio->setRetries(15, 15);
     radio->openWritingPipe(pipes[0]);
-    radio->openReadingPipe(1, pipes[1]);
-    radio->openReadingPipe(2, pipes[2]);
-    radio->openReadingPipe(3, pipes[3]);
-    radio->openReadingPipe(4, pipes[4]);
-    radio->openReadingPipe(5, pipes[5]);
+    radio->openReadingPipe(1, pipes[2]);
+    radio->openReadingPipe(2, pipes[3]);
+    radio->openReadingPipe(3, pipes[4]);
+    radio->openReadingPipe(4, pipes[5]);
+   // radio->openReadingPipe(5, pipes[5]);
     radio->startListening();
     radio->printDetails();
 }

@@ -23,11 +23,12 @@ char receive_payload[max_payload_size + 1]; // +1 to allow room for a terminatin
 uint8_t receive_size;
  uint32_t sourceId;
  uint32_t destId;
+ uint32_t myId;
 bool debug;
 
 //functions
 public:
-	SensorNet(RF24& radio);
+	SensorNet(RF24& radio, uint32_t MAC);
 	~SensorNet();
 	void tick(void);
 	void setup(uint8_t level, uint8_t id);
@@ -38,6 +39,7 @@ protected:
 private:
 void send(uint64_t txaddr,  const void* send_payload, uint8_t len);
 uint8_t getAddresses(uint8_t level, uint8_t id);
+void routePacket(void);
 
 }; //SensorNet
 

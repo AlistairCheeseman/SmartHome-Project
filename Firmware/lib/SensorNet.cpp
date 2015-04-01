@@ -9,9 +9,10 @@
 #include "SensorNet.h"
 
 // default constructor
-SensorNet::SensorNet(RF24& radio)
+SensorNet::SensorNet(RF24& radio, uint32_t MAC)
 {
 	this->radio = &radio;
+	this->myId = MAC;
 } //SensorNet
 
 // default destructor
@@ -28,17 +29,17 @@ void SensorNet::setup(uint8_t level, uint8_t id)// the level helps us find the l
 	
 	uint8_t ADCount = 0;
 	ADCount = getAddresses(level, id);
-	radio->openWritingPipe(pipes[0]); //parent
-	radio->openReadingPipe(1, pipes[1]);
+	radio->openWritingPipe(pipes[1]); //parent
+	radio->openReadingPipe(1, pipes[2]);
 	
 	if (ADCount != 2)
 	{
-		radio->openReadingPipe(2, pipes[2]);
-		radio->openReadingPipe(3, pipes[3]);
+		radio->openReadingPipe(2, pipes[3]);
+		radio->openReadingPipe(3, pipes[4]);
 		if (ADCount != 4)
 		{
-			radio->openReadingPipe(4, pipes[4]);
-			radio->openReadingPipe(5, pipes[5]);
+			radio->openReadingPipe(4, pipes[5]);
+			//radio->openReadingPipe(5, pipes[5]);
 		}
 	}
 	radio->startListening();
@@ -83,8 +84,15 @@ void SensorNet::tick()
 		}
 		printf("\n");
 		this->receive_size = len - 6;
-		
-		this->pendingpacket = true;
+		if (this->destId == this->myId) // if the packet is for us.
+		{
+			this->pendingpacket = true;
+		}
+		else
+		{
+			printf("Routing packet to destination...\n");
+			this->routePacket(); // send it to the correct node if not.
+		}
 	}
 }
 void SensorNet::sendpacket(const void* payload, const uint8_t len,const uint32_t sourceId,const uint32_t destId)
@@ -172,4 +180,9 @@ uint8_t SensorNet::getAddresses(uint8_t level, uint8_t id)
 		len =0x02;
 	}
 	return len;
+}
+void SensorNet::routePacket(void)
+{
+	
+	//todo:add routing mechanism.
 }
