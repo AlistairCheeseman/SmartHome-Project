@@ -22,7 +22,7 @@
 
 FILE * usart0_str;
 RF24 radio;
-SensorNet network(radio);
+SensorNet network(radio, (uint32_t) MAC_SUFF_HEX);
 MQTTSN app(network,(uint8_t) 0x28, (uint32_t) MAC_SUFF_HEX);
 
 int USART0SendByte (char c, FILE *stream);
