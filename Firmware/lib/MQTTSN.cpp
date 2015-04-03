@@ -48,7 +48,7 @@ void MQTTSN::pingresponse()
 void MQTTSN::tick()
 {
 	//are these delays needed?
-//	_delay_ms(50);
+	//	_delay_ms(50);
 	network->tick();
 	_delay_ms(50);
 	uint32_t destId;
@@ -115,12 +115,12 @@ void MQTTSN::tick()
 			this->topicIdResp = packet.topicId;
 			this->currentState = STATE_ACTIVE;
 			break;
-						case UNSUBSCRIBE:
-						
-						break;
-						case UNSUBACK:
-						
-						break;
+			case UNSUBSCRIBE:
+			
+			break;
+			case UNSUBACK:
+			
+			break;
 			case SUBSCRIBE:
 			//should not recieve a subscribe request as a client.
 			case REGISTER:
@@ -216,7 +216,7 @@ void MQTTSN::unsubscribe(unsigned char *topicName, uint8_t topicNameLen)
 {
 	//lookup the topic id.( send REGISTER)
 	
-		//THE TOPICID FLAGS ARE CUSTOM FOR SUBSCRIBE!!!!!/UNSUBSCRIBE!!!!!	//THE TOPICID FLAGS ARE CUSTOM FOR SUBSCRIBE!!!!!/UNSUBSCRIBE!!!!!
+	//THE TOPICID FLAGS ARE CUSTOM FOR SUBSCRIBE!!!!!/UNSUBSCRIBE!!!!!	//THE TOPICID FLAGS ARE CUSTOM FOR SUBSCRIBE!!!!!/UNSUBSCRIBE!!!!!
 	//wait for response with ID (REGACK)
 	uint8_t topicid = this->gettopicid(topicName, topicNameLen);
 	//send unsubscribe, wait for UNSUBACK
@@ -236,7 +236,7 @@ void MQTTSN::publish(unsigned char *topicName,unsigned char *payloaddata, uint8_
 }
 void MQTTSN::publish(uint16_t topicid,unsigned char *payloaddata, uint8_t payloadlen)
 {
-		int t = 0;
+	int t = 0;
 	packet.sanitise();
 	packet.msgType = PUBLISH;
 	packet.flags = (QOS_NORMAL|TOPICID_NUM);
@@ -273,7 +273,7 @@ uint16_t MQTTSN::gettopicid(unsigned char *topicNameIn, uint8_t length)
 	packet.gen_packet(payload, length);
 	this->currentState = STATE_WAIT_REGISTER;
 	network->sendpacket(payload, payload[0], macId, destId);
-uint16_t id = waitResponse(payload);
+	uint16_t id = waitResponse(payload);
 	this->topicIdResp = 0; //stop it polluting other things.
 	return id;
 }
@@ -283,6 +283,8 @@ void MQTTSN::setCallback(void(*callbackfunc)(uint16_t topicId, uint8_t *payload,
 }
 uint16_t MQTTSN::waitResponse(unsigned char  (&payload)[20])
 {
+	unsigned long timenow = 	Timing::millis();
+
 	bool hadresponse = false;
 	int count = 0;
 	while (!hadresponse)
@@ -301,7 +303,8 @@ uint16_t MQTTSN::waitResponse(unsigned char  (&payload)[20])
 			//if we have waited for a bit resend the packet.
 			network->sendpacket(payload, payload[0], macId, destId);
 			count = 0;
-			if (this->currentState == STATE_DISCONNECTED)
+			//if recieved disconnect packet or it has timeout (60 seconds = 10,000milliseconds)
+			if ((this->currentState == STATE_DISCONNECTED) | ((Timing::millis() - timenow) > 60000))
 			{
 				//dont get stuck if connectivity is lost.
 				return 0;
