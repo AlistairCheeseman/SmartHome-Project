@@ -53,93 +53,97 @@ bool MQTTSNCheck::verifyPacket(void *(&payload), uint8_t &length) {
     for (int q = 0; q < length; q++)
         fprintf(stdout, "%.2x", buf[q]);
     fprintf(stdout, " \n");
+    char* topic = new char[20];
 
     switch (buf[1]) {
         case 0x00:
-            fprintf(stdout, "ADVERTISE\n");
+            topic = "ADVERTISE\n";
             break;
         case 0x01:
-            fprintf(stdout, "SEARCHGW\n");
+            topic = "SEARCHGW\n";
             break;
         case 0x02:
-            fprintf(stdout, "GWINFO\n");
+            topic = "GWINFO\n";
             break;
         case 0x04:
-            fprintf(stdout, "CONNECT\n");
+            topic = "CONNECT\n";
             break;
         case 0x05:
-            fprintf(stdout, "CONNACK\n");
+            topic = "CONNACK\n";
             break;
         case 0x06:
-            fprintf(stdout, "WILLTOPICREQ\n");
+            topic = "WILLTOPICREQ\n";
             break;
         case 0x07:
-            fprintf(stdout, "WILLTOPIC\n");
+            topic = "WILLTOPIC\n";
             break;
         case 0x08:
-            fprintf(stdout, "WILLMSGREQ\n");
+            topic = "WILLMSGREQ\n";
             break;
         case 0x09:
-            fprintf(stdout, "WILLMSG\n");
+            topic = "WILLMSG\n";
             break;
         case 0x0A:
-            fprintf(stdout, "REGISTER\n");
+            topic = "REGISTER\n";
             break;
         case 0x0B:
-            fprintf(stdout, "REGACK\n");
+            topic = "REGACK\n";
             break;
         case 0x0C:
-            fprintf(stdout, "PUBLISH\n");
+            topic = "PUBLISH\n";
             break;
         case 0x0D:
-            fprintf(stdout, "PUBACK\n");
+            topic = "PUBACK\n";
             break;
         case 0x0E:
-            fprintf(stdout, "PUBCOMP\n");
+            topic = "PUBCOMP\n";
             break;
         case 0x0F:
-            fprintf(stdout, "PUBREC\n");
+            topic = "PUBREC\n";
             break;
         case 0x10:
-            fprintf(stdout, "PUBREL\n");
+            topic = "PUBREL\n";
             break;
         case 0x12:
-            fprintf(stdout, "SUBSCRIBE\n");
+            topic = "SUBSCRIBE\n";
             break;
         case 0x13:
-            fprintf(stdout, "SUBACK\n");
+            topic = "SUBACK\n";
             break;
         case 0x14:
-            fprintf(stdout, "UNSUBSCRIBE\n");
+            topic = "UNSUBSCRIBE\n";
             break;
         case 0x15:
-            fprintf(stdout, "UNSUBACK\n");
+            topic = "UNSUBACK\n";
             break;
         case 0x16:
-            fprintf(stdout, "PINGREQ\n");
+            topic = "PINGREQ\n";
             break;
         case 0x17:
-            fprintf(stdout, "PINGRESP\n");
+            topic = "PINGRESP\n";
             break;
         case 0x18:
-            fprintf(stdout, "DISCONNECT\n");
+            topic = "DISCONNECT\n";
             break;
         case 0x1A:
-            fprintf(stdout, "WILLTOPICUPD\n");
+            topic = "WILLTOPICUPD\n";
             break;
         case 0x1B:
-            fprintf(stdout, "WILLTOPICRESP\n");
+            topic = "WILLTOPICRESP\n";
             break;
         case 0x1C:
-            fprintf(stdout, "WILLMSGUPD\n");
+            topic = "WILLMSGUPD\n";
             break;
         case 0x1D:
-            fprintf(stdout, "WILLMSGRESP\n");
+            topic = "WILLMSGRESP\n";
             break;
         default:
             break;
     }
 
+
+    printf("%c[%d;%d;%dm%s", 0x1B, 1, 32, 40, topic);
+    printf("%c[%dm", 0x1B, 0);
 
 
     return true;
