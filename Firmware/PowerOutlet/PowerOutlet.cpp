@@ -194,10 +194,9 @@ int main(void)
 				pendingLed(LOW);
 				
 			}
-				_delay_ms(90); // wait a bit to ensure we don't over do the tick and to allow time to recieve.
+			_delay_ms(90); // wait a bit to ensure we don't over do the tick and to allow time to recieve.
 			app.tick(); // process the radio no matter if connected to a MQTT server or not. this is to help the network layer communications.
 			//printf("main loop\n");
-		
 			if (!(ID1_PINPORT & (1<<ID1_PIN))) // pullup so we want to check if it is low.
 			{
 				_delay_ms(1);
@@ -256,6 +255,12 @@ void setup(void)
 	ID4_DDR |= (1<<ID4_PIN); //relay 2
 	STATUS_LED_1_DDR |= (1<<STATUS_LED_1); //STATUS1_LED
 	STATUS_LED_2_DDR |= (1<<STATUS_LED_2); //STATUS2_LED
+	// flash the lights, say hello
+	STATUS_LED_1_PORT |= (1<<STATUS_LED_1); //STATUS1_LED
+	STATUS_LED_2_PORT |= (1<<STATUS_LED_2); //STATUS2_LED
+	_delay_ms(1000);
+	STATUS_LED_1_PORT &= ~(1<<STATUS_LED_1); //STATUS1_LED
+	STATUS_LED_2_PORT &= ~(1<<STATUS_LED_2); //STATUS2_LED
 	//setup input buttons
 	ID1_DDR &= ~(1<<ID1_PIN);
 	ID2_DDR &= ~(1<<ID2_PIN);
@@ -319,7 +324,6 @@ void connectedLed(uint8_t level)
 	}
 	else
 	{
-		
 		STATUS_LED_1_PORT &= ~(1<<STATUS_LED_1);
 	}
 	
@@ -332,7 +336,6 @@ void pendingLed(uint8_t level)
 	}
 	else
 	{
-		
 		STATUS_LED_2_PORT &= ~(1<<STATUS_LED_2);
 	}
 	
