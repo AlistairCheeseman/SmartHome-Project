@@ -75,8 +75,8 @@
 #define ID1_PINPORT PINC
 #define ID2_PINPORT PINC
 
-#define ID1_DDR DDRD
-#define ID2_DDR DDRD
+#define ID1_DDR DDRC
+#define ID2_DDR DDRC
 #define ID3_DDR DDRD
 #define ID4_DDR DDRD
 /* PIN DEFINITIONS */
