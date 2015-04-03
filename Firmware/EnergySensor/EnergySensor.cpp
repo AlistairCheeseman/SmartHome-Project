@@ -25,8 +25,12 @@ uint16_t  adc_read(uint8_t ch);
 int USART0SendByte (char c, FILE *stream);
 int USART0ReceiveByte(FILE *stream);
 void USARTinit(void);
+void connectedLed(uint8_t level);
+void pendingLed(uint8_t level);
 void setup(void);
 void calcPwr(double &power, double &pf);
+
+
 
 FILE * usart0_str;
 RF24 radio;
@@ -38,61 +42,64 @@ int main(void)
 {
 	delay(2000); // wait two seconds for power supply to stabilize.THIS IS COMPULSORY OR CONFIG IN SETUP GOES MAD!
 	setup();
-
-	/*int id = app.gettopicid((unsigned char*)"d/"MAC_SUFF"/"ID1"/"TOPIC_STATUS_UPDATE, 0x0C);
-	printf("Topic ID: %d\n", id);*/
 	while(1)
 	{
-		for (int c = 0; c<60;c++)
+		for (int c = 0; c<120;c++) // report every minute or so. ( 120 * 500msec) =
 		{
-		delay(500); // wait one second
-		delay(500);
-		}//every 60 ticks (60 seconds of waits too)
-		
-		//average three readings.
+			delay(500); // wait one second
+			app.tick(); // tick the network to route any packets or pings.
+		}
+		//take three readings.
 		double pow1, pow2,pow3;
 		double pf1, pf2, pf3;
 		calcPwr(pow1, pf1);
 		calcPwr(pow2, pf2);
 		calcPwr(pow3, pf3);
+		//average them.
 		double averagePower =(pow1+pow2+pow3) /3;
 		double averagePF = (pf1+pf2+pf3)/3;
 		
-		
+		//strip to 1 sig figure.
 		unsigned int temp =(unsigned int) (averagePower *10.0); // shift to the left by 1dp and by putting into int the extra values are lost.
 		averagePower = temp /10.0; //shift back and put into the original value.
 		
+		//strip to  2 sig figure.
 		temp =(unsigned int)(averagePF * 100.0); // shift to the left by 2dp and by putting into int the extra values are lost.
 		averagePF = temp /100.0;
 		
 		
+		//buffers to store text of values.
+		char power [7];// maximum wattage (100A ( current meter max) * 300V (we definetley don't want any rms higher than that.)) 30000.0 (6+1 digits)
+		char pf [4]; // 0.01 precision + 1
+		//shift so no DP. ( saves space)
+		int	avPFShift = averagePF * 100; // shift to left 2dp. will give 0.01 precision.
+		int avPowerShift = averagePower * 10; // shift left 1dp. will give 0.1W precision
 		
-	char power [7];// maximum wattage (100A ( current meter max) * 300V (we definetley don't want any rms higher than that.)) 30000.0 (6+1 digits)
-	char pf [4]; // 0.01 precision + 1
-		
-	int	avPFShift = averagePF * 100; // shift to left 2dp. will give 0.01 precision.
-	int avPowerShift = averagePower * 10; // shift left 1dp. will give 0.1W precision
+		//convert to strings
 		itoa(avPowerShift,power, 10);
 		itoa(avPFShift, pf, 10);
-		app.connect();
-		while (app.currentState != STATE_ACTIVE)
+
+
+		// make sure we are still connected.
+		while (!(app.currentState == STATE_ACTIVE) | (app.currentState == STATE_WAIT_PINGRESP))
 		{
+			connectedLed(LOW);
 			//_delay_ms(2000); //dont spam the network with reconnections.
 			app.connect();
 			_delay_ms(2500); //wait for response.
 			app.tick();
 		}
+		connectedLed(HIGH);
 		char  payload [10];
+		//format the final payload.
 		sprintf((char*)payload,"%s,%s", power, pf);
 		payload [10] = 0x00;
-		
+		// get the size of the payload
 		uint8_t plen = (unsigned)strlen(payload);
-		
+		//get the id of the topic we are going to publish to.
 		uint16_t topicid = app.gettopicid((unsigned char*)"d/"MAC_SUFF"/"ID1"/"TOPIC_STATUS_UPDATE, 0x0C);
-		printf("%s\n",payload);
-		printf("%d\n", plen);
+		//send the message.
 		app.publish(topicid,(unsigned char*)payload,plen);
-	app.disconnect(false);
 	}
 	
 }
@@ -170,13 +177,13 @@ void calcPwr(double &power, double &pf)
 	rmsARaw =0;
 	
 	double AAvg = (rmsARaw * (3.30/1024.0)) * 90.9  ;
-power =AAvg * Tout;
-int raw = AAvg;
+	power =AAvg * Tout;
+	int raw = AAvg;
 
 
 	printf("Current (RMS)         : %d\n", raw);
-		power = AAvg * Tout;
-//	printf("Voltage (RMS)         : %dV\n", Tout);
+	power = AAvg * Tout;
+	//	printf("Voltage (RMS)         : %dV\n", Tout);
 	pf = 1;
 }
 void setup(void)
@@ -185,6 +192,12 @@ void setup(void)
 	Timing::init();// start the timer - used for the millis function (rough time since powered on);
 	adc_init();
 	network.setup(THIS_LEVEL, THIS_DEV); //ensure network is setup before any MQTT work is done.
+	STATUS_LED_1_DDR |= (1<<STATUS_LED_1); //STATUS1_LED
+	STATUS_LED_2_DDR |= (1<<STATUS_LED_2); //STATUS2_LED
+
+	connectedLed(LOW);
+	pendingLed(LOW);
+
 }
 void adc_init()
 {
@@ -279,4 +292,26 @@ void USARTinit(void)
 	
 	usart0_str = fdevopen(USART0SendByte, USART0ReceiveByte);
 	stdin=stdout=usart0_str;
+}
+void connectedLed(uint8_t level)
+{
+	if (level == HIGH)
+	{
+		STATUS_LED_1_PORT |= (1<<STATUS_LED_1);
+	}
+	else
+	{
+		STATUS_LED_1_PORT &= ~(1<<STATUS_LED_1);
+	}
+}
+void pendingLed(uint8_t level)
+{
+	if (level == HIGH)
+	{
+		STATUS_LED_2_PORT |= (1<<STATUS_LED_2);
+	}
+	else
+	{
+		STATUS_LED_2_PORT &= ~(1<<STATUS_LED_2);
+	}
 }
