@@ -65,7 +65,7 @@ int main(int argc, char** argv) {
             void *packet = net->getpacket(currentPackLen, sourceId, destId);
             if (packet && currentPackLen && destId == 0x000000) { //check packet is for the central server has a length and has some data.
                 if (MQTTSNCheck::verifyPacket(packet, currentPackLen) == true) { //check it is a valid mqtt packet.
-                    fprintf(stdout, "Wireless --> UDP\n");
+                    fprintf(stdout, "UDP <-- Wireless\n");
                     fprintf(stdout, "Source: %.6x\nDest  :%.6x\n", sourceId, destId);
                     uint8_t connection = 0;
                     for (int t = 0; t <= 5; t++) {
@@ -97,7 +97,7 @@ int main(int argc, char** argv) {
                         fprintf(stdout, "UDP --> Wireless\n");
                         fprintf(stdout, "Source: %.6x\nDest  : %.6x\n", 0x000000, clients[t]);
                         fprintf(stdout, "Next Hop : %3d\n", nexthop[t]);
-                        net->sendpacket(packet, currentPackLen, 0x000000, clients[t],nexthop[t]);
+                        net->sendpacket(packet, currentPackLen, 0x000000, clients[t], nexthop[t]);
                         fprintf(stdout, "\n");
                     }
                     currentPackLen = 0;
