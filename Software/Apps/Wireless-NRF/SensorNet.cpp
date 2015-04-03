@@ -31,12 +31,13 @@ void SensorNet::setup(void) {
     radio->begin();
     radio->enableDynamicPayloads();
     radio->setRetries(15, 15);
-    radio->openWritingPipe(pipes[0]);
+    radio->openReadingPipe(0, pipes[0]); // if this is not put here, once a tx on a different channel occurs the device stops listening and the channel is lost.
     radio->openReadingPipe(1, pipes[2]);
     radio->openReadingPipe(2, pipes[3]);
     radio->openReadingPipe(3, pipes[4]);
     radio->openReadingPipe(4, pipes[5]);
-   // radio->openReadingPipe(5, pipes[5]);
+    // radio->openReadingPipe(5, pipes[5]);
+    radio->openWritingPipe(pipes[0]);
     radio->startListening();
     radio->printDetails();
 }
@@ -90,7 +91,7 @@ void SensorNet::sendpacket(const void* payload, const uint8_t len, uint32_t sour
         nexthop = pipes[(nextHopId)];
 
 
-     printf("Sending to: 0x%llX for routing\n", nexthop);
+    printf("Sending to: 0x%llX for routing\n", nexthop);
     this->send(nexthop, newPacket, newlen);
 }
 
