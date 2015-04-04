@@ -27,11 +27,11 @@ bool MQTTSNCheck::verifyPacket(void *(&payload), uint8_t &length) {
             int end = 0;
             for (int t = 7; t < length; t++) // loop from the 2nd data byte to the last.
             {
-                end++;
                 if (buf[t] == 0x00) {
                     //ITS A NULL BYTE!
                     break;
                 }
+                end++;
             }
             if (end > 0) {
                 //we have found some null bits starting at end + 7.
