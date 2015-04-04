@@ -358,6 +358,10 @@ echo "PidFile /var/run/apache24.pid" >> $TARGETFS/apache24/etc/httpd.conf
 #make db directory and allow access to all
 mkdir $TARGETFS/var/db
 chmod -R 777 $TARGETFS/var/db
+#// need to make sure /usr/share has zone info.
+#http://www.linuxfromscratch.org/lfs/view/stable/chapter06/glibc.html
+cp -v $TARGETFS/usr/share/zoneinfo/Europe/London $TARGETFS/etc/localtime
+
 
 #install the WWW data from the git repo to the filesystem.
 cp -Rv $DIR/../www/* $TARGETFS/apache24/htdocs/
