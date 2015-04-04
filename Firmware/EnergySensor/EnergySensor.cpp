@@ -98,8 +98,11 @@ int main(void)
 		uint8_t plen = (unsigned)strlen(payload);
 		//get the id of the topic we are going to publish to.
 		uint16_t topicid = app.gettopicid((unsigned char*)"d/"MAC_SUFF"/"ID1"/"TOPIC_STATUS_UPDATE, 0x0C);
-		//send the message.
-		app.publish(topicid,(unsigned char*)payload,plen);
+		if (topicid != 0)
+		{
+			//send the message.
+			app.publish(topicid,(unsigned char*)payload,plen);
+		}
 
 	}
 	
