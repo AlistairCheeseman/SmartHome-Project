@@ -24,9 +24,6 @@ function escape($value) {
 }
 
 function createDB($db) {
-    /* need to convert this to a view or programatically create this table when called. */
-    $db->exec("CREATE TABLE 'PowerLog' ('moment' DATETIME PRIMARY KEY NOT NULL, 'powerReading' REAL NOT NULL, 'powerFactor' REAL NOT NULL)");
- 
     $db->exec("CREATE TABLE 'log' ('Id' INTEGER PRIMARY KEY NOT NULL, 'moment' DATETIME NOT NULL, 'topic' TEXT NOT NULL, 'payload' TEXT NOT NULL)");
     $db->exec("CREATE TABLE 'Dev_Types' ('Id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'Name' TEXT, 'TopicName' TEXT)");
     $db->exec("CREATE TABLE 'Rooms' ('Id' INTEGER PRIMARY KEY NOT NULL, 'Name' TEXT, 'TopicName' TEXT)");
