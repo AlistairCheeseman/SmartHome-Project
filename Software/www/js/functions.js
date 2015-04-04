@@ -648,3 +648,55 @@ function drawPlainGraph(data) {
                     }]
             });
 }
+function drawPowerSummary()
+{
+    var vars = {};
+    $query = "/get_data.php?view=Sensors&filter=sensors";
+    $.getJSON($query, function (json)
+    {
+        var Id = 0;
+        $.each(json, function (key, value) {
+            if (value['Type'] == "Power Consumption")
+            {
+                //we have found a power consumption sensor.
+                Id = value['Id'];
+            }
+        });
+        if (Id)
+        {
+            data = [];
+            data2 = [];
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+            var yyyy = today.getFullYear();
+            if (dd < 10) {
+                dd = '0' + dd
+            }
+            if (mm < 10) {
+                mm = '0' + mm
+            }
+            today = yyyy + '-' + mm + '-' + dd;
+            $.getJSON("/get_data.php?view=SensorHist&id=" + Id + "&filter=date-day&date=" + today, function (json)
+            {
+                $.each(json, function (key, value) {
+                    moment = stringToDate(value['moment']).getTime();
+                    var raw = value['value'];
+                    var array = raw.split(",");
+                    data.push([moment, (parseInt(array[0]) / 10)]);
+                    data2.push([moment, (parseFloat(array[1]) / 100)]);
+                    var row = $("<tr />");
+                    $("#listDataTable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
+                    row.append($("<td>" + value['moment'] + "</td>"));
+                    row.append($("<td>" + value['value'] + "</td>"));
+                });
+                if (data2.length == 0) {
+                    drawPowerGraphSingle(data);
+                } else {
+                    drawPowerGraphFull(data, data2);
+                }
+
+            });
+        }
+    });
+}
