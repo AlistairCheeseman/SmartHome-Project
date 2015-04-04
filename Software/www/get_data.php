@@ -75,7 +75,15 @@ if ($DBView == "power") {
     echo json_encode($results);
 } elseif ($DBView == "SensorHist") {
     $sensorid = $_GET['id'];
+    $filter = $_GET['filter'];
     $query = "SELECT * FROM Sensor_Histories where SensorId='" . $sensorid . "'";
+    if ($filter == "date-day") {
+        $date = date_create($_GET['date']);
+        $datebegin = date_format($date, 'Y-m-d');
+        date_add($date, date_interval_create_from_date_string('1 days'));
+        $dateend = date_format($date, 'Y-m-d');
+        $query = $query . " AND strftime('%s', moment) BETWEEN strftime('%s', '" . $datebegin . "') AND strftime('%s', '" . $dateend . "')";
+    }
     $statement = $db->prepare($query);
     $statement->execute();
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
