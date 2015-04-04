@@ -249,6 +249,7 @@ uint16_t adc_read(uint8_t ch)
 
 	return (ADC);
 }
+#pragma region commoncode
 int USART0SendByte (char c, FILE *stream)
 {
 	if (c == '\n')
@@ -319,3 +320,4 @@ void pendingLed(uint8_t level)
 		STATUS_LED_2_PORT &= ~(1<<STATUS_LED_2);
 	}
 }
+#pragma endregion commoncode
