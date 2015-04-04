@@ -268,7 +268,6 @@ void setup(void)
 	ID1_PORT |= (1<<ID1_PIN);
 	ID2_PORT |= (1<<ID2_PIN);
 }
-#pragma region commoncode
 int USART0SendByte (char c, FILE *stream)
 {
 	if (c == '\n')
@@ -341,4 +340,3 @@ void pendingLed(uint8_t level)
 	}
 	
 }
-#pragma endregion commoncode
