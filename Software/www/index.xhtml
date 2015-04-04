@@ -11,22 +11,7 @@
             $(document).ready(function ()
             {
                 $.ajaxSetup({cache: false}); // turn off ajax CACHING
-                powerVals = [];
-                powerAngle = [];
-                $.getJSON('get_data.php?view=power', function (json)
-                {
-                    $.each(json, function (key, value)
-                    {
-                        moment = stringToDate(value['moment']).getTime();
-
-                        //   powerAngle.push([ Date.parse(value['moment']), parseFloat(value['powerFactor']) ]);
-                        powerAngle.push([moment, parseFloat(value['powerFactor'])]);
-
-                        //   powerVals.push([ Date.parse(value['moment']), parseFloat(value['powerReading']) ]);
-                        powerVals.push([moment, parseFloat(value['powerReading'])]);
-                    });                    
-                   drawPowerGraphFull(powerVals, powerAngle);
-                });
+                drawPowerSummary();
             });
            
 
@@ -73,7 +58,7 @@
 
             <div class="container">  
                 <h1> Current Power Statistics </h1>
-                <p> This shows the total power consumption for the past 24 Hours for the whole house. </p>
+                <p> This shows the total power consumption for the day so far. </p>
                 <script src="js/highcharts.js"></script>
                 <script src="js/modules/exporting.js"></script>
                 <div id="sensorGraph" style="min-width: 310px; height: 400px; margin: 0 auto"></div> 
