@@ -60,24 +60,24 @@ int main(void)
 		double averagePF = (pf1+pf2+pf3)/3;
 		
 		//strip to 1 sig figure.
-		unsigned int temp =(unsigned int) (averagePower *10.0); // shift to the left by 1dp and by putting into int the extra values are lost.
+		long temp =(long) (averagePower *10.0); // shift to the left by 1dp and by putting into int the extra values are lost.
 		averagePower = temp /10.0; //shift back and put into the original value.
 		
 		//strip to  2 sig figure.
-		temp =(unsigned int)(averagePF * 100.0); // shift to the left by 2dp and by putting into int the extra values are lost.
+		temp =(	long)(averagePF * 100.0); // shift to the left by 2dp and by putting into int the extra values are lost.
 		averagePF = temp /100.0;
 		
 		
 		//buffers to store text of values.
-		char power [7];// maximum wattage (100A ( current meter max) * 300V (we definetley don't want any rms higher than that.)) 30000.0 (6+1 digits)
+		char power [7];// maximum wattage (100A ( current meter max) * 300V (we definetley don't want any rms higher than that.)) 30000.0 (6+1 digits) (log2(300000) = at least 19 bits to store as an unsigned number.
 		char pf [4]; // 0.01 precision + 1
 		//shift so no DP. ( saves space)
-		int	avPFShift = averagePF * 100; // shift to left 2dp. will give 0.01 precision.
-		int avPowerShift = averagePower * 10; // shift left 1dp. will give 0.1W precision
+		long	avPFShift = averagePF * 100; // shift to left 2dp. will give 0.01 precision, will never be zero.
+		long avPowerShift = averagePower * 10; // shift left 1dp. will give 0.1W precision
 		
 		//convert to strings
-		itoa(avPowerShift,power, 10);
-		itoa(avPFShift, pf, 10);
+		ltoa(avPowerShift,power, 10);
+		ltoa(avPFShift, pf, 10);
 
 
 		// make sure we are still connected.
@@ -100,6 +100,7 @@ int main(void)
 		uint16_t topicid = app.gettopicid((unsigned char*)"d/"MAC_SUFF"/"ID1"/"TOPIC_STATUS_UPDATE, 0x0C);
 		//send the message.
 		app.publish(topicid,(unsigned char*)payload,plen);
+
 	}
 	
 }
