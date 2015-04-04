@@ -29,7 +29,7 @@ uint16_t readALS(void);
 
 FILE * usart0_str;
 RF24 radio;
-SensorNet network(radio);
+SensorNet network(radio, MAC_SUFF_HEX);
 MQTTSN app(network,(uint8_t) 0x28, MAC_SUFF_HEX);
 
 int main(void)
@@ -64,12 +64,12 @@ uint16_t readALS()
 	return (reading + ADC_OFFSET) * ADC_LINEAR_SCALE;
 	
 }
-void setup(uint8_t level, uint8_t id)
+void setup()
 {
 	USARTinit(); //enable serial output;
 	Timing::init();// start the timer - used for the millis function (rough time since powered on);
 	adc_init();
-	network.setup(); //ensure network is setup before any MQTT work is done.
+	network.setup(THIS_LEVEL, THIS_DEV); //ensure network is setup before any MQTT work is done.
 	
 	ALS_ENABLE_DDR |= (1<<ALS_ENABLE_PIN); //set als enable pin as output.
 	

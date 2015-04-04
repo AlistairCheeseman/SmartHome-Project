@@ -50,5 +50,8 @@
 
 #define MAC_SUFF "6E6E6E"
 #define MAC_SUFF_HEX 0x6E6E6E
+//this should be assigned dynamically but for time being will be manual
+#define THIS_LEVEL 1
+#define THIS_DEV 4
 
 #endif /* ENVIRONMENTSENSORREVA_H_ */
