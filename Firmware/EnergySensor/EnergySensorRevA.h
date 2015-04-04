@@ -55,7 +55,6 @@
 #define VOLTAGE_CH ID1_PIN
 #define CURRENT_CH ID2_PIN
 
-#define TOPIC_STATUS_UPDATE "S"
 
 /* PIN DEFINITIONS */
 

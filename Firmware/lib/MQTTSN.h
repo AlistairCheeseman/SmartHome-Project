@@ -43,6 +43,11 @@
 #define STATE_ACTIVE			0x03
 
 
+#define TOPIC_STATUS_UPDATE "S"
+#define TOPIC_REQUEST "R"
+#define TOPIC_STATUS_REQUEST "P"
+
+
 #include "SensorNet.h"
 #include "MQTTSNPacket.h"
 #include "Timing.h"
