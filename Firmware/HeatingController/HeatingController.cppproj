@@ -193,6 +193,9 @@
     <Compile Include="HeatingController.cpp">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="HeatingControllerRevA.h">
+      <SubType>compile</SubType>
+    </Compile>
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>
