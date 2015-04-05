@@ -42,7 +42,7 @@
 
 
 
-#define ADC_LINEAR_SCALE  0.0025
+#define ADC_LINEAR_SCALE  1
 // the dc offset of the voltage read.
 #define ADC_OFFSET 0
 
@@ -54,4 +54,8 @@
 #define THIS_LEVEL 1
 #define THIS_DEV 4
 
+//MQTT ID Mappings (ASCII VALUE FOR NUMBER)
+#define ID1 "1" //0x31 //1 maps to Humidity
+#define ID2 "2" //0x32 //2 maps to Temperature
+#define ID3 "3" //0x32 //2 maps to Light Level
 #endif /* ENVIRONMENTSENSORREVA_H_ */
