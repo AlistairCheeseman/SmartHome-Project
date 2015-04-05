@@ -1,9 +1,9 @@
 /*
- * EnvironmentSensor.cpp
- *
- * Created: 29/03/2015 06:45:32
- *  Author: Ali
- */ 
+* EnvironmentSensor.cpp
+*
+* Created: 29/03/2015 06:45:32
+*  Author: Ali
+*/
 
 
 #include <avr/io.h>
@@ -25,7 +25,9 @@ int USART0SendByte (char c, FILE *stream);
 int USART0ReceiveByte(FILE *stream);
 void USARTinit(void);
 void setup(void);
-uint16_t readALS(void);
+double readALS(void);
+uint16_t getHumid(void);
+uint16_t getTemp(void);
 
 FILE * usart0_str;
 RF24 radio;
@@ -36,32 +38,63 @@ int main(void)
 {
 	setup();
 	
-    while(1)
-    {
-        // sleep for a period of time
-		uint16_t ALS = readALS();
+	while(1)
+	{
+		// sleep for a period of time
+		_delay_ms(10000);
+		double ALS = readALS();
+		uint16_t temp = getTemp();
+		uint16_t humid = getHumid();
+		char humidC[4];
+		char ALSC[4];
+		char tempC[4];
+		ltoa(humid, humidC, 10);
+		ltoa(ALS,ALSC, 10);
+		ltoa(temp, tempC, 10);
+		printf("Humidity: %s\n", humidC);
+		printf("ALS:      %s\n", ALSC);
+		printf("Temp:     %s\n", tempC);
+		while (app.currentState != STATE_ACTIVE)
+		{
+			//_delay_ms(2000); //dont spam the network with reconnections.
+			app.connect();
+			_delay_ms(2500); //wait for response.
+			app.tick();
+		}
+		uint8_t	pub1id = app.gettopicid((unsigned char*)"d/"MAC_SUFF"/"ID1"/"TOPIC_STATUS_UPDATE, 0x0C);
+		uint8_t	pub2id = app.gettopicid((unsigned char*)"d/"MAC_SUFF"/"ID2"/"TOPIC_STATUS_UPDATE, 0x0C);
+		uint8_t	pub3id = app.gettopicid((unsigned char*)"d/"MAC_SUFF"/"ID3"/"TOPIC_STATUS_UPDATE, 0x0C);
 		
+		app.publish(pub1id,(unsigned char*)humidC, strlen(humidC));
+		app.publish(pub2id,(unsigned char*)tempC, strlen(tempC));
+		app.publish(pub3id,(unsigned char*)ALSC, strlen(ALSC));
 		// on wake get the readings from sensors: light level, humidity, temperature.
 		// connect to the wireless Net and send sensor data.
 		// go back to sleep.
-    }
+	}
 }
-uint16_t readALS()
+double readALS()
 {
 	//turn on the sensor.
-	ALS_ENABLE_PORT |= (1<< ALS_ENABLE_PIN);
 	
+		ALS_ENABLE_PORT &= ~(1<< ALS_ENABLE_PIN);
 	//need a minimum of 0.2milliseconds for the sensor to activate fully.
-	_delay_us(200);
-	uint16_t reading =  adc_read(ALS_CH);
+	_delay_ms(200);
+	uint16_t reading1 =  adc_read(ALS_CH);
+	_delay_ms(200);
+	uint16_t reading2 =  adc_read(ALS_CH);
+	_delay_ms(200);
+	uint16_t reading3 =  adc_read(ALS_CH);
+	_delay_ms(200);
+	printf("%d, %d, %d\n", reading1, reading2, reading3);
 	// 0.25V -> 10 lux
 	// 1.25V -> 100000 lux
 	
 	//turn off the sensor.
-	 ALS_ENABLE_PORT &= ~(1<< ALS_ENABLE_PIN);
+ALS_ENABLE_PORT |= (1<< ALS_ENABLE_PIN);
 	//need a minimum of 0.2milliseconds for the sensor to deactivate fully.
-	_delay_us(200);
-	return (reading + ADC_OFFSET) * ADC_LINEAR_SCALE;
+	_delay_ms(200);
+	return (double)(((reading1+reading2+reading3)/3.0) + ADC_OFFSET) * ADC_LINEAR_SCALE;
 	
 }
 void setup()
@@ -69,8 +102,8 @@ void setup()
 	USARTinit(); //enable serial output;
 	Timing::init();// start the timer - used for the millis function (rough time since powered on);
 	adc_init();
+	i2c_init();
 	network.setup(THIS_LEVEL, THIS_DEV); //ensure network is setup before any MQTT work is done.
-	
 	ALS_ENABLE_DDR |= (1<<ALS_ENABLE_PIN); //set als enable pin as output.
 	
 }
@@ -123,6 +156,15 @@ uint16_t adc_read(uint8_t ch)
 
 	return (ADC);
 }
+uint16_t getHumid(void)
+{
+	return 0;
+}
+uint16_t getTemp(void)
+{
+	return 0;
+}
+
 int USART0SendByte (char c, FILE *stream)
 {
 	if (c == '\n')
