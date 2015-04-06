@@ -56,7 +56,7 @@
 <layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
 <layer number="47" name="Measures" color="7" fill="1" visible="no" active="yes"/>
 <layer number="48" name="Document" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="49" name="Reference" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="49" name="Reference" color="7" fill="1" visible="no" active="yes"/>
 <layer number="51" name="tDocu" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="52" name="bDocu" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="91" name="Nets" color="2" fill="1" visible="no" active="no"/>
@@ -76,9 +76,9 @@
 <wire x1="0" y1="70.03" x2="0" y2="0" width="0" layer="20"/>
 <hole x="4.25" y="35" drill="4"/>
 <hole x="65.75" y="35" drill="4"/>
-<text x="10" y="26" size="1.778" layer="48">SmartHome</text>
-<text x="10" y="23" size="1.778" layer="48">2015 Rev A</text>
-<text x="10" y="20" size="1.778" layer="48">Lightswitch</text>
+<text x="23" y="26" size="1.778" layer="48" rot="MR0">SmartHome</text>
+<text x="22" y="23" size="1.778" layer="48" rot="MR0">2015 Rev A</text>
+<text x="22" y="20" size="1.778" layer="48" rot="MR0">Lightswitch</text>
 </plain>
 <libraries>
 <library name="ic-package">
