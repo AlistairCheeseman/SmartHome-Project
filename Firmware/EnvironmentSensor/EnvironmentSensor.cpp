@@ -43,8 +43,8 @@ int main(void)
 		// sleep for a period of time
 		_delay_ms(10000);
 		double ALS = readALS();
+		uint16_t humid = getHumid();// make sure the humidity is read first, the temperature is read by the chip when measuring humidity. so to reduce time a special command can be issued after the humidity for quick temp readouts.
 		uint16_t temp = getTemp();
-		uint16_t humid = getHumid();
 		char humidC[4];
 		char ALSC[4];
 		char tempC[4];
@@ -77,7 +77,7 @@ double readALS()
 {
 	//turn on the sensor.
 	
-		ALS_ENABLE_PORT &= ~(1<< ALS_ENABLE_PIN);
+	ALS_ENABLE_PORT &= ~(1<< ALS_ENABLE_PIN);
 	//need a minimum of 0.2milliseconds for the sensor to activate fully.
 	_delay_ms(200);
 	uint16_t reading1 =  adc_read(ALS_CH);
@@ -91,7 +91,7 @@ double readALS()
 	// 1.25V -> 100000 lux
 	
 	//turn off the sensor.
-ALS_ENABLE_PORT |= (1<< ALS_ENABLE_PIN);
+	ALS_ENABLE_PORT |= (1<< ALS_ENABLE_PIN);
 	//need a minimum of 0.2milliseconds for the sensor to deactivate fully.
 	_delay_ms(200);
 	return (double)(((reading1+reading2+reading3)/3.0) + ADC_OFFSET) * ADC_LINEAR_SCALE;
