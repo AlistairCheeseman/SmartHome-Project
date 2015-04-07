@@ -252,7 +252,12 @@ function showSensorHistory() {
                 var array = raw.split(",");
                 data.push([moment, (parseInt(array[0]) / 10)]);
                 data2.push([moment, (parseFloat(array[1]) / 100)]);
-            } else {
+            } else if (sensortype == "4")
+            {
+                //temperature has a +100 offset that must be corrected.
+                data.push([moment, (parseInt(value['value']) - 100)]);
+            } else
+            {
                 data.push([moment, parseInt(value['value'])]);
             }
 
@@ -268,9 +273,19 @@ function showSensorHistory() {
             } else {
                 drawPowerGraphFull(data, data2);
             }
-        } else if (sensortype == "1")
+        } else if (sensortype == "4")
+        {
+            drawTemperatureGraph(data);
+        } else if (sensortype == "5")
+        {
+            drawHumidityGraph(data);
+        }
+        else if (sensortype == "1")
         {
             drawDigitalGraph(data)
+        } else if (sensortype == "6")
+        {
+            drawLuxGraph(data);
         }
         else
         {
@@ -645,6 +660,129 @@ function drawPlainGraph(data) {
                         yAxis: 0,
                         data: data,
                         step: true
+                    }]
+            });
+}
+function drawTemperatureGraph(data) {
+    Highcharts.setOptions({
+        global: {
+            useUTC: false
+        }
+    });
+    $('#sensorGraph').highcharts(
+            {
+                title: {
+                    text: 'Temperature'
+                },
+                legend: {
+                    enabled: false
+                },
+                xAxis: {
+                    type: 'datetime'
+                },
+                yAxis: {// Primary yAxis
+                    labels: {
+                        format: '{value}',
+                        style: {
+                            color: Highcharts.getOptions().colors[1]
+                        }
+                    },
+                    title: {
+                        text: 'Temperature (°C)'
+                    }
+                },
+                tooltip: {
+                    valueSuffix: '°C'
+                },
+                series: [{
+                        name: 'Sensor History',
+                        yAxis: 0,
+                        data: data,
+                        step: false
+                    }]
+            });
+}
+function drawHumidityGraph(data) {
+    Highcharts.setOptions({
+        global: {
+            useUTC: false
+        }
+    });
+    $('#sensorGraph').highcharts(
+            {
+                chart: {
+                    type: 'spline'
+                },
+                title: {
+                    text: 'Humidity Readings'
+                },
+                legend: {
+                    enabled: false
+                },
+                xAxis: {
+                    type: 'datetime'
+                },
+                yAxis: {// Primary yAxis
+                    labels: {
+                        format: '{value}',
+                        style: {
+                            color: Highcharts.getOptions().colors[1]
+                        }
+                    },
+                    title: {
+                        text: 'Relative Humidity (%)'
+                    }
+                },
+                tooltip: {
+                    valueSuffix: '%'
+                },
+                series: [{
+                        name: 'Sensor History',
+                        yAxis: 0,
+                        data: data,
+                        step: false
+                    }]
+            });
+}
+function drawLuxGraph(data) {
+    Highcharts.setOptions({
+        global: {
+            useUTC: false
+        }
+    });
+    $('#sensorGraph').highcharts(
+            {
+                chart: {
+                    type: 'spline'
+                },
+                title: {
+                    text: 'Light Level Readings'
+                },
+                legend: {
+                    enabled: false
+                },
+                xAxis: {
+                    type: 'datetime'
+                },
+                yAxis: {// Primary yAxis
+                    labels: {
+                        format: '{value}',
+                        style: {
+                            color: Highcharts.getOptions().colors[1]
+                        }
+                    },
+                    title: {
+                        text: 'Light Level (LUX)'
+                    }
+                },
+                tooltip: {
+                    valueSuffix: 'LUX'
+                },
+                series: [{
+                        name: 'Sensor History',
+                        yAxis: 0,
+                        data: data,
+                        step: false
                     }]
             });
 }
