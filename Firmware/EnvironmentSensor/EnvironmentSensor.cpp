@@ -26,8 +26,8 @@ int USART0ReceiveByte(FILE *stream);
 void USARTinit(void);
 void setup(void);
 double readALS(void);
-uint16_t getHumid(void);
-uint16_t getTemp(void);
+uint8_t getHumid(void);
+uint8_t getTemp(void);
 
 FILE * usart0_str;
 RF24 radio;
@@ -43,8 +43,8 @@ int main(void)
 		// sleep for a period of time
 		_delay_ms(10000);
 		double ALS = readALS();
-		uint16_t humid = getHumid();// make sure the humidity is read first, the temperature is read by the chip when measuring humidity. so to reduce time a special command can be issued after the humidity for quick temp readouts.
-		uint16_t temp = getTemp();
+		uint8_t humid = getHumid();// make sure the humidity is read first, the temperature is read by the chip when measuring humidity. so to reduce time a special command can be issued after the humidity for quick temp readouts.
+		uint8_t temp = getTemp();
 		char humidC[4];
 		char ALSC[4];
 		char tempC[4];
@@ -156,12 +156,22 @@ uint16_t adc_read(uint8_t ch)
 
 	return (ADC);
 }
-uint16_t getHumid(void)
+uint8_t getHumid(void)
 {
+	uint16_t rhCode = 0; // the recieved code
+	int res = (((rhCode * 125.0)/65536) - 6); // factor correction. to get percentage.
+	if ((res >= 0) && (res <= 100))
+	return (uint8_t) res;
+	else
 	return 0;
 }
-uint16_t getTemp(void)
+uint8_t getTemp(void)
 {
+	uint16_t tCode = 0; // the recieved code
+	int res = (((tCode * 175.72)/65536) - 46.85); // factor correction. to get temperature in celcius.
+	if ((res >= 0) && (res <= 100))
+	return (uint8_t) (res + 100);// 0 deg C == 100, 100C = 200, -100C = 0.
+	else
 	return 0;
 }
 
