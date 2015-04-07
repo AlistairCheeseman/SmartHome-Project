@@ -53,20 +53,20 @@ if ($DBView == "power") {
 
     $devid = $_GET['devid'];
     if ($devid) {
-        $query = "SELECT t1.Id, t1.Name as Name, t2.Name as Device, t1.CurrentValue, t1.SRDevTopic, t1.MapTopic, t3.Name as Type, t1.DevId as DevId, t1.ControlId as ControlId, t3.ControlTypeId FROM Sensors t1 INNER JOIN Devices t2 ON t2.id = t1.DevId INNER JOIN Dev_Controls t3 ON t3.ControlId = t1.ControlId AND t3.TypeId = t2.TypeId where DevId='" . $devid . "'";
+        $query = "SELECT t1.Id, t1.Name as Name, t2.Name as Device, t1.CurrentValue, t1.SRDevTopic, t1.MapTopic, t3.Name as Type, t1.DevId as DevId, t1.ControlId as ControlId, t3.ControlTypeId, t4.Category as ControlCategory  FROM Sensors t1 INNER JOIN Devices t2 ON t2.id = t1.DevId INNER JOIN Dev_Controls t3 ON t3.ControlId = t1.ControlId AND t3.TypeId = t2.TypeId INNER JOIN Dev_ControlType t4 ON t4.Id = t3.ControlTypeId  where DevId='" . $devid . "'";
     } else {
-        $query = "SELECT t1.Id, t1.Name as Name, t2.Name as Device, t1.CurrentValue, t1.SRDevTopic, t1.MapTopic, t3.Name as Type, t1.DevId as DevId, t1.ControlId as ControlId, t3.ControlTypeId  FROM Sensors t1 INNER JOIN Devices t2 ON t2.id = t1.DevId INNER JOIN Dev_Controls t3 ON t3.ControlId = t1.ControlId AND t3.TypeId = t2.TypeId";
+        $query = "SELECT t1.Id, t1.Name as Name, t2.Name as Device, t1.CurrentValue, t1.SRDevTopic, t1.MapTopic, t3.Name as Type, t1.DevId as DevId, t1.ControlId as ControlId, t3.ControlTypeId, t4.Category as ControlCategory  FROM Sensors t1 INNER JOIN Devices t2 ON t2.id = t1.DevId INNER JOIN Dev_Controls t3 ON t3.ControlId = t1.ControlId AND t3.TypeId = t2.TypeId INNER JOIN Dev_ControlType t4 ON t4.Id = t3.ControlTypeId ";
     }
 
     if ($filter) {
         if ($filter == "output") {
-            $query = $query . " where t3.ControlTypeId = 1";
+            $query = $query . " where t4.Category = 'Output'";
         }
         if ($filter == "sensors") {
-            $query = $query . " where t3.ControlTypeId = 2";
+            $query = $query . " where t4.Category = 'Sensor'";
         }
         if ($filter == "request") {
-            $query = $query . " where t3.ControlTypeId = 3";
+            $query = $query . " where t4.Category = 'Request'";
         }
     }
     $statement = $db->prepare($query);
