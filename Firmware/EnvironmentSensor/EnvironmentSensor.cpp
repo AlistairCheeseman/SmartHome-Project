@@ -275,8 +275,115 @@ uint8_t getHumid(void)
 }
 uint8_t getTemp(void)
 {
-	uint16_t tCode = 0; // the recieved code
-	int res = (((tCode * 175.72)/65536) - 46.85); // factor correction. to get temperature in celcius.
+	uint16_t tCode = 0; // the recieved code	
+	//send start condition
+	TWCR = (1<<TWINT)|(1<<TWSTA)|(1<<TWEN); // clear interrupt flag ( to one), set start and enable conditions.
+	// wait for twint flag set. this indicated that the START condition has been transmitted.
+	while (!(TWCR & (1<<TWINT))) // ( wait for the interrupt flag ( set to zero)
+	;
+	// check the value of TWI status register. Mask prescaler bits. If status different from START go to ERROR.
+	if ((TWSR & 0xF8) != TW_START)
+	{
+		//ERROR();
+	}
+	
+	
+	//load SLA_W into TWDR Register. Clear TWINT bit in TWCR to start transmission of address.
+	TWDR = (0x40<<1)|TW_WRITE; // shift 7 bit address register and set write flag.
+	TWCR = (1<<TWINT) |	(1<<TWEN); // clear interrupt flag, enable two wire. ( go send the data)
+	
+	//Wait for TWINT Flag set. This indicates that the SLA+W has been transmitted , and ACK/NACK has been received.
+	while (!(TWCR & (1<<TWINT)))
+	;
+	
+	//check the value of TWI status Register. Mask pre-scaler buts. If status different from MT_SLA_ACK goto ERROR
+	if ((TWSR & 0xF8) != TW_MT_SLA_ACK)
+	{
+		//	ERROR();
+	}
+	
+	
+	
+	//Load DATA into TWDR Register. Clear TWINT bit in TWCR to start transmission of data
+	TWDR = 0xE0; // measure humidity, Hold Master Mode
+	TWCR = (1<<TWINT) |	(1<<TWEN); //go
+	
+	// Wait for TWINT Flag set. This indicates that the DATA has been transmitted, and ACK/NACK has been received.
+	while (!(TWCR & (1<<TWINT)))
+	;
+	
+	//Check value of TWI Status Register. Mask prescaler bits. If status different from MT_DATA_ACK go to ERROR
+	if ((TWSR & 0xF8) != TW_MT_DATA_ACK) // data txd with ack.
+	{
+		//ERROR();
+	}
+	// the address and command has been sent. Now send a repeated start and read, clock stretch and then get data.
+	
+	
+	//send repeated start condition ( hardware state machine detects if it is a repeated start or a start.
+	TWCR = (1<<TWINT)|(1<<TWSTA)|(1<<TWEN); // clear interrupt flag ( to one), set start and enable conditions.
+	// wait for twint flag set. this indicated that the START condition has been transmitted.
+	while (!(TWCR & (1<<TWINT))) // ( wait for the interrupt flag ( set to zero)
+	;
+	// check the value of TWI status register. Mask prescaler bits. If status different from REPEATED START go to ERROR.
+	if ((TWSR & 0xF8) != TW_REP_START)
+	{
+		//ERROR();
+	}
+	
+	
+	//load SLA_R into TWDR Register. Clear TWINT bit in TWCR to start transmission of address.
+	TWDR = (0x40<<1)|TW_READ; // shift 7 bit address register and set read flag.
+	TWCR = (1<<TWINT) |	(1<<TWEN); // clear interrupt flag, enable two wire. ( go send the data)
+	
+	//Wait for TWINT Flag set. This indicates that the SLA+W has been transmitted , and ACK/NACK has been received.
+	while (!(TWCR & (1<<TWINT)))
+	;
+	
+	//check the value of TWI status Register. Mask pre-scaler buts. If status different from Master Receiver SLA_ACK goto ERROR
+	if ((TWSR & 0xF8) !=  TW_MR_SLA_ACK)
+	{
+		//	ERROR();
+	}
+	
+	//now set it so that we send ack and enable TWI.
+	TWCR = (1<<TWINT)|	(1<<TWEN)|(1<<TWEA);
+	
+	while (!(TWCR & (1<<TWINT))) // ( wait for the interrupt flag ( set to zero)
+	;
+
+	//check the value of TWI status Register. Mask pre-scaler buts. If status different from Master Receiver DATA rec ACK sent goto ERROR
+	if ((TWSR & 0xF8) !=  TW_MR_DATA_ACK)
+	{
+		//	ERROR();
+	}
+	// data has been received and status good.
+	tCode = (TWDR<<8); //put msbyte in upper byte
+	
+	
+	
+	//for the last bit no ACK is sent.
+	TWCR = (1<<TWINT)|	(1<<TWEN);;
+	// ( wait for the interrupt flag ( set to zero)
+	while (!(TWCR & (1<<TWINT)))
+	;
+	//check the value of TWI status Register. Mask pre-scaler buts. If status different from Master Receiver DATA rec ACK NOT sent goto ERROR
+	if ((TWSR & 0xF8) !=  TW_MR_DATA_NACK)
+	{
+		//	ERROR();
+	}
+	tCode |=(uint16_t) (TWDR); //put LSByte in lower byte
+	
+	
+	//Transmit STOP condition
+	TWCR = (1<<TWINT)|(1<<TWEN)|(1<<TWSTO);
+	
+	
+	
+	
+	
+	
+	int res = (((tCode * 175.72)/65536.0) - 46.85); // factor correction. to get temperature in celcius.
 	if ((res >= 0) && (res <= 100))
 	return (uint8_t) (res + 100);// 0 deg C == 100, 100C = 200, -100C = 0.
 	else
