@@ -26,7 +26,7 @@ int USART0SendByte (char c, FILE *stream);
 int USART0ReceiveByte(FILE *stream);
 void USARTinit(void);
 void setup(void);
-double readALS(void);
+uint16_t readALS(void);
 uint8_t getHumid(void);
 uint8_t getTemp(void);
 
@@ -35,19 +35,31 @@ RF24 radio;
 SensorNet network(radio, MAC_SUFF_HEX);
 MQTTSN app(network,(uint8_t) 0x28, MAC_SUFF_HEX);
 
+
+
+
 int main(void)
 {
 	setup();
 	
 	while(1)
 	{
-		// sleep for a period of time
-		_delay_ms(10000);
-		double ALS = readALS();
+		// sleep for a period of time ( 2 mins)
+		for (int c = 0; c<120;c++) // report every minute or so. ( 120 * 500msec) =
+		{
+			delay(500); // wait 1/2 second
+			app.tick(); // tick the network to route any packets or pings.
+		}
+				for (int c = 0; c<120;c++) // report every minute or so. ( 120 * 500msec) =
+				{
+					delay(500); // wait 1/2 second
+					app.tick(); // tick the network to route any packets or pings.
+				}
+		uint16_t ALS = readALS();
 		uint8_t humid = getHumid();// make sure the humidity is read first, the temperature is read by the chip when measuring humidity. so to reduce time a special command can be issued after the humidity for quick temp readouts.
 		uint8_t temp = getTemp();
 		char humidC[4];
-		char ALSC[4];
+		char ALSC[6]; //10,000 max value
 		char tempC[4];
 		ltoa(humid, humidC, 10);
 		ltoa(ALS,ALSC, 10);
@@ -74,7 +86,7 @@ int main(void)
 		// go back to sleep.
 	}
 }
-double readALS()
+uint16_t readALS()
 {
 	//turn on the sensor.
 	
@@ -95,8 +107,18 @@ double readALS()
 	ALS_ENABLE_PORT |= (1<< ALS_ENABLE_PIN);
 	//need a minimum of 0.2milliseconds for the sensor to deactivate fully.
 	_delay_ms(200);
-	return (double)(((reading1+reading2+reading3)/3.0) + ADC_OFFSET) * ADC_LINEAR_SCALE;
-	
+	uint16_t  averageRead = ((reading1+reading2+reading3)/3.0);
+	//rather than use lookup table, have defined set areas of linearity. this is due to datasheet not being fully concise.
+	if (averageRead <77)
+	return 10; // return min value.
+	else if (averageRead < 167)
+	return (averageRead * 0.5988);
+	else if (averageRead < 251)
+	return (averageRead * 3.9840);
+	else if (averageRead < 335)
+	return (averageRead * 29.8507);
+	else
+	return 0x2710; // return max value 10,000
 }
 void setup()
 {
@@ -237,8 +259,8 @@ uint8_t getHumid(void)
 	//now set it so that we send ack and enable TWI.
 	TWCR = (1<<TWINT)|	(1<<TWEN)|(1<<TWEA);
 	
-		while (!(TWCR & (1<<TWINT))) // ( wait for the interrupt flag ( set to zero)
-		;
+	while (!(TWCR & (1<<TWINT))) // ( wait for the interrupt flag ( set to zero)
+	;
 
 	//check the value of TWI status Register. Mask pre-scaler buts. If status different from Master Receiver DATA rec ACK sent goto ERROR
 	if ((TWSR & 0xF8) !=  TW_MR_DATA_ACK)
@@ -253,14 +275,14 @@ uint8_t getHumid(void)
 	//for the last bit no ACK is sent.
 	TWCR = (1<<TWINT)|	(1<<TWEN);;
 	// ( wait for the interrupt flag ( set to zero)
-		while (!(TWCR & (1<<TWINT))) 
-		;
-			//check the value of TWI status Register. Mask pre-scaler buts. If status different from Master Receiver DATA rec ACK NOT sent goto ERROR
-			if ((TWSR & 0xF8) !=  TW_MR_DATA_NACK)
-			{
-				//	ERROR();
-			}
-		rhCode |=(uint16_t) (TWDR); //put LSByte in lower byte
+	while (!(TWCR & (1<<TWINT)))
+	;
+	//check the value of TWI status Register. Mask pre-scaler buts. If status different from Master Receiver DATA rec ACK NOT sent goto ERROR
+	if ((TWSR & 0xF8) !=  TW_MR_DATA_NACK)
+	{
+		//	ERROR();
+	}
+	rhCode |=(uint16_t) (TWDR); //put LSByte in lower byte
 	
 	
 	//Transmit STOP condition
@@ -275,7 +297,7 @@ uint8_t getHumid(void)
 }
 uint8_t getTemp(void)
 {
-	uint16_t tCode = 0; // the recieved code	
+	uint16_t tCode = 0; // the recieved code
 	//send start condition
 	TWCR = (1<<TWINT)|(1<<TWSTA)|(1<<TWEN); // clear interrupt flag ( to one), set start and enable conditions.
 	// wait for twint flag set. this indicated that the START condition has been transmitted.
