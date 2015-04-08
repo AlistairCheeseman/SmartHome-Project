@@ -134,4 +134,10 @@ INNER JOIN auto_state ast ON ast.Id = ato.stateId";
     $statement->execute();
     $results = $statement->fetch(PDO::FETCH_ASSOC);
     echo json_encode($results);
+} elseif ($DBView == "ActiveDevices") {
+    $query = "SELECT t1.Id, t1.Name as Name, t2.Name as Device, t1.CurrentValue, t1.SRDevTopic, t1.MapTopic, t3.Name as Type, t1.DevId as DevId, t1.ControlId as ControlId, t3.ControlTypeId, t4.Category as ControlCategory, t5.Name as RoomName  FROM Sensors t1 INNER JOIN Devices t2 ON t2.id = t1.DevId INNER JOIN Dev_Controls t3 ON t3.ControlId = t1.ControlId AND t3.TypeId = t2.TypeId INNER JOIN Dev_ControlType t4 ON t4.Id = t3.ControlTypeId INNER JOIN Rooms t5 on t5.Id = t2.RoomId where t4.Category = 'Output' AND t1.CurrentValue != '0'";
+    $statement = $db->prepare($query);
+    $statement->execute();
+    $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode($results);
 }
