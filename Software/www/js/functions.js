@@ -671,6 +671,9 @@ function drawTemperatureGraph(data) {
     });
     $('#sensorGraph').highcharts(
             {
+                chart: {
+                    type: 'spline'
+                },
                 title: {
                     text: 'Temperature'
                 },
