@@ -841,3 +841,16 @@ function drawPowerSummary()
         }
     });
 }
+function showOnDevices()
+{
+    $.getJSON("/get_data.php?view=ActiveDevices", function (json)
+    {
+        $.each(json, function (key, value) {
+            var row = $("<tr />");
+            $("#listActiveDevicesTable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
+            row.append($("<td>" + value['Name'] + "</td>"));
+            row.append($("<td>" + value['Device'] + "</td>"));
+            row.append($("<td>" + value['RoomName'] + "</td>"));
+        });
+    });
+}

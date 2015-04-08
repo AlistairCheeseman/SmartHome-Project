@@ -12,6 +12,7 @@
             {
                 $.ajaxSetup({cache: false}); // turn off ajax CACHING
                 drawPowerSummary();
+                showOnDevices();
             });
            
 
@@ -67,12 +68,13 @@
             <div class="container">  
                 <h1> Active Devices </h1>
                 <p> This shows all the devices currently active. </p>
-                <ul>
-                    <li>Ali's Computer</li>
-                    <li>Ali's Light</li>
-                    <li>Global Heating</li>
-                    <li>Global Hot Water</li>
-                </ul>
+                <table id="listActiveDevicesTable"  class="table table-striped">
+                     <tr>
+                        <th>Name</th>
+                        <th>Device</th>
+                        <th>Room</th>
+                    </tr>
+                </table>
             </div>   
             <hr />
             <div class="container">  
