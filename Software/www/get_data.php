@@ -140,4 +140,10 @@ INNER JOIN auto_state ast ON ast.Id = ato.stateId";
     $statement->execute();
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode($results);
+} elseif ($DBView == "EnvironmentList") {
+    $query = "SELECT t1.Name as Name, t2.Name as Device, t1.CurrentValue, t3.Name as Type, t5.Name as RoomName  FROM Sensors t1 JOIN Devices t2 ON t2.id = t1.DevId JOIN Dev_Controls t3 ON t3.ControlId = t1.ControlId AND t3.TypeId = t2.TypeId JOIN Dev_ControlType t4 ON t4.Id = t3.ControlTypeId JOIN Rooms t5 on t5.Id = t2.RoomId where t4.Category = 'Sensor' AND (t3.Name = 'Temperature' OR t3.Name = 'Ambient Light' OR t3.Name = 'Humidity Level') ";
+    $statement = $db->prepare($query);
+    $statement->execute();
+    $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode($results);
 }
