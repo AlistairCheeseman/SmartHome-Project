@@ -854,3 +854,49 @@ function showOnDevices()
         });
     });
 }
+function showEnvironmentData()
+{
+    var rooms = [];
+    var humidity = {};
+    var lux = {};
+    var temp = {};
+    $.getJSON("/get_data.php?view=EnvironmentList", function (json)
+    {
+        $.each(json, function (key, value) {
+            $typeName = value['Type'];
+            var roomname = value['RoomName'];
+            if ($typeName == "Temperature")
+            {
+                temp[roomname] = (parseInt(value['CurrentValue']) - 100);
+            } else if ($typeName == "Humidity Level")
+            {
+                humidity[roomname] = value['CurrentValue'];
+            } else if ($typeName == "Ambient Light")
+            {
+                lux[roomname] = value['CurrentValue'];
+            }
+
+            var found = false;
+
+            $.each(rooms, function (keynew, valuenew) {
+                if (valuenew == roomname)
+                    found = true;
+            });
+            if (found == false)
+            {
+                rooms.push(roomname);
+            }
+        });
+        $.each(rooms, function (key, value) {
+            var row = $("<tr />");
+            $("#EnvDataTable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
+            row.append($("<td>" + value + "</td>"));
+            row.append($("<td>" + temp[value] + "</td>"));
+            row.append($("<td>" + humidity[value] + "</td>"));
+            row.append($("<td>" + lux[value] + "</td>"));
+        });
+
+    });
+
+
+}

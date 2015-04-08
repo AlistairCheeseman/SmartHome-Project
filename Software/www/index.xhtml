@@ -13,6 +13,7 @@
                 $.ajaxSetup({cache: false}); // turn off ajax CACHING
                 drawPowerSummary();
                 showOnDevices();
+                showEnvironmentData();
             });
            
 
@@ -81,25 +82,16 @@
                 <h1> Current Environmental Information </h1>
                 <p> This shows the all the devices currently active. </p>
 
-                <table class="table table-striped">
+                <table id="EnvDataTable" class="table table-striped">
                     <thead>
                         <tr>
                             <th>Room</th>
                             <th>Temperature (&#176;C)</th>
                             <th>Humidity (&#37;)</th>
+                            <th>Light Level (LUX)</th>
                         </tr> 
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Ali's Room</td>
-                            <td>25</td>
-                            <td>72</td>
-                        </tr>
-                        <tr>
-                            <td>Living Room</td>
-                            <td>25</td>
-                            <td>72</td>
-                        </tr>  
                     </tbody>
                 </table>
             </div>   
