@@ -53,6 +53,7 @@
 //this should be assigned dynamically but for time being will be manual
 #define THIS_LEVEL 1
 #define THIS_DEV 4
+#define THIS_MQTTCLIENTID 0x53
 
 //MQTT ID Mappings (ASCII VALUE FOR NUMBER)
 #define ID1 "1" //0x31 //1 maps to Humidity
