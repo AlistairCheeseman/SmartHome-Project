@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
 
     mosqpp::lib_init();
     SQL* sql = new SQL("/var/db/smarthome");
-   MQTT* mqtt = new MQTT("Scheduler", "192.168.3.50", 1883);
+    MQTT* mqtt = new MQTT("Scheduler", "192.168.3.50", 1883);
 
     while (keep_running) {
         mqtt->loop();
@@ -79,7 +79,7 @@ int main(int argc, char** argv) {
                 char* conditionValue = strtok(NULL, "=");
                 fprintf(stdout, "%s\t%s\n", conditionKey, conditionValue);
                 if (strcmp(conditionKey, "TIME") == 0) {
-                    if (!(strcmp(conditionValue,getTimeofDay()) == 0)) // force the time to be valid for testing
+                    if (!(strcmp(conditionValue, getTimeofDay()) == 0)) // force the time to be valid for testing
                     {
                         //it's not now. ( 5 min window)
                         fprintf(stdout, "Excluded Rule, wrong time\n");
@@ -98,18 +98,16 @@ int main(int argc, char** argv) {
                         fprintf(stdout, "Excluded Rule, wrong day of week\n");
                         runRule = false;
                     }
-
                 }
             }
             if (runRule == true) {
                 // send the payload to the topic.
                 fprintf(stdout, "RuleValid!\n");
-                            mqtt->loop();
-                mqtt->publish(NULL, aRS[t].topic, strlen(aRS[t].topic),  aRS[t].payload);
-                 mqtt->loop();
-                 mqtt->disconnect();
-                  
-                fprintf(stdout,"Publishing %s to %s\n", aRS[t].payload,aRS[t].topic);
+                mqtt->loop();
+                mqtt->publish(NULL, aRS[t].topic, strlen(aRS[t].topic), aRS[t].payload);
+                mqtt->loop();
+                mqtt->disconnect();
+                fprintf(stdout, "Publishing %s to %s\n", aRS[t].payload, aRS[t].topic);
             } else {
                 fprintf(stdout, "Skipping Rule\n");
             }
@@ -127,21 +125,21 @@ char* getDayofWeek() {
     tm *ltm = localtime(&now);
     char *buffer = new char[22];
     strftime(buffer, 22, "%A", ltm);
-    int i=0;
+    int i = 0;
     char c;
-  while (buffer[i])
-  {
-    c=buffer[i];
-   buffer[i] = (toupper(c));
-    i++;
-  }
+    while (buffer[i]) {
+        c = buffer[i];
+        buffer[i] = (toupper(c));
+        i++;
+    }
     return buffer;
 }
+
 char* getTimeofDay() {
-     time_t now = time(0);
+    time_t now = time(0);
     tm *ltm = localtime(&now);
 
-    ltm->tm_min =  ltm->tm_min - ( ltm->tm_min % 5);
+    ltm->tm_min = ltm->tm_min - (ltm->tm_min % 5);
     char *buffer = new char[22];
     strftime(buffer, 22, "%H:%M", ltm);
     fprintf(stdout, "Time is: %s\n", buffer);
