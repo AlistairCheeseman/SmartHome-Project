@@ -45,8 +45,8 @@ void SQL::getActiveAutomationRules(automationRule *(&AR), int &len) {
     sqlite3_stmt *ppStmt;
 
     int ruleCount = 0;
-    //get all start/stop actions that are active or tempoary active
-    const char *statementCount = "SELECT count(*) FROM automation where (stateId = 1) OR (stateId = 4);"; // get number of tempoary rules.
+    //get all start/stop actions that are active or temporary active 
+    const char *statementCount = "SELECT count(*) FROM automation where (stateId = 1) OR (stateId = 4) AND (TypeId = 1);"; // get number of rules.
     if (sqlite3_prepare_v2(db, statementCount, strlen(statementCount), &ppStmt, 0) == SQLITE_OK) {
         while (1) {
             res = sqlite3_step(ppStmt);
@@ -68,7 +68,7 @@ void SQL::getActiveAutomationRules(automationRule *(&AR), int &len) {
 
     int currentrule = 0;
 
-    const char *statement = "SELECT Id, Payload, Topic, Condition  FROM automation where (stateId = 1) OR (stateId = 4);"; // get all active or temporary rules.
+    const char *statement = "SELECT Id, Payload, Topic, Condition  FROM automation where (stateId = 1) OR (stateId = 4) AND (TypeId = 1);"; // get all active or temporary rules.
     if (sqlite3_prepare_v2(db, statement, strlen(statement), &ppStmt, 0) == SQLITE_OK) {
         while (1) {
             res = sqlite3_step(ppStmt);
