@@ -319,57 +319,59 @@ function populateMDevMapSelectLists() {
         $.each(json, function (key, value) {
             $selectdev.append("<option value='" + value['Id'] + "/" + value['controlId'] + "'>" + value['Id'] + "/" + value['controlId'] + " (" + value['DeviceType'] + "/" + value['control'] + ")</option>");
         });
-        var $change = $selectdev.on('change', function () {
-            var vars = {};
-            var $selectId = document.getElementById("Devidlist").selectedIndex;
-            var $rawid = document.getElementById("Devidlist").options[$selectId].value;
-            var $keys = $rawid.split("/");
-            $.getJSON('/get_data.php?view=MDevMaps&filter=true&devId=' + $keys[0] + '&controlId=' + $keys[1], function (json)
-            {
-                $.each(json, function (key, value) {
-                    vars[key] = value;
-                });
-                var $room = vars['room'];
-                var $deviceType = vars['DeviceType'];
-                var $control = vars['control'];
-                var $controlType = vars['ControlTypeId'];
-                document.getElementById('controlTId').value = $controlType;
-                if ($controlType == 3)
-                {
-
-// load up all the devices that can be controlled.
-                    $.getJSON("/get_data.php?view=Sensors&filter=output", function (json)
-                    {
-                        var $select = $("#outputlist");
-                        $.each(json, function (key, value) {
-                            $select.append("<option value='" + value['DevId'] + "/" + value['ControlId'] + "'>" + value['Name'] + "</option>");
-                        });
-                    });
-                    //hide manual entry of the topic map as it will be handled by the multiple select list.
-                    document.getElementById('topicMaptxt').type = "hidden";
-                    document.getElementById('topicMaplbl').style.display = 'none';
-
-                    //make sure we can see the select list.
-                    document.getElementById("outputlist").style.display = 'block';
-                    document.getElementById("selectlistlbl").style.display = 'block';
-                }
-                else
-                {
-                    //load up the default value for a mapping layer value.
-                    document.getElementById('topicMaptxt').value = $room + "/" + $deviceType + "/" + $control;
-                    //ensure the text box is visible
-                    document.getElementById('topicMaplbl').style.display = 'block';
-                    document.getElementById('topicMaptxt').type = "text";
-                    //hide the multiple select list
-                    document.getElementById("outputlist").style.display = 'none';
-                    document.getElementById("selectlistlbl").style.display = 'none';
-                }
-            });
-        });
-
+        var $change = $selectdev.on('change', showOnChangeSensorData());
+        showOnChangeSensorData();
     });
 
 
+}
+function showOnChangeSensorData()
+{
+    var vars = {};
+    var $selectId = document.getElementById("Devidlist").selectedIndex;
+    var $rawid = document.getElementById("Devidlist").options[$selectId].value;
+    var $keys = $rawid.split("/");
+    $.getJSON('/get_data.php?view=MDevMaps&filter=true&devId=' + $keys[0] + '&controlId=' + $keys[1], function (json)
+    {
+        $.each(json, function (key, value) {
+            vars[key] = value;
+        });
+        var $room = vars['room'];
+        var $deviceType = vars['DeviceType'];
+        var $control = vars['control'];
+        var $controlType = vars['ControlTypeId'];
+        document.getElementById('controlTId').value = $controlType;
+        if ($controlType == 3)
+        {
+
+// load up all the devices that can be controlled.
+            $.getJSON("/get_data.php?view=Sensors&filter=output", function (json)
+            {
+                var $select = $("#outputlist");
+                $.each(json, function (key, value) {
+                    $select.append("<option value='" + value['DevId'] + "/" + value['ControlId'] + "'>" + value['Name'] + "</option>");
+                });
+            });
+            //hide manual entry of the topic map as it will be handled by the multiple select list.
+            document.getElementById('topicMaptxt').type = "hidden";
+            document.getElementById('topicMaplbl').style.display = 'none';
+
+            //make sure we can see the select list.
+            document.getElementById("outputlist").style.display = 'block';
+            document.getElementById("selectlistlbl").style.display = 'block';
+        }
+        else
+        {
+            //load up the default value for a mapping layer value.
+            document.getElementById('topicMaptxt').value = $room + "/" + $deviceType + "/" + $control;
+            //ensure the text box is visible
+            document.getElementById('topicMaplbl').style.display = 'block';
+            document.getElementById('topicMaptxt').type = "text";
+            //hide the multiple select list
+            document.getElementById("outputlist").style.display = 'none';
+            document.getElementById("selectlistlbl").style.display = 'none';
+        }
+    });
 }
 function getsensordata() {
     var vars = {};
