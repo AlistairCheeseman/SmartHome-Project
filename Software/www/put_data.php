@@ -128,6 +128,43 @@ try {
             }
             echo "success";
         }
+    } elseif ($table == "rules") {
+        if ($action == "new") {
+            $ruleName = $_GET['ruleName'];
+            $conditions = $_GET['conditions'];
+            $typeId = $_GET['TypeId'];
+            $topicName = $_GET['topicName'];
+            $payload = $_GET['payload'];
+            $state = $_GET['stateId'];
+            $db->exec("INSERT INTO 'automation' ('Name', 'Condition', 'TypeId', 'Topic', 'Payload', 'stateId') VALUES ('" . $ruleName . "','" . $conditions . "','" . $typeId . "','" . $topicName . "','" . $payload . "','" . $state . "')");
+            $db = null;
+            if (REDIRECTS) {
+                header('Location: /rules');
+            }
+            echo "success";
+        } elseif ($action == "delete") {
+            $id = $_GET['id'];
+            $db->exec("DELETE FROM 'automation' where Id = '" . $id . "'");
+            $db = null;
+            if (REDIRECTS) {
+                header('Location: /rules');
+            }
+            echo "success";
+        } elseif ($action == "edit") {
+            $id = $_GET['id'];
+            $ruleName = $_GET['ruleName'];
+            $conditions = $_GET['conditions'];
+            $typeId = $_GET['TypeId'];
+            $topicName = $_GET['topicName'];
+            $payload = $_GET['payload'];
+            $state = $_GET['stateId'];
+            $db->exec("UPDATE 'automation' SET Name='" . $ruleName . "', Condition='" . $conditions  . "', TypeId='" . $typeId. "', Topic='" . $topicName . "', Payload='" . $payload . "', stateId='" . $state. "' WHERE Id='" . $id . "'");
+            $db = null;
+            if (REDIRECTS) {
+                header('Location: /rules');
+            }
+            echo "success";
+        }
     } else
         echo "error";
 } catch (Exception $ex) {
