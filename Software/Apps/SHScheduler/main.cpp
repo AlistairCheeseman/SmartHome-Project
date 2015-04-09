@@ -43,7 +43,7 @@ static void termination_handler(int signum) {
  */
 int main(int argc, char** argv) {
     // this program will be called through cron.
-    //mode 1 this will check the database for all rules and find any that apply to the current condition and post that current condition.
+    //mode 1 this will check the database for all rules and find any that apply to the current condition (only on/off depending on time) and post that current condition.
     //mode 2 It will analyse the logs and look for any patterns, if found it will load them into the suggested rules db for the user to make an active rule.
 
     // Setup signal handlers
