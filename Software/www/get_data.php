@@ -146,4 +146,25 @@ INNER JOIN auto_state ast ON ast.Id = ato.stateId";
     $statement->execute();
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode($results);
+}elseif ($DBView == "RuleTypes") {
+    $query = "SELECT *  FROM auto_Types";
+    $statement = $db->prepare($query);
+    $statement->execute();
+    $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode($results);
+}elseif ($DBView == "RuleStates") {
+    $filter = $_GET['filter']; 
+    $query = "SELECT *  FROM auto_state where ( Id != 4 ";
+    if ($filter == "user")
+    {
+        $query = $query . " AND Id != 3 AND Id != 5";
+    } else if ($filter == "suggested")
+    {
+         $query = $query . " AND Id != 1 AND Id != 2";
+    }
+       $query = $query . ")";
+    $statement = $db->prepare($query);
+    $statement->execute();
+    $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode($results);
 }
