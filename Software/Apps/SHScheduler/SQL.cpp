@@ -46,7 +46,7 @@ void SQL::getActiveAutomationRules(automationRule *(&AR), int &len) {
 
     int ruleCount = 0;
     //get all start/stop actions that are active or temporary active 
-    const char *statementCount = "SELECT count(*) FROM automation where (stateId = 1) OR (stateId = 4) AND (TypeId = 1);"; // get number of rules.
+    const char *statementCount = "SELECT count(*) FROM automation where ((stateId = 1) OR (stateId = 4) OR (stateId = 5)) AND (TypeId = 1);"; // get number of rules.
     if (sqlite3_prepare_v2(db, statementCount, strlen(statementCount), &ppStmt, 0) == SQLITE_OK) {
         while (1) {
             res = sqlite3_step(ppStmt);
@@ -68,7 +68,7 @@ void SQL::getActiveAutomationRules(automationRule *(&AR), int &len) {
 
     int currentrule = 0;
 
-    const char *statement = "SELECT Id, Payload, Topic, Condition  FROM automation where (stateId = 1) OR (stateId = 4) AND (TypeId = 1);"; // get all active or temporary rules.
+    const char *statement = "SELECT Id, Payload, Topic, Condition  FROM automation where ((stateId = 1) OR (stateId = 4) OR (stateId = 5)) AND (TypeId = 1);"; // get all active or temporary rules.
     if (sqlite3_prepare_v2(db, statement, strlen(statement), &ppStmt, 0) == SQLITE_OK) {
         while (1) {
             res = sqlite3_step(ppStmt);
@@ -99,4 +99,24 @@ void SQL::getActiveAutomationRules(automationRule *(&AR), int &len) {
         }
     }
 }
-
+     void SQL::updateLastRunTime(int ruleId)
+     {
+            const char *statement = "UPDATE 'automation' SET lastExec = '%s' WHERE Id = '%d'; ";
+         char *sql = (char *) malloc((strlen(statement)  + 1 + 30));
+    int rc;
+    char *zErrMsg = 0;
+    /* Create SQL statement */
+    char *buffer = getCurrentMoment();
+    sprintf(sql, statement, buffer,ruleId);
+    /* Execute SQL statement */
+    rc = sqlite3_exec(db, sql,NULL, this, &zErrMsg);
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+        sqlite3_free(zErrMsg);
+    } else {
+        //   fprintf(stdout, "Records stored successfully\n");
+    }
+    delete[] sql;
+    delete zErrMsg;
+     }
+     

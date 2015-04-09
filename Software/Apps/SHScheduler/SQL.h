@@ -13,6 +13,7 @@
 #include <ctime>
 #include <string.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #include "automationRule.h"
 class SQL {
@@ -20,6 +21,7 @@ public:
     SQL(const char *filename);
     virtual ~SQL();
      void getActiveAutomationRules(automationRule *(&AR), int &len);
+     void updateLastRunTime(int ruleId);
 private:
     void connectDB(const char *filename);
     sqlite3 *db;

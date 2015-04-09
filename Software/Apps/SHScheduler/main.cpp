@@ -108,6 +108,7 @@ int main(int argc, char** argv) {
                 mqtt->loop();
                 mqtt->disconnect();
                 fprintf(stdout, "Publishing %s to %s\n", aRS[t].payload, aRS[t].topic);
+                sql->updateLastRunTime(aRS[t].id);
             } else {
                 fprintf(stdout, "Skipping Rule\n");
             }
