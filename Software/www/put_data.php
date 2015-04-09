@@ -135,7 +135,7 @@ try {
             $typeId = $_GET['TypeId'];
             $topicName = $_GET['topicName'];
             $payload = $_GET['payload'];
-            $state = $_GET['stateId'];
+            $state = $_GET['StateId'];
             $db->exec("INSERT INTO 'automation' ('Name', 'Condition', 'TypeId', 'Topic', 'Payload', 'stateId') VALUES ('" . $ruleName . "','" . $conditions . "','" . $typeId . "','" . $topicName . "','" . $payload . "','" . $state . "')");
             $db = null;
             if (REDIRECTS) {
@@ -157,7 +157,7 @@ try {
             $typeId = $_GET['TypeId'];
             $topicName = $_GET['topicName'];
             $payload = $_GET['payload'];
-            $state = $_GET['stateId'];
+            $state = $_GET['StateId'];
             $db->exec("UPDATE 'automation' SET Name='" . $ruleName . "', Condition='" . $conditions  . "', TypeId='" . $typeId. "', Topic='" . $topicName . "', Payload='" . $payload . "', stateId='" . $state. "' WHERE Id='" . $id . "'");
             $db = null;
             if (REDIRECTS) {
