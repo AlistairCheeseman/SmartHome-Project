@@ -320,10 +320,9 @@ function populateMDevMapSelectLists() {
             $selectdev.append("<option value='" + value['Id'] + "/" + value['controlId'] + "'>" + value['Id'] + "/" + value['controlId'] + " (" + value['DeviceType'] + "/" + value['control'] + ")</option>");
         });
         var $change = $selectdev.on('change', showOnChangeSensorData());
-        showOnChangeSensorData();
+      
     });
-
-
+  showOnChangeSensorData();
 }
 function showOnChangeSensorData()
 {
