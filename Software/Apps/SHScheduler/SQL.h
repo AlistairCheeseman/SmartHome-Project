@@ -22,6 +22,7 @@ public:
     virtual ~SQL();
      void getActiveAutomationRules(automationRule *(&AR), int &len);
      void updateLastRunTime(int ruleId);
+     void deleteRule(int ruleId);
 private:
     void connectDB(const char *filename);
     sqlite3 *db;

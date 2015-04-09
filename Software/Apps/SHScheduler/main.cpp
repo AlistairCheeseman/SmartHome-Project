@@ -108,7 +108,14 @@ int main(int argc, char** argv) {
                 mqtt->loop();
                 mqtt->disconnect();
                 fprintf(stdout, "Publishing %s to %s\n", aRS[t].payload, aRS[t].topic);
-                sql->updateLastRunTime(aRS[t].id);
+                if (aRS[t].isTemporary == true) {
+                    sql->deleteRule(aRS[t].id);
+                    //delete the rule as it has now been processed.
+                } else {
+                    // it is a permanent rule, update the last ran time.
+                    sql->updateLastRunTime(aRS[t].id);
+                }
+
             } else {
                 fprintf(stdout, "Skipping Rule\n");
             }

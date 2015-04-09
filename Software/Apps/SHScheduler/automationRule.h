@@ -16,6 +16,7 @@ char payload[4];
 char conditions[100][50];
 int conditionCount;
 int id;
+bool isTemporary;
 };
 
 #endif	/* AUTOMATIONRULE_H */
