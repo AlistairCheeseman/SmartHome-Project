@@ -159,6 +159,7 @@ char* SQL::getSRDEVTopic(char* mac, char* id) {
             }
         }
     }
+    sqlite3_finalize(ppStmt);
     
     
     char *output = new char[200]; // final output variable
@@ -222,6 +223,7 @@ char* SQL::getSRMAPTopic(char* room, char* device, char* setting) {
             }
         }
     }
+    sqlite3_finalize(ppStmt);
     char *output = new char[200];
     sprintf(output, "d/%s/%s/P", DevId, ControlId);
     return output;
@@ -255,7 +257,7 @@ char* SQL::getMAPDevtopic(char* mac, char* id) {
             }
         }
     }
-
+    sqlite3_finalize(ppStmt);
     char *output = new char[200];
     sprintf(output, "map/%s/S", SMapTopic);
 
@@ -295,6 +297,7 @@ void SQL::setSMAPVal(char* room, char* device, char* setting, char* MAPVal) {
         }
     }
  sprintf(sql, InsStatement, SensorId, getCurrentMoment(), MAPVal);
+ sqlite3_finalize(ppStmt);
  int rc;
   char *zErrMsg = 0;
      rc = sqlite3_exec(db, sql, c_callback, this, &zErrMsg);
@@ -304,7 +307,7 @@ void SQL::setSMAPVal(char* room, char* device, char* setting, char* MAPVal) {
     } else {
        // fprintf(stdout,"Records stored successfully\n");
     }
-    
+    sqlite3_finalize(ppStmt);
      sprintf(sql, UpdStatement,MAPVal, SensorId);
      rc=0;
      zErrMsg = 0;
@@ -315,6 +318,6 @@ void SQL::setSMAPVal(char* room, char* device, char* setting, char* MAPVal) {
     } else {
        // fprintf(stdout,"Records stored successfully\n");
     }
-    
+    sqlite3_finalize(ppStmt);
     
 }
