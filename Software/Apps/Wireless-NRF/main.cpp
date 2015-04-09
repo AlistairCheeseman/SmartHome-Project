@@ -30,14 +30,14 @@ int main(int argc, char** argv) {
     udp[2] = new UDP("127.0.0.1", "1884");
     udp[3] = new UDP("127.0.0.1", "1884");
     udp[4] = new UDP("127.0.0.1", "1884");
-  //  udp[5] = new UDP("127.0.0.1", "1884");
+    //  udp[5] = new UDP("127.0.0.1", "1884");
     // these will dynamically populate however, setting to fixed values for the time being to allow simple routing.
     clients[0] = 0x87865E; // power outlet
     clients[1] = 0xAEAEAE; // energy sensor
     clients[2] = 0x898989; // heating controller
     clients[3] = 0x6E6E6E; // environment sensor
     clients[4] = 0x7E7E7E; // lightswitch
-  //  clients[5] = 0x000000;
+    //  clients[5] = 0x000000;
 
 
     //this is hardcoded. will be dynamic in future, assume turned on in correct order for the clients[] assignments.
@@ -45,8 +45,9 @@ int main(int argc, char** argv) {
     nexthop[1] = 2;
     nexthop[2] = 3;
     nexthop[3] = 4;
-nexthop[4] = 5;
+    nexthop[4] = 5;
 
+    int udpLoopNumber = 0;
 
 
 
@@ -85,22 +86,26 @@ nexthop[4] = 5;
                 }
             }
         }
+
+        if (udpLoopNumber == 4) {
+            udpLoopNumber = 0;
+        } else {
+            udpLoopNumber++;
+        }
         /*Process UDP Packets */ // loop through every udp connection
-        for (int t = 0; t <= 4; t++) {
-            currentPackLen = 0;
-            //UDP packed recieving is really slowing it down. need to find better way to check packets.
-            if (udp[t]->pendingpacket() == true) {
-                void *packet = udp[t]->getpacket(currentPackLen); // get the headerless mqttsn packet
-                if (packet && currentPackLen) { // check it's a mqtt packet.
-                    if (MQTTSNCheck::verifyPacket(packet, currentPackLen) == true) {
-                        fprintf(stdout, "UDP --> Wireless\n");
-                        fprintf(stdout, "Source: %.6x\nDest  : %.6x\n", 0x000000, clients[t]);
-                        fprintf(stdout, "Next Hop : %3d\n", nexthop[t]);
-                        net->sendpacket(packet, currentPackLen, 0x000000, clients[t], nexthop[t]);
-                        fprintf(stdout, "\n");
-                    }
-                    currentPackLen = 0;
+        currentPackLen = 0;
+        //UDP packed recieving is really slowing it down. need to find better way to check packets.
+        if (udp[udpLoopNumber]->pendingpacket() == true) {
+            void *packet = udp[udpLoopNumber]->getpacket(currentPackLen); // get the headerless mqttsn packet
+            if (packet && currentPackLen) { // check it's a mqtt packet.
+                if (MQTTSNCheck::verifyPacket(packet, currentPackLen) == true) {
+                    fprintf(stdout, "UDP --> Wireless\n");
+                    fprintf(stdout, "Source: %.6x\nDest  : %.6x\n", 0x000000, clients[udpLoopNumber]);
+                    fprintf(stdout, "Next Hop : %3d\n", nexthop[udpLoopNumber]);
+                    net->sendpacket(packet, currentPackLen, 0x000000, clients[udpLoopNumber], nexthop[udpLoopNumber]);
+                    fprintf(stdout, "\n");
                 }
+                currentPackLen = 0;
             }
         }
     }
