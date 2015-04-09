@@ -320,9 +320,9 @@ function populateMDevMapSelectLists() {
             $selectdev.append("<option value='" + value['Id'] + "/" + value['controlId'] + "'>" + value['Id'] + "/" + value['controlId'] + " (" + value['DeviceType'] + "/" + value['control'] + ")</option>");
         });
         var $change = $selectdev.on('change', showOnChangeSensorData());
-      
+
     });
-  showOnChangeSensorData();
+    showOnChangeSensorData();
 }
 function showOnChangeSensorData()
 {
@@ -452,7 +452,10 @@ function getARuleList() {
             var row = $("<tr />");
             $("#RulelistDataTable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
             row.append($("<td>" + value['Name'] + "</td>"));
-            row.append($("<td>" + value['lastExec'] + "</td>"));
+            if (value['lastExec'] == null)
+                row.append($("<td></td>"));
+            else
+                row.append($("<td>" + value['lastExec'] + "</td>"));
             row.append($("<td>" + value['Type'] + "</td>"));
             row.append($("<td>" + value['Condition'] + "</td>"));
             row.append($("<td>" + value['state'] + "</td>"));
@@ -474,6 +477,10 @@ function getSRuleList() {
             var row = $("<tr />");
             $("#SRulelistDataTable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
             row.append($("<td>" + value['Name'] + "</td>"));
+            if (value['lastExec'] == null)
+                row.append($("<td></td>"));
+            else
+                row.append($("<td>" + value['lastExec'] + "</td>"));
             row.append($("<td>" + value['Type'] + "</td>"));
             row.append($("<td>" + value['Condition'] + "</td>"));
             row.append($("<td>" + value['state'] + "</td>"));
