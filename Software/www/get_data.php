@@ -118,10 +118,10 @@ if ($DBView == "power") {
 INNER JOIN auto_Types at ON at.Id = ato.TypeId 
 INNER JOIN auto_state ast ON ast.Id = ato.stateId";
     if ($filter == "user") {
-        $query = $query . " where ato.stateId == 1 OR ato.stateId == 0";
+        $query = $query . " where ato.stateId == 1 OR ato.stateId == 2";
     }
     if ($filter == "suggested") {
-        $query = $query . " where ato.stateId != 1 AND ato.stateId != 0";
+        $query = $query . " where ato.stateId == 3 OR ato.stateId == 5";
     }
     $statement = $db->prepare($query);
     $statement->execute();
