@@ -118,7 +118,7 @@ bool UDP::pendingpacket()
     fd_set readsockfds;
 //wait 0.5 seconds
     tv.tv_sec = 0;
-    tv.tv_usec = 500000;
+    tv.tv_usec = 100000;
 
     FD_ZERO(&readsockfds);
     FD_SET(sock, &readsockfds);
