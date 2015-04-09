@@ -79,8 +79,11 @@ int main(void)
 		uint8_t	pub3id = app.gettopicid((unsigned char*)"d/"MAC_SUFF"/"ID3"/"TOPIC_STATUS_UPDATE, 0x0C);
 		
 		app.publish(pub1id,(unsigned char*)humidC, strlen(humidC));
+			delay(200); // wait 1/5 second
 		app.publish(pub2id,(unsigned char*)tempC, strlen(tempC));
+			delay(200); // wait 1/5 second
 		app.publish(pub3id,(unsigned char*)ALSC, strlen(ALSC));
+			delay(200); // wait 1/5 second
 		// on wake get the readings from sensors: light level, humidity, temperature.
 		// connect to the wireless Net and send sensor data.
 		// go back to sleep.
