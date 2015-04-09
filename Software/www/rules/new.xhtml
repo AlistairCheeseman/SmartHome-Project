@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="UTF-8" />
+        <title>SmartHome - New Rule</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <link rel="stylesheet" href="/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="/css/css.css"   /> 
+        <script src="/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/js/functions.js" ></script>
+        <link rel="stylesheet" href="/css/lavish-bootstrap.css"   />
+        <script type="text/javascript" >
+            $(document).ready(function () {
+                $.ajaxSetup({cache: false}); // turn off ajax CACHING
+populateRuleTypeList();
+populateRuleStateList();
+            });
+
+        </script>
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> 
+                        <span class="sr-only">Toggle navigation</span>  
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/">Smart Home</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/sensors">Sensors</a></li>
+                        <li><a href="/rooms">Rooms</a></li>
+                        <li><a href="/devices">Devices</a></li>
+                        <li class="active"><a href="/rules">Rules</a></li>
+                        <li><a href="/settings">Settings</a></li>
+                        <li><a href="/licensing">Licensing</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container">
+            <div id="container">
+                <form action="/put_data.php" method="GET">
+                    <input type="hidden" name="table" value="rules" />
+                    <input type="hidden" name="action" value="new" />
+                    <fieldset>
+                        <legend>Rule Information</legend>
+                        <label for="ruleName">Rule Name</label><br />
+                        <input type="text" name="ruleName"/><br />
+                        <label for="conditions">Condition</label><br />
+                        <input type="text" name="conditions"/><br />
+                        <label for="TypeId">Rule Type</label><br />
+                        <select name="TypeId" id="TypeIdlist" /> <br /><br />
+                        <label for="topicName">Topic</label><br />
+                        <input type="text" name="topicName"/><br />
+                        <label for="payload">Payload</label><br />
+                        <input type="text" name="payload"/><br />
+                        <label for="StateId">Rule State</label><br />
+                        <select name="StateId" id="StateIdlist" /> <br /><br />
+                    </fieldset>
+                    <input type="submit" value="Submit"/>
+                </form>
+            </div>
+        </div>
+        <div id="footer">
+            <div class="container">
+                <p class="muted credit">Cand No: 79087 - Smart Home for 3rd Year MEng Electronic Engineering Project - University Of Sussex Engineering 2015.</p>
+            </div>
+        </div>
+    </body>
+</html>

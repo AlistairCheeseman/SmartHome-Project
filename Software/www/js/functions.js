@@ -462,7 +462,7 @@ function getARuleList() {
             row.append($("<td>" + value['Topic'] + "</td>"));
             row.append($("<td>" + value['Payload'] + "</td>"));
 
-            row.append($("<td>" + "<a href='/rules/edit?id=" + value['Id'] + "'>" + "Edit" + "</a>" + "</td>"));
+            row.append($("<td>" + "<a href='/rules/edit?id=" + value['Id'] + "&amp;type=" +"user"+ "'>" + "Edit" + "</a>" + "</td>"));
             row.append($("<td><a href='/rules/delete?id=" + value['Id'] + "' >Delete</a></td>"));
         });
     });
@@ -487,7 +487,7 @@ function getSRuleList() {
             row.append($("<td>" + value['Topic'] + "</td>"));
             row.append($("<td>" + value['Payload'] + "</td>"));
 
-            row.append($("<td>" + "<a href='/rules/edit?id=" + value['Id'] + "'>" + "Edit" + "</a>" + "</td>"));
+            row.append($("<td>" + "<a href='/rules/edit?id=" + value['Id']+ "&amp;type=" +"suggested"+ "'>" + "Edit" + "</a>" + "</td>"));
             row.append($("<td><a href='/rules/delete?id=" + value['Id'] + "' >Delete</a></td>"));
         });
     });
@@ -906,5 +906,63 @@ function showEnvironmentData()
 
     });
 
+
+}
+function populateRuleTypeList() {
+    $.getJSON('/get_data.php?view=RuleTypes', function (json)
+    {
+        var $select = $("#TypeIdlist");
+        $.each(json, function (key, value) {
+            $select.append("<option value='" + value['Id'] + "'>" + value['Description'] + "</option>");
+        });
+    });
+}
+function populateRuleStateList() {
+      var vars = {};
+    vars = getvars();   
+    $ruleType = vars['type'];
+    $.getJSON('/get_data.php?view=RuleStates&filter=' + $ruleType, function (json)
+    {
+        var $select = $("#StateIdlist");
+        $.each(json, function (key, value) {
+            $select.append("<option value='" + value['Id'] + "'>" + value['Description'] + "</option>");
+        });
+    });
+}
+function getRuleInfo() {
+    var vars = {};
+    vars = getvars();
+    $id = vars['id'];
+    document.getElementById('id').value
+    $url = '/get_data.php?view=Rule&Id=' + $id.toString();
+    $.getJSON($url, function (json)
+    {
+        $.each(json, function (key, value) {
+            vars[key] = value;
+        });
+        $ruleName = vars['Name'];
+        $conditions = vars['Condition'];
+        $typeId = vars['TypeId'];
+        $topicName = vars['Topic'];
+        $payload = vars['Payload'];
+        $state = vars['stateId'];
+        document.getElementById('ruleName').value = $ruleName;
+
+        for (var i = 0; i < document.getElementById("TypeIdlist").length; i++) {
+            if (document.getElementById("TypeIdlist").options[i].value == $typeId) {
+                document.getElementById("TypeIdlist").selectedIndex = i;
+            }
+        }
+        for (var i = 0; i < document.getElementById("StateIdlist").length; i++) {
+            if (document.getElementById("StateIdlist").options[i].value == $state) {
+                document.getElementById("StateIdlist").selectedIndex = i;
+            }
+        }
+        document.getElementById('conditionTxt').value = $conditions;
+        document.getElementById('topicNameTxt').value = $topicName;
+        document.getElementById('payloadTxt').value = $payload;
+    }).error(function (error) {
+        alert(error);
+    });
 
 }
