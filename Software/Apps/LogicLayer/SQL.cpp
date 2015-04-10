@@ -32,7 +32,7 @@ SQL::~SQL() {
 void SQL::connectDB(const char *filename) {
     int rc;
 
-    rc = sqlite3_open(filename, &db);
+    rc = sqlite3_open_v2(filename, &db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_FULLMUTEX, NULL);
     if (rc) {
         fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
         isdbopen = false;
@@ -43,7 +43,7 @@ void SQL::connectDB(const char *filename) {
 }
 
 void SQL::logVal(char *topic, char *payload) {
-    const char *statement = "INSERT INTO log (moment, topic,payload) VALUES ('%s','%s', '%s' ); ";
+    const char *statement = "INSERT INTO 'log' (moment, topic,payload) VALUES ('%s','%s', '%s' ); ";
     char *sql = (char *) malloc((strlen(statement) + strlen(topic) + strlen(payload)) + 1 + 22);
     int rc;
     char *zErrMsg = 0;
@@ -51,13 +51,16 @@ void SQL::logVal(char *topic, char *payload) {
     char *buffer = getCurrentMoment();
     sprintf(sql, statement, buffer, topic, payload);
     /* Execute SQL statement */
-    rc = sqlite3_exec(db, sql, c_callback, this, &zErrMsg);
+    do {
+    rc = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
     if (rc != SQLITE_OK) {
-        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+        fprintf(stderr, "SQL error: %s whilst logging raw value\n", zErrMsg);
         sqlite3_free(zErrMsg);
     } else {
-        //   fprintf(stdout, "Records stored successfully\n");
+        fprintf(stdout, "Records stored successfully\n");
+        break;
     }
+    }while(1);
     delete[] sql;
     delete zErrMsg;
 }
@@ -90,10 +93,10 @@ void SQL::writePower(float pf, float pow) {
     /* Execute SQL statement */
     rc = sqlite3_exec(db, sql, c_callback, this, &zErrMsg);
     if (rc != SQLITE_OK) {
-          fprintf(stderr, "SQL error: %s\n", zErrMsg);
+        fprintf(stderr, "SQL error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
     } else {
-         fprintf(stdout, "Records stored successfully\n");
+        fprintf(stdout, "Records stored successfully\n");
     }
     delete sql;
     delete[] buffer;
@@ -108,9 +111,9 @@ int SQL::callback(int argc, char** argv, char** azColName) {
     /* just print returned results for time being.*/
     int i;
     for (i = 0; i < argc; i++) {
-          fprintf(stdout, "%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+        fprintf(stdout, "%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
     }
-      fprintf(stdout, "\n");
+    fprintf(stdout, "\n");
     return 0;
 }
 
@@ -145,13 +148,10 @@ char* SQL::getSRDEVTopic(char* mac, char* id) {
         while (1) {
             res = sqlite3_step(ppStmt);
             if (res == SQLITE_ROW) {
-                if (sqlite3_column_text(ppStmt,4) == NULL)
-                {
+                if (sqlite3_column_text(ppStmt, 4) == NULL) {
                     sprintf(SRTopic, "%s/%s", mac, id);
-                }
-                else
-                {
-                strcpy(SRTopic, reinterpret_cast<const char*> (sqlite3_column_text(ppStmt, 4)));
+                } else {
+                    strcpy(SRTopic, reinterpret_cast<const char*> (sqlite3_column_text(ppStmt, 4)));
                 }
             }
             if (res == SQLITE_DONE || res == SQLITE_ERROR) {
@@ -160,33 +160,33 @@ char* SQL::getSRDEVTopic(char* mac, char* id) {
         }
     }
     sqlite3_finalize(ppStmt);
-    
-    
+
+
     char *output = new char[200]; // final output variable
     output[0] = NULL; //ensure that it is sanitised before processing.
-            char* currentTopic = strtok(SRTopic, ";"); // variable to hold each iteration of the raw publish topic.
-            while (currentTopic != NULL) { // loop for each publish topic
-                int i, j;
-                char * formattedTopic = new char[15]; 
-                sprintf(formattedTopic,"d/%s/P;", currentTopic); // format the string and add the ; back in.
-                
-                 for (j=0; formattedTopic[j] !=NULL; j++) // get the length of the formatted string
-                    ;
-                for (i=0; output[i] !=NULL; i++) // get the current length of the output.
-                    ;
-                 char * newout  =(char*) calloc(i + j +1, sizeof(char*)); // create a var to hold the new output string.
-                 memcpy(newout, output, i*sizeof(char*));
-                 memcpy(newout +i, formattedTopic, j*sizeof(char*));
-                 newout[i+j] = NULL;
-                 memcpy(output, newout, (i + j +1)*sizeof(char*));
-               currentTopic = strtok(NULL, ";");
-            }
+    char* currentTopic = strtok(SRTopic, ";"); // variable to hold each iteration of the raw publish topic.
+    while (currentTopic != NULL) { // loop for each publish topic
+        int i, j;
+        char * formattedTopic = new char[15];
+        sprintf(formattedTopic, "d/%s/P;", currentTopic); // format the string and add the ; back in.
+
+        for (j = 0; formattedTopic[j] != NULL; j++) // get the length of the formatted string
+            ;
+        for (i = 0; output[i] != NULL; i++) // get the current length of the output.
+            ;
+        char * newout = (char*) calloc(i + j + 1, sizeof (char*)); // create a var to hold the new output string.
+        memcpy(newout, output, i * sizeof (char*));
+        memcpy(newout + i, formattedTopic, j * sizeof (char*));
+        newout[i + j] = NULL;
+        memcpy(output, newout, (i + j + 1) * sizeof (char*));
+        currentTopic = strtok(NULL, ";");
+    }
 
 
 
-    
-   // sprintf(output, "d/%s/P", SRTopic);
-            fprintf(stdout, "%s\n", output);
+
+    // sprintf(output, "d/%s/P", SRTopic);
+    fprintf(stdout, "%s\n", output);
     return output;
 }
 
@@ -204,19 +204,19 @@ char* SQL::getSRMAPTopic(char* room, char* device, char* setting) {
     //try and find the map topic in the Sensor table.
     //get the device and publish the state request there.
     //todo:if the topic is not in the table?
-     const char *statement = "SELECT * FROM Sensors WHERE MapTopic = '%s/%s/%s'";
+    const char *statement = "SELECT * FROM Sensors WHERE MapTopic = '%s/%s/%s'";
     char *sql = new char[300];
     char *DevId = new char[50];
     char *ControlId = new char[50];
-    sprintf(sql, statement, room,device, setting);
+    sprintf(sql, statement, room, device, setting);
     sqlite3_stmt *ppStmt;
     int res = 0;
     if (sqlite3_prepare_v2(db, sql, strlen(sql), &ppStmt, 0) == SQLITE_OK) {
         while (1) {
             res = sqlite3_step(ppStmt);
-            if (res == SQLITE_ROW) {    
+            if (res == SQLITE_ROW) {
                 strcpy(DevId, reinterpret_cast<const char*> (sqlite3_column_text(ppStmt, 1)));
-                  strcpy(ControlId, reinterpret_cast<const char*> (sqlite3_column_text(ppStmt, 2)));
+                strcpy(ControlId, reinterpret_cast<const char*> (sqlite3_column_text(ppStmt, 2)));
             }
             if (res == SQLITE_DONE || res == SQLITE_ERROR) {
                 break;
@@ -242,7 +242,7 @@ char* SQL::getMAPDevtopic(char* mac, char* id) {
     const char *statement = "SELECT * FROM Sensors WHERE DevId = '%s' AND controlId = '%s'";
     char *sql = new char[300];
 
-    char *SMapTopic= new char[50];
+    char *SMapTopic = new char[50];
     sprintf(sql, statement, mac, id);
     sqlite3_stmt *ppStmt;
     int res = 0;
@@ -251,7 +251,7 @@ char* SQL::getMAPDevtopic(char* mac, char* id) {
             res = sqlite3_step(ppStmt);
             if (res == SQLITE_ROW) {
                 strcpy(SMapTopic, reinterpret_cast<const char*> (sqlite3_column_text(ppStmt, 3)));
-              }
+            }
             if (res == SQLITE_DONE || res == SQLITE_ERROR) {
                 break;
             }
@@ -271,53 +271,45 @@ char* SQL::getMAPDevtopic(char* mac, char* id) {
 //Set the current value into the db and log the change.
 // an incoming string should look like: mmap/<room>/<device>/<named device output>/S
 //it does not need to return anything.
+
 void SQL::setSMAPVal(char* room, char* device, char* setting, char* MAPVal) {
-//get the sensorid for the map.
+    //get the sensorid for the map.
     //log the new value in the sensor log table with with the FK SensorId.
     //update the sensor table the the sensors current state.
     const char *SelStatement = "SELECT Id FROM Sensors WHERE MapTopic = '%s/%s/%s'";
-    const char *InsStatement = "INSERT INTO Sensor_Histories (SensorId, moment, value) VALUES ('%d', '%s', '%s' )";
-    const char *UpdStatement = "UPDATE Sensors SET CurrentValue ='%s' WHERE Id = '%d'";
-    
-        char *sql = new char[300];
-    
-        int SensorId;
+    const char *InsStatement = "INSERT INTO Sensor_Histories (SensorId, moment, value) VALUES ('%d', '%s', '%s' );UPDATE Sensors SET CurrentValue ='%s' WHERE Id = '%d';";
+    char *sql = new char[300];
+    int SensorId;
     sprintf(sql, SelStatement, room, device, setting);
     sqlite3_stmt *ppStmt;
     int res = 0;
     if (sqlite3_prepare_v2(db, sql, strlen(sql), &ppStmt, 0) == SQLITE_OK) {
         while (1) {
             res = sqlite3_step(ppStmt);
+            if (res == SQLITE_BUSY) {
+                continue; // it's busy, attempt a step again.
+            }
             if (res == SQLITE_ROW) {
-              SensorId  = (sqlite3_column_int(ppStmt, 0));
-              }
-            if (res == SQLITE_DONE || res == SQLITE_ERROR) {
+                SensorId = (sqlite3_column_int(ppStmt, 0));
+            }
+            if (res == SQLITE_DONE) {
+                break;
+            }
+            if (res == SQLITE_ERROR) {
+                fprintf(stdout, "SQL Error : %s\n", sqlite3_errmsg(db));
                 break;
             }
         }
     }
- sprintf(sql, InsStatement, SensorId, getCurrentMoment(), MAPVal);
- sqlite3_finalize(ppStmt);
- int rc;
-  char *zErrMsg = 0;
-     rc = sqlite3_exec(db, sql, c_callback, this, &zErrMsg);
+    sqlite3_finalize(ppStmt);
+    sprintf(sql, InsStatement, SensorId, getCurrentMoment(), MAPVal, MAPVal, SensorId);
+    int rc;
+    char *zErrMsg = 0;
+    rc = sqlite3_exec(db, sql, c_callback, this, &zErrMsg);
     if (rc != SQLITE_OK) {
-          fprintf(stderr, "SQL error: %s\n", zErrMsg);
+        fprintf(stderr, "SQL error: %s in SensorHistory Insert and Current Value Update\n", zErrMsg);
         sqlite3_free(zErrMsg);
     } else {
-       // fprintf(stdout,"Records stored successfully\n");
+        // fprintf(stdout,"Records stored successfully\n");
     }
-    sqlite3_finalize(ppStmt);
-     sprintf(sql, UpdStatement,MAPVal, SensorId);
-     rc=0;
-     zErrMsg = 0;
-     rc = sqlite3_exec(db, sql, c_callback, this, &zErrMsg);
-    if (rc != SQLITE_OK) {
-          fprintf(stderr, "SQL error: %s\n", zErrMsg);
-        sqlite3_free(zErrMsg);
-    } else {
-       // fprintf(stdout,"Records stored successfully\n");
-    }
-    sqlite3_finalize(ppStmt);
-    
 }
