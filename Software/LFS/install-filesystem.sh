@@ -136,8 +136,8 @@ sed -i -e 's|CONFIG_FEATURE_INETD_RPC=y|# CONFIG_FEATURE_INETD_RPC is not set|g'
 #remove rpc support as cannot build with against new versions of glibc
 #Networking Utilities --> (DISABLE) inetd/Support RPC services
 #CONFIG_PREFIX sets the install directory
-make CONFIG_PREFIX="/remote/arm/targetfs2"
-make CONFIG_PREFIX="/remote/arm/targetfs2" install
+make CONFIG_PREFIX=${TARGETFS}
+make CONFIG_PREFIX=${TARGETFS} install
 chmod +x ${TARGETFS}/bin/busybox
 
 cp examples/depmod.pl ${BUILDTOOLSYSDIR}/bin/depmod.pl
@@ -283,12 +283,12 @@ make install
 cp -v ${SRCDIR}/apache/pcre-build/lib/*.so* $TARGETFS/lib/
 
 cd ${SRCDIR}
-wget http://mirror.catn.com/pub/apache/httpd/httpd-2.4.10.tar.gz
-tar -xf httpd-2.4.10.tar.gz
-rm httpd-2.4.10.tar.gz
-cd httpd-2.4.10
+wget http://mirror.catn.com/pub/apache/httpd/httpd-2.4.12.tar.gz
+tar -xf httpd-2.4.12.tar.gz
+rm httpd-2.4.12.tar.gz
+cd httpd-2.4.12
 #set the default user
-sed -i -e 's/User daemon/User httpd/g' ${SRCDIR}/httpd-2.4.10/docs/conf/httpd.conf.in
+sed -i -e 's/User daemon/User httpd/g' ${SRCDIR}/httpd-2.4.12/docs/conf/httpd.conf.in
 sed -i -e 's/Group daemon/Group httpd/g' docs/conf/httpd.conf.in
 ./configure --prefix=/apache24 --host=${TARGET} --with-apr=${SRCDIR}/apache/apr-build --with-apr-util=${SRCDIR}/apache/apr-util-build  --with-pcre=${SRCDIR}/apache/pcre-build ap_cv_void_ptr_lt_long=no --with-mpm=prefork  --sysconfdir=/apache24/etc
 #this will fail, but it must be ran to allow the below replacement to take place. ||true ensures that the broken make will not halt the buildscript
@@ -312,7 +312,7 @@ rm libxml2-2.9.2.tar.gz
 cd libxml2-2.9.2
 ./configure --host=$TARGET --without-python --prefix=''
 make
-make  DESTDIR=/remote/arm/tools/build/sysroot install
+make  DESTDIR=${BUILDTOOLSYSDIR}/sysroot install
 make  DESTDIR=${TARGETFS} install
 
 #need to install sqlite
@@ -323,7 +323,7 @@ rm sqlite-autoconf-3080801.tar.gz
 cd sqlite-autoconf-3080801
 ./configure --host=$TARGET --prefix=''
 make
-make DESTDIR=/remote/arm/tools/build/sysroot install
+make DESTDIR=${BUILDTOOLSYSDIR}/sysroot install
 make  DESTDIR=${TARGETFS} install
 
 cd $SRCDIR
@@ -333,18 +333,18 @@ tar -xf php-5.6.5.tar.gz
 rm php-5.6.5.tar.gz
 cd php-5.6.5
 #need to test
-sed -i -e 's|my $installbuilddir = "/apache24/build";|my $installbuilddir = "/remote/arm/targetfs2/apache24/build";|g' ${TARGETFS}/apache24/bin/apxs
-sed -i -e 's|includedir = ${prefix}/include|includedir = /remote/arm/targetfs2/apache24/include|g' ${TARGETFS}/apache24/build/config_vars.mk
+sed -i -e 's|my $installbuilddir = "/apache24/build";|my $installbuilddir = "'"${TARGETFS}"'/apache24/build" ;|g' ${TARGETFS}/apache24/bin/apxs
+sed -i -e 's|includedir = ${prefix}/include|includedir = '"${TARGETFS}"'/apache24/include|g' ${TARGETFS}/apache24/build/config_vars.mk
 #nano ${TARGETFS}/apache24/bin/apxs
-./configure --host=$TARGET --prefix='' --with-libxml-dir=/remote/arm/tools/build/sysroot --with-sqlite3 --enable-pdo --enable-json --with-pdo-sqlite --disable-all --with-apxs2=${TARGETFS}/apache24/bin/apxs --enable-session
+./configure --host=$TARGET --prefix='' --with-libxml-dir=${BUILDTOOLSYSDIR}/sysroot --with-sqlite3 --enable-pdo --enable-json --with-pdo-sqlite --disable-all --with-apxs2=${TARGETFS}/apache24/bin/apxs --enable-session
 LDFLAGS='-ldl' make
-make INSTALL_ROOT=/remote/arm/targetfs2 install
+make INSTALL_ROOT=${TARGETFS} install
 #modify the incorrect location of the php module
 #/remote/arm/targetfs2/apache24/modules/libphp5.so
 #to
 #modules/libphp5.so
 #using | as a delimeter so as not to confuse the escaping sequence
-sed -i -e 's|/remote/arm/targetfs2/apache24/||g' $TARGETFS/apache24/etc/httpd.conf
+sed -i -e 's|'"${TARGETFS}"'/apache24/||g' $TARGETFS/apache24/etc/httpd.conf
 sed -i -e 's|DirectoryIndex index.html|DirectoryIndex index.html index.xhtml index.php|g' $TARGETFS/apache24/etc/httpd.conf
 #todo: this sed command needs to only replace the first occurence.
 sed -i -e '1,/AllowOverride None/s/AllowOverride None/AllowOverride All/' $TARGETFS/apache24/etc/httpd.conf
