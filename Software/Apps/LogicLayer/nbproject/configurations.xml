@@ -6,6 +6,7 @@
                    projectFiles="true">
       <itemPath>ProcessMessage.h</itemPath>
       <itemPath>SQL.h</itemPath>
+      <itemPath>automationRule.h</itemPath>
       <itemPath>mqtt.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -66,6 +67,8 @@
       </item>
       <item path="SQL.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="automationRule.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="mqtt.cpp" ex="false" tool="1" flavor2="0">
@@ -110,6 +113,8 @@
       <item path="SQL.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="SQL.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="automationRule.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
