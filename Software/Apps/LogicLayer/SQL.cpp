@@ -163,7 +163,7 @@ char* SQL::getSRDEVTopic(char* mac, char* id) {
 
 
     char *output = new char[200]; // final output variable
-    output[0] = NULL; //ensure that it is sanitised before processing.
+    output[0] = 0x00; //ensure that it is sanitised before processing.
     char* currentTopic = strtok(SRTopic, ";"); // variable to hold each iteration of the raw publish topic.
     while (currentTopic != NULL) { // loop for each publish topic
         int i, j;
@@ -177,7 +177,7 @@ char* SQL::getSRDEVTopic(char* mac, char* id) {
         char * newout = (char*) calloc(i + j + 1, sizeof (char*)); // create a var to hold the new output string.
         memcpy(newout, output, i * sizeof (char*));
         memcpy(newout + i, formattedTopic, j * sizeof (char*));
-        newout[i + j] = NULL;
+        newout[i + j] = 0x00;
         memcpy(output, newout, (i + j + 1) * sizeof (char*));
         currentTopic = strtok(NULL, ";");
     }
@@ -312,4 +312,117 @@ void SQL::setSMAPVal(char* room, char* device, char* setting, char* MAPVal) {
     } else {
         // fprintf(stdout,"Records stored successfully\n");
     }
+}
+bool SQL::checkRules(char* id)
+{
+    // get any active rule, that we can process that can mentions the sensor.
+    const char *Statement1 = "SELECT count(*) FROM automation where Condition LIKE '%";
+    const char *Statement2 = "SENSOR=%s";
+    const char *Statement3 = "%' AND (stateId = '1' OR stateId = '4' OR stateId = '5') AND (typeId = '3' OR typeId = '5' OR typeId = '6' );"; // rule active and linked to sensor id.
+    char *sql = new char[300];
+    char *newStatement2 = new char[20];
+    sprintf(newStatement2, Statement2, id);
+    sprintf(sql, "%s%s%s", Statement1,newStatement2 , Statement3);
+    int resCount = 0;
+    sqlite3_stmt *ppStmt;
+    int res = 0;
+    if (sqlite3_prepare_v2(db, sql, strlen(sql), &ppStmt, 0) == SQLITE_OK) {
+        while (1) {
+            res = sqlite3_step(ppStmt);
+            if (res == SQLITE_BUSY) {
+                continue; // it's busy, attempt a step again.
+            }
+            if (res == SQLITE_ROW) {
+               resCount = (sqlite3_column_int(ppStmt, 0));
+            }
+            if (res == SQLITE_DONE) {
+                break;
+            }
+            if (res == SQLITE_ERROR) {
+                fprintf(stdout, "SQL Error : %s\n", sqlite3_errmsg(db));
+                break;
+            }
+        }
+    }
+    sqlite3_finalize(ppStmt);
+    if (resCount >0)
+        return true;
+    else
+        return false;
+}
+int SQL::getRules(char* id, automationRule *(&AR))
+{
+    const char *Statement1 = "SELECT Id,Payload, Topic, Condition, TypeId  FROM automation where Condition LIKE '%";
+    const char *Statement2 = "SENSOR=%s";
+    const char *Statement3 = "%' AND (stateId = '1' OR stateId = '4' OR stateId = '5') AND (typeId = '3' OR typeId = '5' OR typeId = '6' );"; // rule active and linked to sensor id.
+    char *sql = new char[300];
+    char *newStatement2 = new char[20];
+    sprintf(newStatement2, Statement2, id);
+    sprintf(sql, "%s%s%s", Statement1,newStatement2 , Statement3);
+    int res = 0;
+    sqlite3_stmt *ppStmt;
+    int currentrule = 0;
+    if (sqlite3_prepare_v2(db, sql, strlen(sql), &ppStmt, 0) == SQLITE_OK) {
+        while (1) {
+            res = sqlite3_step(ppStmt);
+            if (res == SQLITE_ROW) {
+                // for each row returned.
+                AR[currentrule].id = sqlite3_column_int(ppStmt, 0);
+                strcpy(AR[currentrule].payload, reinterpret_cast<const char*> (sqlite3_column_text(ppStmt, 1)));
+                strcpy(AR[currentrule].topic, reinterpret_cast<const char*> (sqlite3_column_text(ppStmt, 2)));
+                char * conditionsBuffer = new char[200];
+                strcpy(conditionsBuffer, reinterpret_cast<const char*> (sqlite3_column_text(ppStmt, 3)));
+                int typeId =  sqlite3_column_int(ppStmt, 4);
+                if (typeId == 4)
+                {
+                    AR[currentrule].isTemporary = true;
+                }
+                else
+                {
+                    AR[currentrule].isTemporary = false;
+                }
+                
+                char* currentCondition = strtok(conditionsBuffer, ";"); // variable to hold each iteration of the conditi
+                int currentConditionCount = 0;
+                while (currentCondition != NULL) { // loop for each publish topic
+                    memcpy(AR[currentrule].conditions[currentConditionCount], currentCondition, strlen(currentCondition));
+                    AR[currentrule].conditions[currentConditionCount][strlen(currentCondition)] = 0x00;
+                    currentConditionCount++;
+                    currentCondition = strtok(NULL, ";");
+                }
+                AR[currentrule].conditionCount = currentConditionCount;
+                AR[currentrule].TypeId =  sqlite3_column_int(ppStmt, 5);
+            }
+            if (res == SQLITE_DONE || res == SQLITE_ERROR) {
+                break;
+            }
+            if (res == SQLITE_BUSY) {
+                fprintf(stdout, "database busy\n");
+            }
+            currentrule++;
+        }
+    }
+    return currentrule;
+}
+char* SQL::getSensorId(char* mac, char* id) {
+    const char *statement = "SELECT Id FROM Sensors WHERE DevId = '%s' AND controlId = '%s'";
+    char *sql = new char[300];
+    char *sensorId = new char[4];
+    sensorId[0] = 0x00;
+    sprintf(sql, statement, mac, id);
+    sqlite3_stmt *ppStmt;
+    int res = 0;
+    if (sqlite3_prepare_v2(db, sql, strlen(sql), &ppStmt, 0) == SQLITE_OK) {
+        while (1) {
+            res = sqlite3_step(ppStmt);
+            if (res == SQLITE_ROW) {
+                strcpy(sensorId, reinterpret_cast<const char*> (sqlite3_column_text(ppStmt, 0)));
+            }
+            if (res == SQLITE_DONE || res == SQLITE_ERROR) {
+                break;
+            }
+        }
+    }
+    sqlite3_finalize(ppStmt);
+    return sensorId;
 }
