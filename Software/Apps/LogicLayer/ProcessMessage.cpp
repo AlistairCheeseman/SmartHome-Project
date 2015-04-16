@@ -81,6 +81,22 @@ void ProcessMessage::messageReceived(char *topic, char *payload, int payloadlen,
             char* publishtopic = sqldb->getMAPDevtopic(mac, id);
             fprintf(stdout, "ACTION: Publishing new DEV state to MAP Layer: %s \n", publishtopic);
             sender->publish(NULL, publishtopic, strlen(publishtopic), payload);
+            //check if there are any pending rules
+            char* sensorId = new char[5];
+            strcpy(sensorId, sqldb->getSensorId(mac, id));
+                fprintf(stdout, "Sensor Id: %s\n", sensorId);
+            bool pendingRules = sqldb->checkRules(sensorId);
+            if (pendingRules == true)
+            {
+                fprintf(stdout, "Found some rules to process with this request!\n");
+                automationRule * ARs = new automationRule[10];
+              int ruleCount =   sqldb->getRules(sensorId, ARs);
+              for (int t = 0;t<ruleCount;t++)
+              {
+                  fprintf(stdout, "Rule Id: %d\n", ARs[t].id);
+              }
+            }
+            
         } else if (!strcmp(type, "P")) {
             //nothing needs to be done for a state request, this is handled by the device.
             // the state request is solely on the device layer for the actual request of the state change
