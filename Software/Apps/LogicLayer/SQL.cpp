@@ -391,7 +391,7 @@ int SQL::getRules(char* id, automationRule *(&AR))
                     currentCondition = strtok(NULL, ";");
                 }
                 AR[currentrule].conditionCount = currentConditionCount;
-                AR[currentrule].TypeId =  sqlite3_column_int(ppStmt, 5);
+                AR[currentrule].TypeId =  sqlite3_column_int(ppStmt, 4);
             }
             if (res == SQLITE_DONE || res == SQLITE_ERROR) {
                 break;
