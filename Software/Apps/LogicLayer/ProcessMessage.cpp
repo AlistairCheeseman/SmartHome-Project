@@ -94,6 +94,13 @@ void ProcessMessage::messageReceived(char *topic, char *payload, int payloadlen,
               for (int t = 0;t<ruleCount;t++)
               {
                   fprintf(stdout, "Rule Id: %d\n", ARs[t].id);
+                  fprintf(stdout, "Rule TypeId: %d\n", ARs[t].TypeId);
+                  if (ARs[t].TypeId == 5)
+                  {
+                      fprintf(stdout, "Mirror Rule!");
+                      sender->publish(NULL,ARs[t].topic, strlen(ARs[t].topic),payload); 
+                      
+                  }
               }
             }
             
