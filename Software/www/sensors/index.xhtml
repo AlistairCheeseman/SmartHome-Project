@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="UTF-8" />
+        <title>SmartHome - Sensors</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <link rel="stylesheet" href="/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="/css/css.css"   /> 
+        <script src="/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="/css/lavish-bootstrap.css"   /> 
+         <script type="text/javascript" src="/js/functions.js" ></script>
+        <script type="text/javascript" >
+            $(document).ready(function () {
+              $.ajaxSetup({ cache:false }); // turn off ajax CACHING
+              getSensorList();
+              getOutSensorList();
+              getReqSensorList();
+            });
+        </script>
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> 
+                        <span class="sr-only">Toggle navigation</span>  
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/">Smart Home</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="/">Home</a></li>
+                        <li class="active"><a href="/sensors">Sensors</a></li>
+                        <li><a href="/rooms">Rooms</a></li>
+                        <li><a href="/devices">Devices</a></li>
+                                                <li><a href="/rules">Rules</a></li>
+                        <li><a href="/settings">Settings</a></li>
+                        <li><a href="/licensing">Licensing</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        
+         <div class="container">
+            <div id="container">
+                <h2>Output Devices</h2>
+                <table id="listOutDataTable"  class="table table-striped">
+                    <tr>
+                        <th>Name</th>
+                        <th>Device</th>
+                        <th>Type</th>
+                        <th>Current Value</th>
+                           <th></th>
+                        <th>Mapping</th>
+                      
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </table>
+                <h2>Sensors</h2>
+                  <table id="listSenDataTable"  class="table table-striped">
+                    <tr>
+                        <th>Name</th>
+                        <th>Device</th>
+                        <th>Type</th>
+                        <th>Current Value</th>
+                        <th>Mapping</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </table>
+                <h2>Buttons / Requestors</h2>
+                  <table id="listReqDataTable"  class="table table-striped">
+                    <tr>
+                        <th>Name</th>
+                        <th>Device</th>
+                        <th>Type</th>
+                        
+                        <th>Mapping</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </table>
+                
+                <p><a href="/sensors/new">Add a New sensor</a></p>
+            </div>
+        </div>
+        <div id="footer">
+            <div class="container">
+                <p class="muted credit">Cand No: 79087 - Smart Home for 3rd Year MEng Electronic Engineering Project - University Of Sussex Engineering 2015.</p>
+            </div>
+        </div>
+    </body>
+</html>

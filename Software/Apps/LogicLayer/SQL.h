@@ -11,6 +11,7 @@
 
 #include <sqlite3.h>
 #include <stdio.h>
+#include "automationRule.h"
 
 class SQL {
 public:
@@ -29,7 +30,12 @@ public:
     char* getMAPDevtopic(char* mac, char* id);
     //Set the current value into the db.
     void setSMAPVal(char* room, char* device, char* setting, char* MAPVal);
-    
+    //check if there is a matching automation rule
+    bool checkRules(char* id);
+    //actually get the rules
+    int getRules(char* id, automationRule *(&AR));
+    // from the mac and control ID get the Sensor Id
+    char* getSensorId(char* mac, char* id);
 private:
     void connectDB(const char *filename);
     sqlite3 *db;

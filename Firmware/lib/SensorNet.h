@@ -16,25 +16,31 @@ class SensorNet
 public:
 protected:
 private:
-RF24 radio;
-uint64_t pipes[2];
+RF24* radio;
+uint64_t pipes[6];
 static const int max_payload_size = 32;
 char receive_payload[max_payload_size + 1]; // +1 to allow room for a terminating NULL char
 uint8_t receive_size;
+ uint32_t sourceId;
+ uint32_t destId;
+ uint32_t myId;
 bool debug;
 
 //functions
 public:
-	SensorNet();
+	SensorNet(RF24& radio, uint32_t MAC);
 	~SensorNet();
 	void tick(void);
-	void setup(void);
+	void setup(uint8_t level, uint8_t id);
 	bool pendingpacket;
-	void sendpacket(const void* payload, const uint8_t len);
-	void *getpacket(uint8_t *len);
+	void sendpacket(const void* payload, const uint8_t len,const uint32_t sourceId,const uint32_t destId);
+	void *getpacket(uint8_t *len, uint32_t *sourceId, uint32_t *destId);
 protected:
 private:
 void send(uint64_t txaddr,  const void* send_payload, uint8_t len);
+uint8_t getAddresses(uint8_t level, uint8_t id);
+void routePacket(void);
+
 }; //SensorNet
 
 #endif //__SENSORNET_H__

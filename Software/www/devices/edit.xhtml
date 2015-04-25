@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="UTF-8" />
+        <title>SmartHome - Edit Device</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <link rel="stylesheet" href="/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="/css/css.css"   /> 
+        <script src="/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="/css/lavish-bootstrap.css"   /> 
+        <script type="text/javascript" src="/js/functions.js" ></script>
+        <script type="text/javascript" >
+            $(document).ready(function () {
+                    $.ajaxSetup({ cache:false }); // turn off ajax CACHING
+                //need to turn off async requests otherwise list cannot populate before the slected value is specified.
+         $.ajaxSetup({
+        async: false
+    });    
+        getid();
+                populateRoomList();populateDevTypeList();  getDevInfo();
+                
+    $.ajaxSetup({
+        async: true
+    });
+            });
+
+        </script>
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> 
+                        <span class="sr-only">Toggle navigation</span>  
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/">Smart Home</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/sensors">Sensors</a></li>
+                        <li><a href="/rooms">Rooms</a></li>
+                        <li class="active"><a href="/devices">Devices</a></li>
+                        <li><a href="/rules">Rules</a></li>
+                        <li><a href="/settings">Settings</a></li>
+                        <li><a href="/licensing">Licensing</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+                <div class="container">
+            <div id="container">
+                
+                 <form action="/put_data.php" method="GET">
+                    <input type="hidden" name="table" value="devs" />
+                        <input type="hidden" name="action" value="edit" />
+                           <input type="hidden" name="id" id="id"/>
+                    <fieldset>
+                        <legend>Device Information</legend>
+                           <br />
+                        <label for="Name">Name</label><br />
+                        <input type="text" name="Name" id="nameid"/><br />
+                         
+                    </fieldset>
+                        <hr />
+                        <fieldset>
+                            <label for="roomid">Select the Room this device is in</label><br />
+                           <select name="roomid" id="roomidlist">  
+                           </select><br /><br />
+                             <label for="devid">Select the Device Type</label><br />
+                           <select name="devid" id="devidlist"> 
+                           </select><br />
+                        </fieldset>
+                        <br/>
+                      <input type="submit" value="Submit"/>
+                </form> 
+                
+            </div>
+        </div>
+        <div id="footer">
+            <div class="container">
+                <p class="muted credit">Cand No: 79087 - Smart Home for 3rd Year MEng Electronic Engineering Project - University Of Sussex Engineering 2015.</p>
+            </div>
+        </div>
+    </body>
+</html>

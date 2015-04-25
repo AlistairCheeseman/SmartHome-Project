@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.5.0">
+<eagle version="6.4">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -86,7 +86,7 @@
 <symbol name="VTX214001103">
 <pin name="LIVE" x="-17.78" y="5.08" length="middle" direction="in"/>
 <pin name="NEUTRAL" x="-17.78" y="-5.08" length="middle" direction="in"/>
-<pin name="+3V3" x="17.78" y="5.08" length="middle" direction="sup" rot="R180"/>
+<pin name="VOUT" x="17.78" y="5.08" length="middle" direction="sup" rot="R180"/>
 <pin name="GND" x="17.78" y="-5.08" length="middle" direction="sup" rot="R180"/>
 <text x="-12.7" y="7.62" size="1.27" layer="95">&gt;NAME</text>
 <text x="5.08" y="-10.16" size="1.27" layer="96">&gt;VALUE</text>
@@ -104,10 +104,10 @@
 <devices>
 <device name="" package="VTX214001103">
 <connects>
-<connect gate="G$1" pin="+3V3" pad="2"/>
 <connect gate="G$1" pin="GND" pad="1"/>
 <connect gate="G$1" pin="LIVE" pad="4"/>
 <connect gate="G$1" pin="NEUTRAL" pad="3"/>
+<connect gate="G$1" pin="VOUT" pad="2"/>
 </connects>
 <technologies>
 <technology name=""/>

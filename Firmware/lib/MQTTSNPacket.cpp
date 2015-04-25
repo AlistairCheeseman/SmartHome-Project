@@ -189,6 +189,7 @@ bool MQTTSNPacket::load_packet(unsigned char * payload)
 /* varlength is the length of the variable part */
 void MQTTSNPacket::gen_packet(unsigned char  (&payloadOut)[20],uint8_t varLength)
 {
+	
 	if (msgType == CONNECT)
 	{
 		/*VARIABLE LENGTH MESSAGE (FORCE FIXED) */
@@ -432,6 +433,15 @@ void MQTTSNPacket::sanitise()
 	this->data[0] = 0x00;
 	this->data[1] = 0x00;
 	this->data[2] = 0x00;
+	this->data[3] = 0x00;
+	this->data[4] = 0x00;
+	this->data[5] = 0x00;
+	this->data[6] = 0x00;
+	this->data[7] = 0x00;
+	this->data[8] = 0x00;
+	this->data[9] = 0x00;
+	this->data[10] = 0x00;
+	
 	this->topicname[0] = 0x00;
 	this->topicname[1] = 0x00;
 	this->topicname[2] = 0x00;

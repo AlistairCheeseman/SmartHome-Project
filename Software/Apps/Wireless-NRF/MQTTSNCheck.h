@@ -11,7 +11,7 @@
 #include <stdint.h>
     namespace MQTTSNCheck
     {
-        bool verifyPacket(void *payload, uint8_t len);
+        bool verifyPacket(void *(&payload), uint8_t &len);
     }
 
 

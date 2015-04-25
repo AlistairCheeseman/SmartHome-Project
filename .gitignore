@@ -33,12 +33,9 @@
 *.eps
 
 /Software/www/nbproject/private/
-/Software/Apps/LogicLayer/build/
-/Software/Apps/LogicLayer/dist/
-/Software/Apps/LogicLayer/nbproject/private/
-/Software/Apps/Wireless-NRF/build/
-/Software/Apps/Wireless-NRF/dist/
-/Software/Apps/Wireless-NRF/nbproject/private/
-
-/Firmware/PowerOutlet/Debug/
-/Firmware/PowerOutlet/Release/
+/Software/Apps/*/build/
+/Software/Apps/*/dist/
+/Software/Apps/*/nbproject/private/
+/Firmware/*/Debug/
+/Firmware/*/Release/
+*.atsuo

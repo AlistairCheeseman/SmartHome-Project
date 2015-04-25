@@ -10,24 +10,34 @@
 #define POWEROUTLETV1_H_
 
 
+//check the global compile time variables have been defined.
+#ifndef HIGH
+# warning "HIGH LEVEL NOT DEFINED"
+#endif
+#ifndef LOW
+# warning "LOW LEVEL NOT DEFINED"
+#endif
+#ifndef CSN
+#warning "CSN PIN NOT DEFINED"
+#endif
+#ifndef CE
+#warning "CSN PIN NOT DEFINED"
+#endif
+#ifndef F_CPU
+#warning "CPU Speed NOT DEFINED"
+#endif
 
-#define CSN PORTB1
-#define CE PORTB2
-
-#define F_CPU 8000000UL
-
-#define HIGH 1
-#define LOW 0
-#define OUTPUT 1
-#define INPUT 0
-
-
-#define TOPIC_STATUS_UPDATE "S"
-#define TOPIC_REQUEST "R"
-#define TOPIC_STATUS_REQUEST "P"
 
 //INDIVIDUAL DEVICE ID
 #define MAC_SUFF "87865E"
+#define MAC_SUFF_HEX 0x87865E
+//this should be assigned dynamically but for time being will be manual
+#define THIS_LEVEL 1
+#define THIS_DEV 1
+#define THIS_MQTTCLIENTID 0x4F
+
+
+
 
 
 #define STATUS_LED_1 PORTD5 //OUT1_LED
@@ -62,8 +72,8 @@
 #define ID1_PINPORT PINC
 #define ID2_PINPORT PINC
 
-#define ID1_DDR DDRD
-#define ID2_DDR DDRD
+#define ID1_DDR DDRC
+#define ID2_DDR DDRC
 #define ID3_DDR DDRD
 #define ID4_DDR DDRD
 /* PIN DEFINITIONS */

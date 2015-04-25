@@ -36,10 +36,16 @@
 #define STATE_WAIT_UNSUBACK		0x50
 #define STATE_WAIT_PINGRESP		0x60
 #define STATE_WAIT_DISCONNECT	0x70
+#define STATE_WAIT_MASK			0xF0
 //NOMINAL STATES
 #define STATE_ASLEEP			0x01
 #define STATE_DISCONNECTED		0x02
 #define STATE_ACTIVE			0x03
+
+
+#define TOPIC_STATUS_UPDATE "S"
+#define TOPIC_REQUEST "R"
+#define TOPIC_STATUS_REQUEST "P"
 
 
 #include "SensorNet.h"
@@ -63,10 +69,11 @@ class MQTTSN
 	unsigned long lastTransmission;
 	uint8_t msgid;
 	uint8_t topicIdResp;
-
+	uint32_t macId;
+uint32_t  destId;
 	//functions
 	public:
-	MQTTSN(SensorNet& snetwork, uint8_t clientId);
+	MQTTSN(SensorNet& snetwork, uint8_t clientId, uint32_t MAC);
 	~MQTTSN();
 		void tick(void);
 		void connect(void);
@@ -86,7 +93,6 @@ class MQTTSN
 	MQTTSN& operator=( const MQTTSN &c );
 	void ping(void);
 	void pingresponse(void);
-
 	int getmsgid();
 }; //MQTTSN
 

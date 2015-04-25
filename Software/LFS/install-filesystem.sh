@@ -358,6 +358,27 @@ echo "PidFile /var/run/apache24.pid" >> $TARGETFS/apache24/etc/httpd.conf
 #make db directory and allow access to all
 mkdir $TARGETFS/var/db
 chmod -R 777 $TARGETFS/var/db
+#// need to make sure /usr/share has zone info.
+#http://www.linuxfromscratch.org/lfs/view/stable/chapter06/glibc.html
+mkdir $SRCDIR/tz
+cd $SRCDIR/tz
+wget http://www.iana.org/time-zones/repository/releases/tzdata2015b.tar.gz
+tar -xf tzdata2015b.tar.gz
+rm tzdata2015b.tar.gz
+export ZONEINFO=${TARGETFS}/usr/share/zoneinfo
+mkdir -pv $ZONEINFO/{posix,right}
+for tz in etcetera southamerica northamerica europe africa antarctica  \
+          asia australasia backward pacificnew systemv; do
+    zic -L /dev/null   -d $ZONEINFO       -y "sh yearistype.sh" ${tz}
+    zic -L /dev/null   -d $ZONEINFO/posix -y "sh yearistype.sh" ${tz}
+    zic -L leapseconds -d $ZONEINFO/right -y "sh yearistype.sh" ${tz}
+done
+cp -v zone.tab zone1970.tab iso3166.tab $ZONEINFO
+zic -d $ZONEINFO -p America/New_York
+unset ZONEINFO
+
+
+cp -v $TARGETFS/usr/share/zoneinfo/Europe/London $TARGETFS/etc/localtime
 
 #install the WWW data from the git repo to the filesystem.
 cp -Rv $DIR/../www/* $TARGETFS/apache24/htdocs/
