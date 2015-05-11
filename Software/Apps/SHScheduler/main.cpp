@@ -55,6 +55,16 @@ int main(int argc, char** argv) {
     SQL* sql = new SQL("/var/db/smarthome");
     MQTT* mqtt = new MQTT("Scheduler", "192.168.3.50", 1883);
 
+    
+    if (!strcmp(argv[1], "/SuggestRules"))
+    {
+        // as this is gets sql data and puts sql data, have made this a sql lib function to make this main program look a bit cleaner. 
+        sql->createSuggestedRules();
+        return 0; // and close the program.
+    }
+    
+    
+    
     while (keep_running) {
         mqtt->loop();
         automationRule* aRS;

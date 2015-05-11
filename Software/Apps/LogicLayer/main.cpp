@@ -16,7 +16,7 @@
 
 using namespace std;
 
-
+// if the program revieces a SIGHUP signal process it and shut down the program, this allows for a more graceful shutdown.
 bool keep_running = true;
 static void termination_handler (int signum)
 {
@@ -52,7 +52,7 @@ int main(int argc, char** argv) {
     signal(SIGHUP, termination_handler);
 
     
-    
+    // check if we have the configuration arguments necessary to start the program.
      if (argc == 4)
     {
          strcpy(database, argv[1]);
@@ -86,11 +86,11 @@ int main(int argc, char** argv) {
    
     
     
-    
+    // initialise the MQTT Library
     mosqpp::lib_init();
     class mqtt * mqttstor;
     int rc;
-    //for time being mosquitto server and database location are hard coded. todo:get vars from arguments when program called.
+    // create the MQTT class to handle everything.
     mqttstor = new mqtt("logiclayer", mqttserver, port, database);
     while (keep_running) {
        rc = mqttstor->loop();
@@ -98,6 +98,7 @@ int main(int argc, char** argv) {
             mqttstor->reconnect();
         } 
     }
+    //tidy up for a graceful shutdown.
     mosqpp::lib_cleanup();
     return 0;
 }

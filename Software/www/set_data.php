@@ -30,6 +30,7 @@ try {
     unset($statement);
     unset($db);
     //the database MUST be closed before message send or it will kill the logic layer!
+    // NOTE NOTE NOTE HOW WE ARE NOT ALLOWED TO DIRECTLY SET THE COMMAND, THIS IS SECURITY FEATURE DO NOT CHANGE TO HAVE A VARIABLE DIRECTLY SET ON THE COMMAND LINE!
     $cmd = escapeshellcmd("mosquitto_pub -h 127.0.0.1 -p 1883 -m '" . $payload . "' -t " . $topic);
     $output = shell_exec($cmd);
 

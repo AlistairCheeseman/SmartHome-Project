@@ -1,7 +1,7 @@
 /* 
  * File:   UDP.cpp
  * Author: alistair
- * // http://beej.us/guide/bgnet/output/html/singlepage/bgnet.html
+ * //Inspritaion and help taken from: http://beej.us/guide/bgnet/output/html/singlepage/bgnet.html
  * Created on 27 February 2015, 11:24
  */
 

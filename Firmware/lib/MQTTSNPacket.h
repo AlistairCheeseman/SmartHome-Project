@@ -3,6 +3,7 @@
 *
 * Created: 01/03/2015 15:23:11
 *  Author: Ali
+* MQTTSNPacket works by either taking in serial data and loading it into the correct variables or having varaibles set and the serial data generated, this actually generates/handles the raw mqttsn data.
 */
 
 

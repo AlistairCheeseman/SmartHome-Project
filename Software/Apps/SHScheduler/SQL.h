@@ -3,6 +3,7 @@
  * Author: Ali
  *
  * Created on 09 April 2015, 10:53
+ * this handles the bulk sql data function names are self explanatory.
  */
 
 #ifndef SQL_H
@@ -23,6 +24,7 @@ public:
      void getActiveAutomationRules(automationRule *(&AR), int &len);
      void updateLastRunTime(int ruleId);
      void deleteRule(int ruleId);
+     void createSuggestedRules();
 private:
     void connectDB(const char *filename);
     sqlite3 *db;

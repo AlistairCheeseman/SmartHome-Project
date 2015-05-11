@@ -8,7 +8,7 @@
 #ifndef AUTOMATIONRULE_H
 #define	AUTOMATIONRULE_H
 #include <vector>
-
+// define a structure that will hold the rule data.
 struct automationRule
 {
 char topic[20];
