@@ -1,9 +1,7 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This actually saves the data to the database, the save depends of the variables provided, actions are categorised into table and action, this informs what must be done.
  */
 
 

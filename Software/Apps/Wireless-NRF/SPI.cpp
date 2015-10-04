@@ -3,7 +3,7 @@
  * Author: alistair
  * 
  * Created on 26 January 2015, 13:50
- * www.kernel.org/doc/Documentation/spi/spidev_test.c 
+ * Inspiration taken from www.kernel.org/doc/Documentation/spi/spidev_test.c 
  */
 
 #include <stdint.h>

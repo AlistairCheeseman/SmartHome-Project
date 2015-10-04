@@ -1,7 +1,7 @@
 /* 
  * File:   MQTT.h
  * Author: Ali
- *
+ * very similar to the logic layer MQTT code functionality
  * Created on 09 April 2015, 16:09
  */
 

@@ -19655,11 +19655,11 @@ Source: www.farnell.com/datasheets/247.pdf</description>
 <part name="IC1" library="ic-package" deviceset="DIL28" device="-3" value="ATMega 328p-pu"/>
 <part name="Q1" library="crystal" deviceset="CRYSTAL" device="HC49S" value="16MHz"/>
 <part name="R2" library="rcl" deviceset="R-EU_" device="R1206" value="10k"/>
-<part name="R3" library="rcl" deviceset="R-EU_" device="R1206" value="330R"/>
-<part name="R4" library="rcl" deviceset="R-EU_" device="R1206" value="330R"/>
+<part name="R3" library="rcl" deviceset="R-EU_" device="R1206" value="3k3"/>
+<part name="R4" library="rcl" deviceset="R-EU_" device="R1206" value="3k3"/>
 <part name="C3" library="rcl" deviceset="C-EU" device="C1206K" value="22p"/>
 <part name="C4" library="rcl" deviceset="C-EU" device="C1206K" value="22p"/>
-<part name="C5" library="rcl" deviceset="C-EU" device="C1206K" value="1n"/>
+<part name="C5" library="rcl" deviceset="C-EU" device="C1206K" value="0.1u"/>
 <part name="+3V2" library="supply1" deviceset="+3V3" device=""/>
 <part name="GND2" library="supply1" deviceset="GND" device=""/>
 <part name="GND3" library="supply1" deviceset="GND" device=""/>
@@ -19682,10 +19682,10 @@ Source: www.farnell.com/datasheets/247.pdf</description>
 <part name="GND8" library="supply1" deviceset="GND" device=""/>
 <part name="SUPPLY1" library="supply2" deviceset="VCC" device=""/>
 <part name="SUPPLY3" library="supply2" deviceset="VCC" device=""/>
-<part name="R5" library="rcl" deviceset="R-EU_" device="R1206"/>
-<part name="R6" library="rcl" deviceset="R-EU_" device="R1206"/>
-<part name="R7" library="rcl" deviceset="R-EU_" device="R1206"/>
-<part name="R8" library="rcl" deviceset="R-EU_" device="R1206"/>
+<part name="R5" library="rcl" deviceset="R-EU_" device="R1206" value="120R"/>
+<part name="R6" library="rcl" deviceset="R-EU_" device="R1206" value="120R"/>
+<part name="R7" library="rcl" deviceset="R-EU_" device="R1206" value="120R"/>
+<part name="R8" library="rcl" deviceset="R-EU_" device="R1206" value="120R"/>
 <part name="L1" library="rcl" deviceset="L-EU" device="L3230M"/>
 <part name="L2" library="rcl" deviceset="L-EU" device="L3230M"/>
 <part name="SUPPLY2" library="supply2" deviceset="VCC" device=""/>

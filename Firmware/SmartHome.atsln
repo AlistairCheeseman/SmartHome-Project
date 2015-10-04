@@ -11,8 +11,6 @@ Project("{E66E83B9-2572-4076-B26E-6BE79FF3018A}") = "HeatingController", "Heatin
 EndProject
 Project("{E66E83B9-2572-4076-B26E-6BE79FF3018A}") = "LightSwitch", "LightSwitch\LightSwitch.cppproj", "{309AC0C3-4AFD-4451-8885-98C9C4A0347A}"
 EndProject
-Project("{E66E83B9-2572-4076-B26E-6BE79FF3018A}") = "LightController", "LightController\LightController.cppproj", "{06C58EC0-7612-414D-889B-826A3C7C39CE}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -39,10 +37,6 @@ Global
 		{309AC0C3-4AFD-4451-8885-98C9C4A0347A}.Debug|AVR.Build.0 = Debug|AVR
 		{309AC0C3-4AFD-4451-8885-98C9C4A0347A}.Release|AVR.ActiveCfg = Release|AVR
 		{309AC0C3-4AFD-4451-8885-98C9C4A0347A}.Release|AVR.Build.0 = Release|AVR
-		{06C58EC0-7612-414D-889B-826A3C7C39CE}.Debug|AVR.ActiveCfg = Debug|AVR
-		{06C58EC0-7612-414D-889B-826A3C7C39CE}.Debug|AVR.Build.0 = Debug|AVR
-		{06C58EC0-7612-414D-889B-826A3C7C39CE}.Release|AVR.ActiveCfg = Release|AVR
-		{06C58EC0-7612-414D-889B-826A3C7C39CE}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

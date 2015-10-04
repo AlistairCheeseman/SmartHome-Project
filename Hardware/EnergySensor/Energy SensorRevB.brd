@@ -2113,15 +2113,15 @@ design rules under a new name.</description>
 <attribute name="NAME" x="83.85" y="41.43" size="1.778" layer="25" ratio="10"/>
 <attribute name="VALUE" x="83.723" y="38.89" size="1.778" layer="27" ratio="10"/>
 </element>
-<element name="C11" library="rcl" package="E3,5-8" value="10u" x="99.29" y="43.23" rot="R180"/>
+<element name="C11" library="rcl" package="E3,5-8" value="47u" x="99.29" y="43.23" rot="R180"/>
 <element name="C12" library="rcl" package="C025-025X050" value="1n" x="89.23" y="25.93"/>
 <element name="LINK" library="led" package="LED5MM" value="GRN" x="143.85" y="10.69"/>
 <element name="ACTIVITY" library="led" package="LED5MM" value="RED" x="143.77" y="18.58" smashed="yes">
 <attribute name="NAME" x="146.945" y="19.1134" size="1.27" layer="25" ratio="10"/>
 <attribute name="VALUE" x="146.9704" y="16.7766" size="1.27" layer="27" ratio="10"/>
 </element>
-<element name="R9" library="rcl" package="0207/7" value="330R" x="138.74" y="14.27" rot="R90"/>
-<element name="R10" library="rcl" package="0207/7" value="330R" x="135.01" y="12.03" rot="R90"/>
+<element name="R9" library="rcl" package="0207/7" value="3k3" x="138.74" y="14.27" rot="R90"/>
+<element name="R10" library="rcl" package="0207/7" value="3k3" x="135.01" y="12.03" rot="R90"/>
 <element name="JP1" library="jumper" package="JP1" value="Extern_Power" x="75.58" y="26.55" smashed="yes">
 <attribute name="NAME" x="76.929" y="30.01" size="1.27" layer="25" ratio="10" rot="R90"/>
 <attribute name="VALUE" x="78.501" y="24.01" size="1.27" layer="27" ratio="10" rot="R90"/>
@@ -2148,7 +2148,7 @@ design rules under a new name.</description>
 <attribute name="NAME" x="97.603" y="14.46" size="1.27" layer="25" ratio="10" rot="R90"/>
 <attribute name="VALUE" x="99.5588" y="17.714" size="1.27" layer="27" ratio="10" rot="R90"/>
 </element>
-<element name="C4" library="rcl" package="E3,5-8" value="10u" x="139" y="41"/>
+<element name="C4" library="rcl" package="E3,5-8" value="47u" x="139" y="41"/>
 <element name="C5" library="rcl" package="C1206K" value="100n" x="119" y="34" smashed="yes" rot="MR0">
 <attribute name="NAME" x="115.6" y="36.1" size="1.016" layer="26" rot="MR0"/>
 <attribute name="VALUE" x="120.6" y="31.9" size="1.016" layer="28" rot="MR0"/>

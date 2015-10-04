@@ -11,10 +11,12 @@
 #include <cstring>
 
 ProcessMessage::ProcessMessage(const char *dbloc) {
+    //connect to the database
     sqldb = new SQL(dbloc);
 }
 
 ProcessMessage::~ProcessMessage() {
+    //close the database connection
     delete sqldb;
 }
 

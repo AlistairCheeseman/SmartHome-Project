@@ -37,11 +37,15 @@
 
 namespace SPI
 {
+	//send data
 	uint8_t transfer(uint8_t tx_);
+	//configure hardware spi
 void init();
+//configure subs
 void setBitOrder(uint8_t bitOrder);
 void setDataMode(uint8_t mode);
 void setClockDivider(uint8_t);
+//disable and stop spi functions
 void stop();
 }; //SPI
 

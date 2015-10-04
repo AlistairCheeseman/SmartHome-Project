@@ -10,6 +10,7 @@
 
 class ProcessMessage {
 public:
+    // this processes any messages, this performs the actual logic layer operation.
     ProcessMessage(const char *dbloc);
     virtual ~ProcessMessage();
     void messageReceived(char *topic, char *payload, int payloadlen,  class mqtt *sender);

@@ -17979,12 +17979,12 @@ BLOCK</description>
 <part name="+3V3" library="supply1" deviceset="+3V3" device=""/>
 <part name="+3V4" library="supply1" deviceset="+3V3" device=""/>
 <part name="+3V5" library="supply1" deviceset="+3V3" device=""/>
-<part name="C11" library="rcl" deviceset="CPOL-EU" device="E3.5-8" value="10u"/>
+<part name="C11" library="rcl" deviceset="CPOL-EU" device="E3.5-8" value="47u"/>
 <part name="C12" library="rcl" deviceset="C-EU" device="025-025X050" value="1n"/>
 <part name="LINK" library="led" deviceset="LED" device="5MM" value="GRN"/>
 <part name="ACTIVITY" library="led" deviceset="LED" device="5MM" value="RED"/>
-<part name="R9" library="rcl" deviceset="R-EU_" device="0207/7" value="330R"/>
-<part name="R10" library="rcl" deviceset="R-EU_" device="0207/7" value="330R"/>
+<part name="R9" library="rcl" deviceset="R-EU_" device="0207/7" value="3k3"/>
+<part name="R10" library="rcl" deviceset="R-EU_" device="0207/7" value="3k3"/>
 <part name="GND9" library="supply1" deviceset="GND" device=""/>
 <part name="+3V6" library="supply1" deviceset="+3V3" device=""/>
 <part name="JP1" library="jumper" deviceset="JP1E" device="" value="Extern_Power"/>
@@ -18001,7 +18001,7 @@ BLOCK</description>
 <part name="R12" library="rcl" deviceset="R-EU_" device="R1206" value="22R"/>
 <part name="U$1" library="jack" deviceset="3.5MMJACK" device=""/>
 <part name="R13" library="rcl" deviceset="R-EU_" device="0207/7" value="1k"/>
-<part name="C4" library="rcl" deviceset="CPOL-EU" device="E3.5-8" value="10u"/>
+<part name="C4" library="rcl" deviceset="CPOL-EU" device="E3.5-8" value="47u"/>
 <part name="C5" library="rcl" deviceset="C-EU" device="C1206K" value="100n"/>
 <part name="L1" library="rcl" deviceset="L-EU" device="L3230M" value="10u"/>
 </parts>

@@ -11,6 +11,7 @@
 // default constructor
 MQTTSN::MQTTSN(SensorNet& snetwork, uint8_t clientId, uint32_t MAC)
 {
+	//load everything to zero or default values.
 	this->clientId = clientId;
 	this->network = &snetwork;
 	this->currentState = STATE_DISCONNECTED;
@@ -31,7 +32,7 @@ void MQTTSN::ping()
 	packet.gen_packet(payload, 0x00);
 	network->sendpacket(payload, payload[0], macId, destId);
 	this->currentState = STATE_WAIT_PINGRESP;
-	
+	//set the last transmission time so it can be worked out when a ping is needed next.
 	this->lastTransmission = Timing::millis();
 }
 void MQTTSN::pingresponse()

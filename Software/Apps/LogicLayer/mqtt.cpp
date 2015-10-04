@@ -21,6 +21,7 @@ mqtt::mqtt(const char *id, const char *host, int port,const char *dbloc) : mosqu
 	/* Connect immediately. This could also be done by calling
 	 * mqtt_tempconv->connect(). */
 	connect(host, port, keepalive);  
+        //create the message processor that handles everything.
         messageProcessor = new ProcessMessage(dbloc);
         
 }
@@ -46,6 +47,7 @@ void mqtt::on_message(const struct mosquitto_message *message)
     char buffer[101];
     memset(buffer, 0,101*sizeof(char));
     memcpy(buffer, message->payload, 100*sizeof(char));
+    //set the messageprocessor off processing the recieved message.
     messageProcessor->messageReceived(message->topic, buffer, message->payloadlen, this);
     }
 }

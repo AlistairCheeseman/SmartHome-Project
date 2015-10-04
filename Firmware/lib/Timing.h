@@ -30,7 +30,9 @@
 
 namespace Timing
 {
+	//get the milliseconds since turned on
 unsigned long millis();
+//start the timer
 void init(void);
 
 	

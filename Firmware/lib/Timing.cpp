@@ -45,6 +45,7 @@ ISR(TIMER0_OVF_vect)
 }
 void Timing::init()
 {
+	//init interrupts and set the timer going.
 	sei();
 	
 	TCCR0A|= (1<< WGM01);

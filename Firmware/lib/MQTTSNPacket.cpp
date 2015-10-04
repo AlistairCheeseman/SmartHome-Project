@@ -10,17 +10,19 @@
 
 MQTTSNPacket::MQTTSNPacket()
 {
+	//clean all variables, initialise everything to zero.
 	sanitise();
 }
 MQTTSNPacket::~MQTTSNPacket()
 {
 }
+//this takes in a raw mqtt packet and loads it into the relevant variables in this class depending on what packet type it is.
 bool MQTTSNPacket::load_packet(unsigned char * payload)
 {
 	int t;
 	this->msgType = payload[1];
 	this->length = payload[0];
-	if (payload[1] == CONNECT)
+	if (payload[1] == CONNECT) // find what packet type it is.
 	{
 		if (length != 7)
 		return false;
@@ -31,7 +33,7 @@ bool MQTTSNPacket::load_packet(unsigned char * payload)
 		this->protocolId =	payload[3];
 		this->duration  = (	payload[4]<< 8)| payload[5];
 		this->clientId =	payload[6];
-		return true;
+		return true; // no point looping through rest of routine.
 	}
 	else if (payload[1] == CONNACK)
 	{
@@ -187,10 +189,11 @@ bool MQTTSNPacket::load_packet(unsigned char * payload)
 	return false;
 }
 /* varlength is the length of the variable part */
+// generate the MQTT packet from what class variables have been set.
 void MQTTSNPacket::gen_packet(unsigned char  (&payloadOut)[20],uint8_t varLength)
 {
 	
-	if (msgType == CONNECT)
+	if (msgType == CONNECT) // check what packet it is to load correct packet payload data.
 	{
 		/*VARIABLE LENGTH MESSAGE (FORCE FIXED) */
 		//mask off unused flags ( only need CleanSession and Will)
@@ -202,7 +205,7 @@ void MQTTSNPacket::gen_packet(unsigned char  (&payloadOut)[20],uint8_t varLength
 		payloadOut[4] = (this->duration >> 8);
 		payloadOut[5] = this->duration;
 		payloadOut[6] = this->clientId;
-		return;
+		return; // no poiint looping through rest of routine.
 	}
 	else if (msgType == CONNACK)
 	{
@@ -417,6 +420,7 @@ void MQTTSNPacket::gen_packet(unsigned char  (&payloadOut)[20],uint8_t varLength
 		return;
 	}
 }
+// clean slate the whole class, to ensure everything is initialised to zero. this is called between packet generation/decoding.
 void MQTTSNPacket::sanitise()
 {
 	

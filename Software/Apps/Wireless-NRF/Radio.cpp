@@ -1,8 +1,8 @@
 /* 
  * File:   Radio.cpp
  * Author: alistair
- * modifed version of maniacbugs code ( reduced features and adapted for linux, and made only work with nRF24L01+)
- * https://github.com/maniacbug/RF24
+ * heavily modifed version of maniacbugs code ( reduced features and adapted for linux, and made only work with nRF24L01+)
+ * https://github.com/maniacbug/RF24 Licenced under GNU GPL
  * Created on 25 February 2015, 21:53
  */
 

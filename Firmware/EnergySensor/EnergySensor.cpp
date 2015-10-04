@@ -3,7 +3,7 @@
 *
 * Created: 16/03/2015 09:09:38
 *  Author: Ali
-* Energy calculations inspired by https://github.com/openenergymonitor/EmonLib
+* Energy calculations based on a modified version of https://github.com/openenergymonitor/EmonLib licensed by GNU GPL I do not claim to have developed them fully myself. 
 */
 
 
@@ -150,7 +150,7 @@ void calcPwr(double &power, double &pf)
 		//read the instantaneous voltage and current
 		int instV = adc_read(VOLTAGE_CH);
 		int instA = adc_read(CURRENT_CH);
-		
+		//low pass digital filter
 		filterV = filterV + ((instV-filterV)/1024);
 		double filteredV = instV - filterV;
 		
@@ -173,13 +173,14 @@ void calcPwr(double &power, double &pf)
 		if (numberOfSamples==1) lastVCross = checkVCross;
 		if (lastVCross != checkVCross) currentCrossCount++;
 	}
+	//scale the voltage to the voltage at the pin then multiply it by a calibration factor, this was worked out with use of an oscilloscope to ensure it is accurate representation of measurement.
 	int Tout  = (sqrt(summedV / numberOfSamples))  * (3.30/1024) * 248.528; //was 230.412
 	
 	double rmsARaw =(sqrt(summedA / numberOfSamples)-2.9);
 
 	if (rmsARaw < 0)
 	rmsARaw =0;
-	
+	//same as with the voltage, this is a calibration factor that is worked out with use of an oscilloscope.
 	double AAvg = (rmsARaw * (3.30/1024.0)) * 90.9  ;
 	power =AAvg * Tout;
 	int raw = AAvg;

@@ -79,13 +79,10 @@ void SQL::getActiveAutomationRules(automationRule *(&AR), int &len) {
                 strcpy(AR[currentrule].topic, reinterpret_cast<const char*> (sqlite3_column_text(ppStmt, 2)));
                 char * conditionsBuffer = new char[200];
                 strcpy(conditionsBuffer, reinterpret_cast<const char*> (sqlite3_column_text(ppStmt, 3)));
-                int typeId =  sqlite3_column_int(ppStmt, 4);
-                if (typeId == 4)
-                {
+                int typeId = sqlite3_column_int(ppStmt, 4);
+                if (typeId == 4) {
                     AR[currentrule].isTemporary = true;
-                }
-                else
-                {
+                } else {
                     AR[currentrule].isTemporary = false;
                 }
                 char* currentCondition = strtok(conditionsBuffer, ";"); // variable to hold each iteration of the conditi
@@ -130,12 +127,12 @@ void SQL::updateLastRunTime(int ruleId) {
 }
 
 void SQL::deleteRule(int ruleId) {
-   const char *statement = "DELETE FROM automation where Id = %d;";
+    const char *statement = "DELETE FROM automation where Id = %d;";
     char *sql = (char *) malloc(strlen(statement) + 1);
     int rc;
     char *zErrMsg = 0;
     /* Create SQL statement */
-    sprintf(sql, statement,ruleId);
+    sprintf(sql, statement, ruleId);
     /* Execute SQL statement */
     rc = sqlite3_exec(db, sql, NULL, this, &zErrMsg);
     if (rc != SQLITE_OK) {
@@ -148,3 +145,82 @@ void SQL::deleteRule(int ruleId) {
     delete zErrMsg;
 }
 
+void createSuggestedRules() {
+    const time_t ONE_DAY = 24 * 60 * 60;
+    time_t now = time(0);
+    tm *ltm = localtime(&now);
+    char *hour = new char[5];
+    char *date1 = new char[22];
+    char *date2 = new char[22];
+    char *date3 = new char[22];
+    strftime(date1, 22, "%Y-%m-%d ", ltm);
+    now = now - (ONE_DAY);
+    ltm = localtime(&now);
+    strftime(date2, 22, "%Y-%m-%d ", ltm);
+    now = now - (ONE_DAY);
+    ltm = localtime(&now);
+    strftime(date3, 22, "%Y-%m-%d ", ltm);
+
+
+    const char *Statement1 = "SELECT SensorId, value from Sensor_Histories WHERE (moment LIKE '%s"; // load hour in.
+    const char *Statement2 = ":%:%' AND moment LIKE '"; // static
+    //date 1
+    const char *Statement3 = "%') AND (moment LIKE '%";
+    //time 
+    //statement2 again
+    //date 2
+    //statement3 again
+    //statement2 again
+    //date 3
+    const char *Statement4 = "%') group by SensorId, value HAVING count(*) > 0;"; // 
+    //in summary this is three nested statements that get all sensor records for a time for three consecutive days. If ANY values have been returned it means these actions were completed in the same hour for the past three days.
+    sqlite3_stmt *ppStmt;
+    // for each hour.
+    for (int t = 1; t <= 24; t++) {
+        // run the statement three times, once for each day.
+        char *sql1 = new char[400];
+        char *newStatement1 = new char[20];
+        sprintf(newStatement1, Statement1, t); // load in the hour.
+
+        sprintf(sql1, "%s%s%s%s%d%s%s%s%d%s%s%s", newStatement1, Statement2, date1, Statement3, t, Statement2, date2, Statement3, t, Statement2, date3, Statement4); // compile the  super statement
+        int res = 0;
+
+        if (sqlite3_prepare_v2(db, sql1, strlen(sql1), &ppStmt, 0) == SQLITE_OK) {
+            while (1) {
+                res = sqlite3_step(ppStmt);
+                if (res == SQLITE_ROW) {
+                    // if we have a result, add it as a suggested rule!
+
+                    char * sensorId = reinterpret_cast<const char*> (sqlite3_column_text(ppStmt, 0));
+                    char * payload = reinterpret_cast<const char*> (sqlite3_column_text(ppStmt, 0));
+
+
+
+                    const char *Insertstatement = "INSERT INTO 'automation' (Condition, TypeId, payload, Topic, stateId) VALUES ('%s','%d', '%s', '%s', '%d' ); ";
+                    char *sql = (char *) malloc((strlen(Insertstatement) + strlen(payload) + strlen(sensorId)) + 1 + 22);
+                    int rc;
+                    char *zErrMsg = 0;
+                    /* Create SQL statement */
+                    char *condition = "TIME=%d:00";
+                    sprintf(condition, t);
+                    sprintf(sql, condition, 1, payload, sensorId, 3);
+
+
+                    /* Execute SQL statement */
+                    rc = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
+
+
+
+
+                }
+                if (res == SQLITE_DONE || res == SQLITE_ERROR) {
+                    break;
+                }
+            }
+
+        }
+
+
+
+    }
+}
