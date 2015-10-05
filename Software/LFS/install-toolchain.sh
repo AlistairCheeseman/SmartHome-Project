@@ -9,7 +9,7 @@ unset CFLAGS
 #the system that we will be creating a toolchain for.
 export TARGET=arm-unknown-linux-gnueabihf
 #the root location to be installed to
-export ROOTDIR=/remote/arm
+export ROOTDIR=/data/BBB
 #the source directory we will be storing downloaded files.
 export SRCDIR=${ROOTDIR}/tools/src
 #the directory we want our build tools installed into.
