@@ -209,7 +209,7 @@ export CC=arm-unknown-linux-gnueabihf-gcc
 
 echo "ZLIB"
  cd $SRCDIR
- wget http://zlib.net/zlib-1.2.8.tar.gz
+ wget https://filestore.kmxsoftware.co.uk/zlib-1.2.8.tar.gz
  tar -xf zlib-1.2.8.tar.gz
 rm zlib-1.2.8.tar.gz
  cd zlib-1.2.8
@@ -220,7 +220,7 @@ echo "OpenSSL"
  ##OPENSSL is needed for opennsh and mosquitto
  unset CROSS_COMPILE
  cd $SRCDIR
-wget http://www.openssl.org/source/openssl-1.0.1i.tar.gz
+wget https://filestore.kmxsoftware.co.uk/openssl-1.0.1i.tar.gz
 tar -xf openssl-1.0.1i.tar.gz
 rm openssl-1.0.1i.tar.gz
 cd openssl-1.0.1i
@@ -239,7 +239,7 @@ make install  2>&1 | tee -a make.out
 echo "C-Ares"
 #C-ARES IS NEEDED FOR MOSQUITTO
 cd $SRCDIR
-wget http://c-ares.haxx.se/download/c-ares-1.10.0.tar.gz
+wget https://filestore.kmxsoftware.co.uk/c-ares-1.10.0.tar.gz
 tar -xf c-ares-1.10.0.tar.gz
 rm c-ares-1.10.0.tar.gz
 cd c-ares-1.10.0
@@ -250,7 +250,7 @@ make install DESTDIR=${SYSROOT} 2>&1 | tee -a make.out
 
 echo "Libaio"
 cd $SRCDIR
-wget https://git.fedorahosted.org/cgit/libaio.git/snapshot/libaio-0.3.109.tar.gz
+wget https://filestore.kmxsoftware.co.uk/libaio-0.3.109.tar.gz
 tar -xf libaio-0.3.109.tar.gz
 rm libaio-0.3.109.tar.gz
 cd libaio-0.3.109
@@ -260,7 +260,7 @@ make install prefix=$SYSROOT 2>&1 | tee -a make.out
 
 echo "ncurses"
 cd $SRCDIR
-wget http://ftp.gnu.org/pub/gnu/ncurses/ncurses-5.9.tar.gz
+wget https://filestore.kmxsoftware.co.uk/ncurses-5.9.tar.gz
 tar -xf ncurses-5.9.tar.gz
 rm ncurses-5.9.tar.gz
 cd ncurses-5.9
