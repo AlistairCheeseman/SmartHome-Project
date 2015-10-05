@@ -51,7 +51,7 @@ wget http://ftp.gnu.org/gnu/binutils/binutils-2.25.tar.bz2
 wget ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-4.9.1/gcc-4.9.1.tar.bz2
 wget http://ftp.gnu.org/gnu/glibc/glibc-2.19.tar.bz2
 wget https://gmplib.org/download/gmp/gmp-6.0.0a.tar.bz2
-wget http://www.mpfr.org/mpfr-current/mpfr-3.1.2.tar.bz2
+wget http://www.mpfr.org/mpfr-current/mpfr-3.1.3.tar.bz2
 wget ftp://ftp.gnu.org/gnu/mpc/mpc-1.0.2.tar.gz
 wget http://www.mr511.de/software/libelf-0.8.13.tar.gz
 
@@ -60,7 +60,7 @@ tar -xf binutils-2.25.tar.bz2
 tar -xf gcc-4.9.1.tar.bz2
 tar -xf glibc-2.19.tar.bz2
 tar -xf gmp-6.0.0a.tar.bz2
-tar -xf mpfr-3.1.2.tar.bz2
+tar -xf mpfr-3.1.3.tar.bz2
 tar -xf mpc-1.0.2.tar.gz
 tar -xf libelf-0.8.13.tar.gz
 echo "Cleaning Directory Structure"
@@ -68,7 +68,7 @@ mv -v binutils-2.25 binutils
 mv -v gcc-4.9.1 gcc-src
 mv -v glibc-2.19 glibc
 mv -v gmp-6.0.0 gmp
-mv -v mpfr-3.1.2 mpfr
+mv -v mpfr-3.1.3 mpfr
 mv -v mpc-1.0.2 mpc
 mv -v libelf-0.8.13 libelf
 
@@ -82,7 +82,7 @@ rm binutils-2.25.tar.bz2
 rm gcc-4.9.1.tar.bz2
 rm glibc-2.19.tar.bz2
 rm gmp-6.0.0a.tar.bz2
-rm mpfr-3.1.2.tar.bz2
+rm mpfr-3.1.3.tar.bz2
 rm mpc-1.0.2.tar.gz
 rm libelf-0.8.13.tar.gz
 echo "Getting LINUX Kernel from GIT"
