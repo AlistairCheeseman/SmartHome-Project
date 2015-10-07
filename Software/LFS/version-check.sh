@@ -22,3 +22,4 @@ tar --version | head -n1
 makeinfo --version | head -n1
 git --version
 tic -V
+lzop -V
