@@ -79,11 +79,9 @@
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
-          <commandlineTool>/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-gcc</commandlineTool>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
-          <commandlineTool>/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++</commandlineTool>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
@@ -93,7 +91,6 @@
           <commandlineTool>/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-as</commandlineTool>
         </asmTool>
         <linkerTool>
-          <commandlineTool>/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++</commandlineTool>
           <linkerLibItems>
             <linkerLibLibItem>mosquittopp</linkerLibLibItem>
             <linkerLibLibItem>sqlite3</linkerLibLibItem>

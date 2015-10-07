@@ -14,9 +14,9 @@ GREP=grep
 NM=nm
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-gcc
-CCC=/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++
-CXX=/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++
+CC=/data/BBB/tools/build/bin/arm-unknown-linux-gnueabihf-gcc
+CCC=/data/BBB/tools/build/bin/arm-unknown-linux-gnueabihf-g++
+CXX=/data/BBB/tools/build/bin/arm-unknown-linux-gnueabihf-g++
 FC=gfortran
 AS=/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-as
 
@@ -63,7 +63,7 @@ LDLIBSOPTIONS=-lmosquittopp -lsqlite3
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/logiclayer: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++ -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/logiclayer ${OBJECTFILES} ${LDLIBSOPTIONS}
+	/data/BBB/tools/build/bin/arm-unknown-linux-gnueabihf-g++ -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/logiclayer ${OBJECTFILES} ${LDLIBSOPTIONS}
 
 ${OBJECTDIR}/ProcessMessage.o: ProcessMessage.cpp 
 	${MKDIR} -p ${OBJECTDIR}

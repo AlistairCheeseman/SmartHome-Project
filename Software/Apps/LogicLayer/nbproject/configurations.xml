@@ -43,16 +43,16 @@
       </toolsSet>
       <compileType>
         <cTool>
-          <commandlineTool>/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-gcc</commandlineTool>
+          <commandlineTool>/data/BBB/tools/build/bin/arm-unknown-linux-gnueabihf-gcc</commandlineTool>
         </cTool>
         <ccTool>
-          <commandlineTool>/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++</commandlineTool>
+          <commandlineTool>/data/BBB/tools/build/bin/arm-unknown-linux-gnueabihf-g++</commandlineTool>
         </ccTool>
         <asmTool>
           <commandlineTool>/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-as</commandlineTool>
         </asmTool>
         <linkerTool>
-          <commandlineTool>/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++</commandlineTool>
+          <commandlineTool>/data/BBB/tools/build/bin/arm-unknown-linux-gnueabihf-g++</commandlineTool>
           <linkerLibItems>
             <linkerLibLibItem>mosquittopp</linkerLibLibItem>
             <linkerLibLibItem>sqlite3</linkerLibLibItem>

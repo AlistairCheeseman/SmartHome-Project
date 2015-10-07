@@ -14,9 +14,9 @@ GREP=grep
 NM=nm
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-gcc
-CCC=/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++
-CXX=/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++
+CC=arm-unknown-linux-gnueabihf-gcc
+CCC=arm-unknown-linux-gnueabihf-g++
+CXX=arm-unknown-linux-gnueabihf-g++
 FC=gfortran
 AS=/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-as
 
@@ -62,7 +62,7 @@ LDLIBSOPTIONS=-lmosquittopp -lsqlite3
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/shscheduler: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++ -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/shscheduler ${OBJECTFILES} ${LDLIBSOPTIONS}
+	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/shscheduler ${OBJECTFILES} ${LDLIBSOPTIONS}
 
 ${OBJECTDIR}/MQTT.o: MQTT.cpp 
 	${MKDIR} -p ${OBJECTDIR}
