@@ -136,8 +136,8 @@ sed -i -e 's|CONFIG_FEATURE_INETD_RPC=y|# CONFIG_FEATURE_INETD_RPC is not set|g'
 #remove rpc support as cannot build with against new versions of glibc
 #Networking Utilities --> (DISABLE) inetd/Support RPC services
 #CONFIG_PREFIX sets the install directory
-make CONFIG_PREFIX=${TARGETFS}
-make CONFIG_PREFIX=${TARGETFS} install
+make CONFIG_PREFIX="${TARGETFS}"
+make CONFIG_PREFIX="${TARGETFS}" install
 chmod +x ${TARGETFS}/bin/busybox
 
 cp examples/depmod.pl ${BUILDTOOLSYSDIR}/bin/depmod.pl
@@ -218,14 +218,14 @@ LD=$TARGET-gcc AR=$TARGET-ar make
 make install-nokeys LD=$TARGET-gcc AR=$TARGET-ar DESTDIR=${TARGETFS} STRIP_OPT="-s --strip-program=arm-unknown-linux-gnueabihf-strip"
 
 cd $SRCDIR
-wget http://mosquitto.org/files/source/mosquitto-1.3.5.tar.gz
+wget -4 http://mosquitto.org/files/source/mosquitto-1.3.5.tar.gz
 tar -xf mosquitto-1.3.5.tar.gz
 rm mosquitto-1.3.5.tar.gz
 cd mosquitto-1.3.5
 ##maybe change prefix install dir as installs in /usr/local/ this is at the bottom of the config.mk
 make
 make install prefix='' DESTDIR=$TARGETFS
-
+make install prefix='' DESTDIR=${BUILDTOOLSYSDIR}/sysroot
 cp $TARGETFS/etc/mosquitto/mosquitto.conf.example $TARGETFS/etc/mosquitto/mosquitto.conf
 
 sed -i -e 's|#pid_file|pid_file /var/run/mosquitto.pid|g' $TARGETFS/etc/mosquitto/mosquitto.conf 
@@ -241,10 +241,10 @@ make install prefix=/ DESTDIR=$TARGETFS
 
 #APR
 cd $SRCDIR
-wget http://mirror.catn.com/pub/apache/apr/apr-1.5.1.tar.bz2
-tar -xf apr-1.5.1.tar.bz2
-rm apr-1.5.1.tar.bz2
-cd apr-1.5.1
+wget http://mirror.catn.com/pub/apache/apr/apr-1.5.2.tar.bz2
+tar -xf apr-1.5.2.tar.bz2
+rm apr-1.5.2.tar.bz2
+cd apr-1.5.2
 #may have to be installed in src dir.
 #have not tested apr_cv_tcp_nodelay_with_cork
 ./configure --host=$TARGET --prefix=$SRCDIR/apache/apr-build ac_cv_file__dev_zero=yes ac_cv_func_setpgrp_void=yes apr_cv_tcp_nodelay_with_cork=no ac_cv_sizeof_struct_iovec=1
@@ -283,12 +283,12 @@ make install
 cp -v ${SRCDIR}/apache/pcre-build/lib/*.so* $TARGETFS/lib/
 
 cd ${SRCDIR}
-wget http://mirror.catn.com/pub/apache/httpd/httpd-2.4.12.tar.gz
-tar -xf httpd-2.4.12.tar.gz
-rm httpd-2.4.12.tar.gz
-cd httpd-2.4.12
+wget http://mirror.catn.com/pub/apache/httpd/httpd-2.4.16.tar.gz
+tar -xf httpd-2.4.16.tar.gz
+rm httpd-2.4.16.tar.gz
+cd httpd-2.4.16
 #set the default user
-sed -i -e 's/User daemon/User httpd/g' ${SRCDIR}/httpd-2.4.12/docs/conf/httpd.conf.in
+sed -i -e 's/User daemon/User httpd/g' ${SRCDIR}/httpd-2.4.16/docs/conf/httpd.conf.in
 sed -i -e 's/Group daemon/Group httpd/g' docs/conf/httpd.conf.in
 ./configure --prefix=/apache24 --host=${TARGET} --with-apr=${SRCDIR}/apache/apr-build --with-apr-util=${SRCDIR}/apache/apr-util-build  --with-pcre=${SRCDIR}/apache/pcre-build ap_cv_void_ptr_lt_long=no --with-mpm=prefork  --sysconfdir=/apache24/etc
 #this will fail, but it must be ran to allow the below replacement to take place. ||true ensures that the broken make will not halt the buildscript
@@ -333,14 +333,14 @@ tar -xf php-5.6.5.tar.gz
 rm php-5.6.5.tar.gz
 cd php-5.6.5
 #need to test
-sed -i -e 's|my $installbuilddir = "/apache24/build";|my $installbuilddir = "'"${TARGETFS}"'/apache24/build" ;|g' ${TARGETFS}/apache24/bin/apxs
+sed -i -e 's|my $installbuilddir = "/apache24/build";|my $installbuilddir = "'"${TARGETFS}"'/apache24/build";|g' ${TARGETFS}/apache24/bin/apxs
 sed -i -e 's|includedir = ${prefix}/include|includedir = '"${TARGETFS}"'/apache24/include|g' ${TARGETFS}/apache24/build/config_vars.mk
 #nano ${TARGETFS}/apache24/bin/apxs
 ./configure --host=$TARGET --prefix='' --with-libxml-dir=${BUILDTOOLSYSDIR}/sysroot --with-sqlite3 --enable-pdo --enable-json --with-pdo-sqlite --disable-all --with-apxs2=${TARGETFS}/apache24/bin/apxs --enable-session
 LDFLAGS='-ldl' make
 make INSTALL_ROOT=${TARGETFS} install
 #modify the incorrect location of the php module
-#/remote/arm/targetfs2/apache24/modules/libphp5.so
+#${TARGETFS}/apache24/modules/libphp5.so
 #to
 #modules/libphp5.so
 #using | as a delimeter so as not to confuse the escaping sequence
