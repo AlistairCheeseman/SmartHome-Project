@@ -145,7 +145,7 @@ void SQL::deleteRule(int ruleId) {
     delete zErrMsg;
 }
 
-void createSuggestedRules() {
+void SQL::createSuggestedRules() {
     const time_t ONE_DAY = 24 * 60 * 60;
     time_t now = time(0);
     tm *ltm = localtime(&now);
@@ -191,8 +191,10 @@ void createSuggestedRules() {
                 if (res == SQLITE_ROW) {
                     // if we have a result, add it as a suggested rule!
 
-                    char * sensorId = reinterpret_cast<const char*> (sqlite3_column_text(ppStmt, 0));
-                    char * payload = reinterpret_cast<const char*> (sqlite3_column_text(ppStmt, 0));
+                    char * sensorId;
+                    strcpy(sensorId, reinterpret_cast<const char*> (sqlite3_column_text(ppStmt, 0)));
+                    char * payload;
+                    strcpy(payload, reinterpret_cast<const char*> (sqlite3_column_text(ppStmt, 1)));
 
 
 
@@ -201,8 +203,8 @@ void createSuggestedRules() {
                     int rc;
                     char *zErrMsg = 0;
                     /* Create SQL statement */
-                    char *condition = "TIME=%d:00";
-                    sprintf(condition, t);
+                    char *condition = (char*) "TIME=%d:00";
+                    sprintf(condition,condition, t);
                     sprintf(sql, condition, 1, payload, sensorId, 3);
 
 
