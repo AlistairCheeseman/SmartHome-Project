@@ -1,0 +1,44 @@
+#!/bin/ash
+#
+# RSMB - IBM MQTT broker
+
+. /etc/init.d/functions
+
+PIDFILE=/var/run/rsmb.pid
+
+case "$1" in
+start)
+	if [ -r "$PIDFILE" ]; then
+		echo "Service RSMB already running."
+	else
+		echo -n "Starting RSMB server: "
+		/sbin/start-stop-daemon -Sbx /usr/bin/broker_mqtts -mp $PIDFILE -- /usr/bin/broker.cfg --daemon
+		check_status
+	fi
+	;;
+stop)
+	if [ -r "$PIDFILE" ]; then
+		echo -n "Stopping RSMB server: "
+		kill `cat "$PIDFILE"`
+		check_status
+		rm -r $PIDFILE
+	else
+		echo "Service RSMB not running."
+	fi
+	;;
+restart)
+	$0 stop
+	$0 start
+	;;
+
+status)
+	if [ -r "$PIDFILE" ]; then
+		echo "Service RSMB running (PID $(cat "$PIDFILE"))."
+	else
+		echo "Service RSMB not running."
+	fi
+	;;
+*)
+	echo "Usage: $0 {start|stop|restart|status}"
+	exit 1
+esac

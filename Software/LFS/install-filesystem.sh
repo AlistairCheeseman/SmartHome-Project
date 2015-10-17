@@ -188,11 +188,14 @@ cp ${DIR}/resources/sshd ${TARGETFS}/etc/init.d/sshd
 cp ${DIR}/resources/syslog ${TARGETFS}/etc/init.d/syslog
 cp ${DIR}/resources/mosquitto ${TARGETFS}/etc/init.d/mosquitto
 cp ${DIR}/resources/apache24 ${TARGETFS}/etc/init.d/apache24
+cp ${DIR}/resources/rsmb ${TARGETFS}/etc/init.d/rsmb
 
 chmod +x ${TARGETFS}/etc/init.d/sshd
 chmod +x ${TARGETFS}/etc/init.d/syslog
 chmod +x ${TARGETFS}/etc/init.d/mosquitto
 chmod +x ${TARGETFS}/etc/init.d/apache24
+chmod +x ${TARGETFS}/etc/init.d/rsmb
+
 
 cp ${DIR}/resources/functions ${TARGETFS}/etc/init.d/functions
 
@@ -204,7 +207,9 @@ mkdir $TARGETFS/etc/rcS.d
 cd ${TARGETFS}/etc/rcS.d
 ln -sfv ../init.d/syslog S05syslog
 ln -sfv ../init.d/sshd S30sshd
-ln -sfv ../init.d/mosquitto S40mosquitto
+#mosquitto is not the primary mqtt broker anymore
+#ln -sfv ../init.d/mosquitto S40mosquitto
+ln -sfv ../init.d/rsmb S40rsmb
 ln -sfv ../init.d/apache24 S50apache24
 
 cd $SRCDIR
@@ -229,6 +234,15 @@ make install prefix='' DESTDIR=${BUILDTOOLSYSDIR}/sysroot
 cp $TARGETFS/etc/mosquitto/mosquitto.conf.example $TARGETFS/etc/mosquitto/mosquitto.conf
 
 sed -i -e 's|#pid_file|pid_file /var/run/mosquitto.pid|g' $TARGETFS/etc/mosquitto/mosquitto.conf 
+
+
+cd ${SRCDIR}
+git clone https://git.eclipse.org/r/mosquitto/org.eclipse.mosquitto.rsmb rsmb
+cd rsmb/rsmb/src
+GCC=$CC make
+cp broker_mqtts ${TARGETFS}/bin/broker_mqtts
+cp ${DIR}/resources/broker.cfg ${TARGETFS}/usr/bin/broker.cfg
+cp Messages.1.3.0.2 ${TARGETFS}/usr/bin/Messages.1.3.0.2
 
 cd $SRCDIR
 wget http://rsync.samba.org/ftp/rsync/src/rsync-3.1.1.tar.gz
@@ -283,12 +297,12 @@ make install
 cp -v ${SRCDIR}/apache/pcre-build/lib/*.so* $TARGETFS/lib/
 
 cd ${SRCDIR}
-wget http://mirror.catn.com/pub/apache/httpd/httpd-2.4.16.tar.gz
-tar -xf httpd-2.4.16.tar.gz
-rm httpd-2.4.16.tar.gz
-cd httpd-2.4.16
+wget http://mirror.catn.com/pub/apache/httpd/httpd-2.4.17.tar.gz
+tar -xf httpd-2.4.17.tar.gz
+rm httpd-2.4.17.tar.gz
+cd httpd-2.4.17
 #set the default user
-sed -i -e 's/User daemon/User httpd/g' ${SRCDIR}/httpd-2.4.16/docs/conf/httpd.conf.in
+sed -i -e 's/User daemon/User httpd/g' ${SRCDIR}/httpd-2.4.17/docs/conf/httpd.conf.in
 sed -i -e 's/Group daemon/Group httpd/g' docs/conf/httpd.conf.in
 ./configure --prefix=/apache24 --host=${TARGET} --with-apr=${SRCDIR}/apache/apr-build --with-apr-util=${SRCDIR}/apache/apr-util-build  --with-pcre=${SRCDIR}/apache/pcre-build ap_cv_void_ptr_lt_long=no --with-mpm=prefork  --sysconfdir=/apache24/etc
 #this will fail, but it must be ran to allow the below replacement to take place. ||true ensures that the broken make will not halt the buildscript
