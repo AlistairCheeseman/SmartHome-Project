@@ -1,0 +1,44 @@
+#!/bin/ash
+#
+# Logic Layer - Smart home Logic Agent
+
+. /etc/init.d/functions
+
+PIDFILE=/var/run/logiclayer.pid
+
+case "$1" in
+start)
+	if [ -r "$PIDFILE" ]; then
+		echo "Service Logic Layer already running."
+	else
+		echo -n "Starting Logic Layer server: "
+		/sbin/start-stop-daemon -Sbx /usr/bin/logiclayer -mp $PIDFILE -- /var/db/smarthome 127.0.0.1
+		check_status
+	fi
+	;;
+stop)
+	if [ -r "$PIDFILE" ]; then
+		echo -n "Stopping Logic Layer server: "
+		kill `cat "$PIDFILE"`
+		check_status
+		rm -r $PIDFILE
+	else
+		echo "Service Logic Layer not running."
+	fi
+	;;
+restart)
+	$0 stop
+	$0 start
+	;;
+
+status)
+	if [ -r "$PIDFILE" ]; then
+		echo "Service Logic Layer running (PID $(cat "$PIDFILE"))."
+	else
+		echo "Service Logic Layer not running."
+	fi
+	;;
+*)
+	echo "Usage: $0 {start|stop|restart|status}"
+	exit 1
+esac
