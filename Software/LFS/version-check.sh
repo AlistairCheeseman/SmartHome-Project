@@ -23,3 +23,4 @@ makeinfo --version | head -n1
 git --version
 tic -V
 lzop -V
+bc --version
