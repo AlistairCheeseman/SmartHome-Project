@@ -43,7 +43,7 @@ chmod -R 777 $ROOTDIR
 mkdir -p $SRCDIR
 mkdir -p $SYSROOT
 
-ln -sfv . $SYSROOT/usr
+ln -s . $SYSROOT/usr
 
 cd $SRCDIR
 #wget ftp://sourceware.org/pub/binutils/snapshots/binutils-2.24.51.tar.bz2
