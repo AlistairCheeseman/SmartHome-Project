@@ -324,7 +324,7 @@ wget ftp://xmlsoft.org/libxml2/libxml2-2.9.2.tar.gz
 tar -xf libxml2-2.9.2.tar.gz
 rm libxml2-2.9.2.tar.gz
 cd libxml2-2.9.2
-./configure --host=$TARGET --without-python --prefix=''
+./configure --host=$TARGET --without-python --prefix='' --without-lzma --with-zlib=${BUILDTOOLSYSDIR}/sysroot
 make
 make  DESTDIR=${BUILDTOOLSYSDIR}/sysroot install
 make  DESTDIR=${TARGETFS} install
@@ -394,8 +394,9 @@ unset ZONEINFO
 
 cp -v $TARGETFS/usr/share/zoneinfo/Europe/London $TARGETFS/etc/localtime
 
-#install the WWW data from the git repo to the filesystem.
-cp -Rv $DIR/../www/* $TARGETFS/apache24/htdocs/
+#install the WWW data from the git repo to the filesystem and remove the old apachefile
+rm -Rv ${TARGETFS}/apache24/htdocs
+cp -Rv $DIR/../www $TARGETFS/apache24/htdocs
 echo "WWW Files Copied"
 
 
