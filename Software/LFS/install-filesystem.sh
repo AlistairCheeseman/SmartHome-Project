@@ -287,22 +287,22 @@ make install
 cp -v ${SRCDIR}/apache/apr-util-build/lib/*.so* $TARGETFS/lib/
 
 cd ${SRCDIR}
-wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.36.tar.gz
-tar -xf pcre-8.36.tar.gz
-rm pcre-8.36.tar.gz
-cd pcre-8.36
+wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.38.tar.gz
+tar -xf pcre-8.38.tar.gz
+rm pcre-8.38.tar.gz
+cd pcre-8.38
 ./configure --host=${TARGET} --prefix=${SRCDIR}/apache/pcre-build
 make
 make install
 cp -v ${SRCDIR}/apache/pcre-build/lib/*.so* $TARGETFS/lib/
 
 cd ${SRCDIR}
-wget http://mirror.catn.com/pub/apache/httpd/httpd-2.4.17.tar.gz
-tar -xf httpd-2.4.17.tar.gz
-rm httpd-2.4.17.tar.gz
-cd httpd-2.4.17
+wget http://mirror.catn.com/pub/apache/httpd/httpd-2.4.18.tar.gz
+tar -xf httpd-2.4.18.tar.gz
+rm httpd-2.4.18.tar.gz
+cd httpd-2.4.18
 #set the default user
-sed -i -e 's/User daemon/User httpd/g' ${SRCDIR}/httpd-2.4.17/docs/conf/httpd.conf.in
+sed -i -e 's/User daemon/User httpd/g' ${SRCDIR}/httpd-2.4.18/docs/conf/httpd.conf.in
 sed -i -e 's/Group daemon/Group httpd/g' docs/conf/httpd.conf.in
 ./configure --prefix=/apache24 --host=${TARGET} --with-apr=${SRCDIR}/apache/apr-build --with-apr-util=${SRCDIR}/apache/apr-util-build  --with-pcre=${SRCDIR}/apache/pcre-build ap_cv_void_ptr_lt_long=no --with-mpm=prefork  --sysconfdir=/apache24/etc
 #this will fail, but it must be ran to allow the below replacement to take place. ||true ensures that the broken make will not halt the buildscript
