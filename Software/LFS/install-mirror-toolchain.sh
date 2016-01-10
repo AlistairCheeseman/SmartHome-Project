@@ -91,12 +91,12 @@ git config --global user.email “ali@kmxsoftware.co.uk”
 
 #repository moved.
 #git clone https://github.com/beagleboard/kernel.git
-git clone git@git.kmxsoftware.co.uk:extern/linux
+git clone git@git.kmxsoftware.co.uk:extern/linux.git
 #cd kernel
 cd linux
 #with new git repository this may not be needed anymore
 #git checkout origin/3.13 -b 3.13
-#git checkout origin/3.14 -b 3.14
+git checkout origin/3.14 -b 3.14
 #
 #./patch.sh
 #cp configs/beaglebone kernel/arch/arm/configs/beaglebone_defconfig
