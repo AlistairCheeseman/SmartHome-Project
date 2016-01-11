@@ -100,7 +100,7 @@ make ARCH=arm bb.org_defconfig
 #spi1 can be used when hdmi is still in use, additionally there are two lines to enable serial. ENSURE the *-bone-* is selected for serial access.
 
 sleep 1
-sed -i -e 's|/\* #include "am335x-bone-spi1-spidev.dtsi" \*/|#include \"am335x-bone-spi1-spidev.dtsi\"|g' arch/arm/boot/dts/am335x-boneblack.dts
+sed -i -e 's|/\* #include "am335x-bone-spi0-spidev.dtsi" \*/|#include \"am335x-bone-spi0-spidev.dtsi\"|g' arch/arm/boot/dts/am335x-boneblack.dts
 sed -i -e 's|#include "am335x-ttyO1.dtsi"|/\* #include "am335x-ttyO1.dtsi" \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
 sed -i -e 's|/\* #include "am335x-bone-ttyO1.dtsi" \*/|#include "am335x-bone-ttyO1.dtsi"|g' arch/arm/boot/dts/am335x-boneblack.dts
 sed -i -e 's|#include "am335x-boneblack-nxp-hdmi-audio.dtsi"|/\* #include "am335x-boneblack-nxp-hdmi-audio.dtsi" \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
@@ -118,6 +118,11 @@ cp arch/arm/boot/uImage $TARGETFS/boot/uImage
 cp arch/arm/boot/zImage $TARGETFS/boot/zImage
 
 cp arch/arm/boot/dts/am335x-boneblack.dtb $TARGETFS/boot/am335x-boneblack.dtb
+
+# we want to make it so that the spitest exe is copied too
+cd Documentation/spi
+$CC spidev_test.c -o spitest
+cp spitest ${TARGETFS}/bin/
 
 
 cp ${DIR}/resources/uEnv.txt.nfs ${TARGETFS}/boot/
@@ -189,12 +194,18 @@ cp ${DIR}/resources/syslog ${TARGETFS}/etc/init.d/syslog
 cp ${DIR}/resources/mosquitto ${TARGETFS}/etc/init.d/mosquitto
 cp ${DIR}/resources/apache24 ${TARGETFS}/etc/init.d/apache24
 cp ${DIR}/resources/rsmb ${TARGETFS}/etc/init.d/rsmb
+cp ${DIR}/resources/wirelessBridge ${TARGETFS}/etc/init.d/wirelessBridge
+cp ${DIR}/resources/logiclayer ${TARGETFS}/etc/init.d/logiclayer
 
 chmod +x ${TARGETFS}/etc/init.d/sshd
 chmod +x ${TARGETFS}/etc/init.d/syslog
 chmod +x ${TARGETFS}/etc/init.d/mosquitto
 chmod +x ${TARGETFS}/etc/init.d/apache24
 chmod +x ${TARGETFS}/etc/init.d/rsmb
+chmod +x ${TARGETFS}/etc/init.d/wirelessBridge
+chmod +x ${TARGETFS}/etc/init.d/logiclayer
+
+
 
 
 cp ${DIR}/resources/functions ${TARGETFS}/etc/init.d/functions
@@ -211,6 +222,9 @@ ln -sfv ../init.d/sshd S30sshd
 #ln -sfv ../init.d/mosquitto S40mosquitto
 ln -sfv ../init.d/rsmb S40rsmb
 ln -sfv ../init.d/apache24 S50apache24
+#temporarily disable for development
+ln -sfv ../init.d/wirelessBridge S60wirelessBridge
+ln -sfv ../init.d/logiclayer S55logiclayer
 
 cd $SRCDIR
 wget http://www.mirrorservice.org/pub/OpenBSD/OpenSSH/portable/openssh-6.7p1.tar.gz
@@ -399,7 +413,32 @@ rm -Rv ${TARGETFS}/apache24/htdocs
 cp -Rv $DIR/../www $TARGETFS/apache24/htdocs
 echo "WWW Files Copied"
 
+#build the apps and copy them over
+#PLACEHOLDER!!!!!!!
+cd ${DIR}/../Apps/LogicLayer
+make
+make DESTDIR=${TARGETFS} install
 
+cd ${DIR}/../Apps/Wireless-NRF
+make
+make DESTDIR=${TARGETFS} install
+
+cd ${DIR}/../Apps/SHScheduler
+make
+make DESTDIR=${TARGETFS} install
+
+
+
+#create a crontab to call the scheduler
+install -dv ${TARGETFS}/var/spool/cron/crontabs
+echo "*/5 * * * * /usr/bin/shscheduler" > ${TARGETFS}/var/spool/cron/crontabs/root
+
+
+cd ${TARGETFS}
+tar jcf ../fs.tar.bz2 *
+cd ${TARGETFS}/..
+rm -R ${SRCDIR}
+rm -R ${TARGETFS}
 ENDTIME=$(date +%s)
 echo "####################################################################"
 echo "####################################################################"
