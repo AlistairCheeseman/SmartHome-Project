@@ -316,104 +316,6 @@ CSN_RADIO
 Text GLabel 4720 1550 0    60   Input ~ 0
 CE_RADIO
 $Comp
-L CONN_02X04 P1
-U 1 1 56935EF2
-P 7610 1320
-F 0 "P1" H 7610 1570 50  0000 C CNN
-F 1 "CONN_02X04" H 7610 1070 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_2x04" H 7610 120 50  0001 C CNN
-F 3 "" H 7610 120 50  0000 C CNN
-	1    7610 1320
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	7360 1170 7240 1170
-Wire Wire Line
-	7360 1270 7240 1270
-Wire Wire Line
-	7360 1370 7240 1370
-Wire Wire Line
-	7240 1470 7360 1470
-Wire Wire Line
-	7860 1170 8000 1170
-Wire Wire Line
-	7860 1270 8000 1270
-Wire Wire Line
-	7860 1370 8000 1370
-Wire Wire Line
-	7860 1470 8000 1470
-Text GLabel 7240 1170 0    60   Input ~ 0
-IRQ_RADIO
-Text GLabel 7240 1270 0    60   Input ~ 0
-MOSI
-Text GLabel 7240 1370 0    60   Input ~ 0
-CSN_RADIO
-Text GLabel 8000 1170 2    60   Input ~ 0
-MISO
-Text GLabel 8000 1270 2    60   Input ~ 0
-SCK
-Text GLabel 8000 1370 2    60   Input ~ 0
-CE_RADIO
-$Comp
-L GNDD #PWR014
-U 1 1 569364C3
-P 8000 1530
-F 0 "#PWR014" H 8000 1280 50  0001 C CNN
-F 1 "GNDD" H 8000 1380 50  0000 C CNN
-F 2 "" H 8000 1530 60  0000 C CNN
-F 3 "" H 8000 1530 60  0000 C CNN
-	1    8000 1530
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	8000 1470 8000 1530
-$Comp
-L +3V3 #PWR015
-U 1 1 56936787
-P 7080 1620
-F 0 "#PWR015" H 7080 1470 50  0001 C CNN
-F 1 "+3V3" H 7080 1760 50  0000 C CNN
-F 2 "" H 7080 1620 60  0000 C CNN
-F 3 "" H 7080 1620 60  0000 C CNN
-	1    7080 1620
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	7080 1620 7080 1650
-Wire Wire Line
-	7080 1650 7350 1650
-Wire Wire Line
-	7240 1650 7240 1470
-$Comp
-L C C1
-U 1 1 569368DA
-P 7620 1700
-F 0 "C1" H 7645 1800 50  0000 L CNN
-F 1 "C" H 7645 1600 50  0000 L CNN
-F 2 "Capacitors_SMD:C_1210_HandSoldering" H 7658 1550 50  0001 C CNN
-F 3 "" H 7620 1700 50  0000 C CNN
-	1    7620 1700
-	0    1    1    0   
-$EndComp
-Wire Wire Line
-	7850 1520 7890 1480
-Wire Wire Line
-	7890 1480 7890 1470
-Connection ~ 7890 1470
-Wire Wire Line
-	7350 1650 7400 1700
-Wire Wire Line
-	7400 1700 7470 1700
-Connection ~ 7240 1650
-Wire Wire Line
-	7850 1520 7800 1570
-Wire Wire Line
-	7800 1570 7800 1680
-Wire Wire Line
-	7800 1680 7780 1700
-Wire Wire Line
-	7780 1700 7770 1700
-$Comp
 L CONN_01X12 P2
 U 1 1 56937017
 P 7770 2660
@@ -450,8 +352,6 @@ Wire Wire Line
 	6990 2910 6990 3300
 Wire Wire Line
 	7510 2030 7510 2110
-Wire Wire Line
-	7510 2110 7570 2110
 Wire Wire Line
 	7570 3210 7460 3210
 Wire Wire Line
@@ -764,10 +664,6 @@ F 3 "" H 8040 2940 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	7460 3210 7460 3350
-Wire Wire Line
-	7460 3350 8040 3350
-Wire Wire Line
 	8040 3350 8040 3300
 Text GLabel 7460 3210 0    60   Input ~ 0
 DETECT
@@ -784,4 +680,12 @@ F 3 "" H 8040 3150 50  0000 C CNN
 $EndComp
 Wire Wire Line
 	8040 2940 8040 3000
+Wire Wire Line
+	7520 3350 7520 3210
+Connection ~ 7520 3210
+Connection ~ 7520 3350
+Wire Wire Line
+	7520 3350 8040 3350
+Wire Wire Line
+	7510 2110 7570 2110
 $EndSCHEMATC
