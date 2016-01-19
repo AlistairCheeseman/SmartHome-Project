@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="95">
+<configurationDescriptor version="97">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
@@ -35,22 +35,16 @@
   <confs>
     <conf name="Debug" type="1">
       <toolsSet>
-        <compilerSet>GNU_ARM|GNU</compilerSet>
+        <compilerSet>GNU|GNU</compilerSet>
         <dependencyChecking>true</dependencyChecking>
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
-        <cTool>
-          <commandlineTool>/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-gcc</commandlineTool>
-        </cTool>
         <ccTool>
           <commandlineTool>/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++</commandlineTool>
         </ccTool>
-        <asmTool>
-          <commandlineTool>/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-as</commandlineTool>
-        </asmTool>
         <linkerTool>
-          <commandlineTool>/remote/arm/tools/build/bin/arm-unknown-linux-gnueabihf-g++</commandlineTool>
+          <output>shscheduler</output>
           <linkerLibItems>
             <linkerLibLibItem>mosquittopp</linkerLibLibItem>
             <linkerLibLibItem>sqlite3</linkerLibLibItem>
