@@ -414,18 +414,17 @@ cp -Rv $DIR/../www $TARGETFS/apache24/htdocs
 echo "WWW Files Copied"
 
 #build the apps and copy them over
-#PLACEHOLDER!!!!!!!
 cd ${DIR}/../Apps/LogicLayer
-make
-make DESTDIR=${TARGETFS} install
+make CXX=${CXX}
+make CXX=${CXX} DESTDIR=${TARGETFS} install
 
 cd ${DIR}/../Apps/Wireless-NRF
-make
-make DESTDIR=${TARGETFS} install
+make CXX=${CXX}
+make CXX=${CXX} DESTDIR=${TARGETFS} install
 
 cd ${DIR}/../Apps/SHScheduler
-make
-make DESTDIR=${TARGETFS} install
+make CXX=${CXX}
+make CXX=${CXX} DESTDIR=${TARGETFS} install
 
 
 
