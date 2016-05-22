@@ -219,6 +219,8 @@ echo "OpenSSL"
  ##OPENSSL is needed for opennsh and mosquitto
  unset CROSS_COMPILE
  cd $SRCDIR
+ #need to upgrade to new version
+ #ftp://ftp.openssl.org/source/openssl-1.0.2h.tar.gz
 wget http://www.openssl.org/source/openssl-1.0.1i.tar.gz
 tar -xf openssl-1.0.1i.tar.gz
 rm openssl-1.0.1i.tar.gz
