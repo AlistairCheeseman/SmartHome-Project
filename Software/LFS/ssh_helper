@@ -1,0 +1,2 @@
+#!/bin/bash
+ssh -i /home/ali/.ssh/id_rsa $1 $2
