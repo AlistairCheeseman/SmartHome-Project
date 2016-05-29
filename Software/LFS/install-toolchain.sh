@@ -48,38 +48,41 @@ mkdir -p $SYSROOT
 ln -s . $SYSROOT/usr
 
 cd $SRCDIR
-#wget ftp://sourceware.org/pub/binutils/snapshots/binutils-2.24.51.tar.bz2
+
+
+
+
 if [ $USE_MIRROR == 'FALSE' ]; then
 
-wget http://ftp.gnu.org/gnu/binutils/binutils-2.25.tar.bz2
-wget ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-4.9.1/gcc-4.9.1.tar.bz2
-wget http://ftp.gnu.org/gnu/glibc/glibc-2.19.tar.bz2
-wget https://gmplib.org/download/gmp/gmp-6.0.0a.tar.bz2
-wget http://www.mpfr.org/mpfr-current/mpfr-3.1.4.tar.bz2
-wget ftp://ftp.gnu.org/gnu/mpc/mpc-1.0.2.tar.gz
+wget ftp://ftp.gnu.org/gnu/binutils/binutils-2.26.tar.gz
+wget ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-6.1.0/gcc-6.1.0.tar.gz
+wget ftp://ftp.gnu.org/gnu/glibc/glibc-2.23.tar.gz
+wget https://gmplib.org/download/gmp/gmp-6.1.0.tar.bz2
+wget http://www.mpfr.org/mpfr-current/mpfr-3.1.4.tar.gz
+wget ftp://ftp.gnu.org/gnu/mpc/mpc-1.0.3.tar.gz
 wget http://www.mr511.de/software/libelf-0.8.13.tar.gz
 
-wget http://ftp.gnu.org/pub/gnu/ncurses/ncurses-5.9.tar.gz
-wget https://git.fedorahosted.org/cgit/libaio.git/snapshot/libaio-0.3.109.tar.gz
-wget http://c-ares.haxx.se/download/c-ares-1.10.0.tar.gz
-wget http://www.openssl.org/source/openssl-1.0.1i.tar.gz
+wget http://ftp.gnu.org/pub/gnu/ncurses/ncurses-6.0.tar.gz
+wget https://git.fedorahosted.org/cgit/libaio.git/snapshot/libaio-0.3.110-1.tar.gz
+wget http://c-ares.haxx.se/download/c-ares-1.11.0.tar.gz
+wget ftp://ftp.openssl.org/source/openssl-1.0.2h.tar.gz
 wget http://zlib.net/zlib-1.2.8.tar.gz
 
 wget http://arago-project.org/git/projects/?p=am33x-cm3.git\;a=blob_plain\;f=bin/am335x-pm-firmware.bin\;hb=HEAD -O am335x-pm-firmware.bin
 else
 
-wget https://filestore.kmxsoftware.co.uk/binutils-2.25.tar.bz2
-wget https://filestore.kmxsoftware.co.uk/gcc-4.9.1.tar.bz2
-wget https://filestore.kmxsoftware.co.uk/glibc-2.19.tar.bz2
-wget https://filestore.kmxsoftware.co.uk/gmp-6.0.0a.tar.bz2
-wget https://filestore.kmxsoftware.co.uk/mpfr-3.1.3.tar.bz2
-wget https://filestore.kmxsoftware.co.uk/mpc-1.0.2.tar.gz
+wget https://filestore.kmxsoftware.co.uk/binutils-2.26.tar.gz
+wget https://filestore.kmxsoftware.co.uk/gcc-6.1.0.tar.gz
+wget https://filestore.kmxsoftware.co.uk/glibc-2.23.tar.gz
+wget https://filestore.kmxsoftware.co.uk/gmp-6.1.0.tar.bz2
+wget https://filestore.kmxsoftware.co.uk/mpfr-3.1.4.tar.gz
+wget https://filestore.kmxsoftware.co.uk/mpc-1.0.3.tar.gz
 wget https://filestore.kmxsoftware.co.uk/libelf-0.8.13.tar.gz
 
-wget https://filestore.kmxsoftware.co.uk/ncurses-5.9.tar.gz
-wget https://filestore.kmxsoftware.co.uk/libaio-0.3.109.tar.gz
-wget https://filestore.kmxsoftware.co.uk/c-ares-1.10.0.tar.gz
-wget https://filestore.kmxsoftware.co.uk/openssl-1.0.1i.tar.gz
+wget https://filestore.kmxsoftware.co.uk/ncurses-6.0.tar.gz
+wget https://filestore.kmxsoftware.co.uk/libaio-0.3.110-1.tar.gz
+wget https://filestore.kmxsoftware.co.uk/c-ares-1.11.0.tar.gz
+wget https://filestore.kmxsoftware.co.uk/openssl-1.0.2h.tar.gz
 wget https://filestore.kmxsoftware.co.uk/zlib-1.2.8.tar.gz
 
 wget https://filestore.kmxsoftware.co.uk/am335x-pm-firmware.bin -O am335x-pm-firmware.bin
@@ -87,33 +90,33 @@ fi
 
 
 echo "Extracting Files"
-tar -xf binutils-2.25.tar.bz2
-tar -xf gcc-4.9.1.tar.bz2
-tar -xf glibc-2.19.tar.bz2
-tar -xf gmp-6.0.0a.tar.bz2
-tar -xf mpfr-3.1.3.tar.bz2
-tar -xf mpc-1.0.2.tar.gz
+tar -xf binutils-2.26.tar.gz
+tar -xf gcc-6.1.0.tar.gz
+tar -xf glibc-2.23.tar.gz
+tar -xf gmp-6.1.0.tar.bz2
+tar -xf mpfr-3.1.4.tar.gz
+tar -xf mpc-1.0.3.tar.gz
 tar -xf libelf-0.8.13.tar.gz
 
 tar -xf zlib-1.2.8.tar.gz
-tar -xf openssl-1.0.1i.tar.gz
-tar -xf c-ares-1.10.0.tar.gz
-tar -xf libaio-0.3.109.tar.gz
-tar -xf ncurses-5.9.tar.gz
+tar -xf openssl-1.0.2h.tar.gz
+tar -xf c-ares-1.11.0.tar.gz
+tar -xf libaio-0.3.110-1.tar.gz
+tar -xf ncurses-6.0.tar.gz
 
 echo "Cleaning Directory Structure"
-mv -v binutils-2.25 binutils
-mv -v gcc-4.9.1 gcc-src
-mv -v glibc-2.19 glibc
-mv -v gmp-6.0.0 gmp
-mv -v mpfr-3.1.3 mpfr
-mv -v mpc-1.0.2 mpc
+mv -v binutils-2.26 binutils
+mv -v gcc-6.1.0 gcc-src
+mv -v glibc-2.23 glibc
+mv -v gmp-6.1.0 gmp
+mv -v mpfr-3.1.4 mpfr
+mv -v mpc-1.0.3 mpc
 mv -v libelf-0.8.13 libelf
 mv -v zlib-1.2.8 zlib
-mv -v openssl-1.0.1i openssl
-mv -v c-ares-1.10.0 c-ares
-mv -v libaio-0.3.109 libaio
-mv -v ncurses-5.9 ncurses
+mv -v openssl-1.0.2h openssl
+mv -v c-ares-1.11.0 c-ares
+mv -v libaio-0.3.110-1 libaio
+mv -v ncurses-6.0 ncurses
 
 
 mv mpfr gcc-src/mpfr
@@ -122,19 +125,19 @@ mv mpc gcc-src/mpc
 mv libelf gcc-src/libelf
 
 
-rm binutils-2.25.tar.bz2
-rm gcc-4.9.1.tar.bz2
-rm glibc-2.19.tar.bz2
-rm gmp-6.0.0a.tar.bz2
-rm mpfr-3.1.3.tar.bz2
-rm mpc-1.0.2.tar.gz
+rm binutils-2.26.tar.gz
+rm gcc-6.1.0.tar.gz
+rm glibc-2.23.tar.gz
+rm gmp-6.1.0.tar.bz2
+rm mpfr-3.1.4.tar.gz
+rm mpc-1.0.3.tar.gz
 rm libelf-0.8.13.tar.gz
 
 rm zlib-1.2.8.tar.gz
-rm openssl-1.0.1i.tar.gz
-rm ncurses-5.9.tar.gz
-rm c-ares-1.10.0.tar.gz
-rm libaio-0.3.109.tar.gz
+rm openssl-1.0.2h.tar.gz
+rm ncurses-6.0.tar.gz
+rm c-ares-1.11.0.tar.gz
+rm libaio-0.3.110-1.tar.gz
 
 echo "Getting LINUX Kernel from GIT"
 git config --global user.email “ali@kmxsoftware.co.uk”
