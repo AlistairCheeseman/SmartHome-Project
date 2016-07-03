@@ -11,7 +11,7 @@
 
 SensorNet::SensorNet() {
     timing = new Timing();
-    radio = new Radio((char*) "/dev/spidev1.0", 115, 117, false);
+    radio = new Radio((char*) "/dev/spidev1.0", 69, 66, false);
     pipes[0] = 0xF0F0F0F001LL; // the default writing pipe, this will get set to the node needed by the dest addr.
     pipes[1] = 0xF0F0F0F000LL;
     pipes[2] = 0xF0F0F0F002LL;
