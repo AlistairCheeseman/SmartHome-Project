@@ -5,6 +5,7 @@ STARTTIME=$(date +%s)
 export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ./buildscript.sh
 
+
 rm -Rf $TARGETFS
 rm -Rf $SRCDIR
 mkdir -pv $TARGETFS
@@ -12,7 +13,7 @@ cd $TARGETFS
 
 ln -svf usr/bin  $TARGETFS/bin
 ln -svf usr/sbin $TARGETFS/sbin
-ln -svr usr/lib  $TARGETFS/lib
+ln -svf usr/lib  $TARGETFS/lib
 
 
 #mkdir -pv  $TARGETFS/usr/{,local/}{bin,include,lib,sbin,share,src}
@@ -66,6 +67,57 @@ cd $SRCDIR
 wget ftp://ftp.denx.de/pub/u-boot/u-boot-2014.07.tar.bz2
 tar -xf u-boot-2014.07.tar.bz2
 rm u-boot-2014.07.tar.bz2
+
+wget --no-check-certificate http://busybox.net/downloads/busybox-1.22.1.tar.bz2
+tar -xf busybox-1.22.1.tar.bz2
+rm busybox-1.22.1.tar.bz2
+
+wget http://sethwklein.net/iana-etc-2.30.tar.bz2
+tar -xf iana-etc-2.30.tar.bz2
+rm iana-etc-2.30.tar.bz2
+wget http://www.mirrorservice.org/pub/OpenBSD/OpenSSH/portable/openssh-6.7p1.tar.gz
+tar -xf openssh-6.7p1.tar.gz
+rm openssh-6.7p1.tar.gz
+
+wget http://uk1.php.net/get/php-5.6.5.tar.gz/from/this/mirror
+mv mirror php-5.6.5.tar.gz
+tar -xf php-5.6.5.tar.gz
+rm php-5.6.5.tar.gz
+
+wget http://www.sqlite.org/2015/sqlite-autoconf-3080801.tar.gz
+tar -xf sqlite-autoconf-3080801.tar.gz
+rm sqlite-autoconf-3080801.tar.gz
+
+
+wget ftp://xmlsoft.org/libxml2/libxml2-2.9.2.tar.gz
+tar -xf libxml2-2.9.2.tar.gz
+rm libxml2-2.9.2.tar.gz
+
+wget http://mirror.catn.com/pub/apache/httpd/httpd-2.4.18.tar.gz
+tar -xf httpd-2.4.18.tar.gz
+rm httpd-2.4.18.tar.gz
+
+wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.38.tar.gz
+tar -xf pcre-8.38.tar.gz
+rm pcre-8.38.tar.gz
+
+wget http://mirror.catn.com/pub/apache/apr/apr-util-1.5.4.tar.gz
+tar -xf apr-util-1.5.4.tar.gz
+rm apr-util-1.5.4.tar.gz
+
+wget http://mirror.catn.com/pub/apache/apr/apr-1.5.2.tar.bz2
+tar -xf apr-1.5.2.tar.bz2
+rm apr-1.5.2.tar.bz2
+
+wget http://rsync.samba.org/ftp/rsync/src/rsync-3.1.1.tar.gz
+tar -xf rsync-3.1.1.tar.gz
+rm rsync-3.1.1.tar.gz
+
+wget -4 http://mosquitto.org/files/source/mosquitto-1.3.5.tar.gz
+tar -xf mosquitto-1.3.5.tar.gz
+rm mosquitto-1.3.5.tar.gz
+
+
 cd u-boot-2014.07
 #note CROSS_COMPILE and ARCH must be set for this to work on the target system.
 make am335x_evm_config
@@ -130,11 +182,7 @@ cp ${DIR}/resources/uEnv.txt.local ${TARGETFS}/boot/
 cp ${TARGETFS}/boot/uEnv.txt.nfs ${TARGETFS}/boot/uEnv.txt
 
 
-cd $SRCDIR
-wget http://busybox.net/downloads/busybox-1.22.1.tar.bz2
-tar -xf busybox-1.22.1.tar.bz2
-rm busybox-1.22.1.tar.bz2
-cd busybox-1.22.1
+cd $SRCDIR/busybox-1.22.1
 make defconfig
 sleep 1
 sed -i -e 's|CONFIG_FEATURE_INETD_RPC=y|# CONFIG_FEATURE_INETD_RPC is not set|g' .config
@@ -148,11 +196,7 @@ chmod +x ${TARGETFS}/bin/busybox
 cp examples/depmod.pl ${BUILDTOOLSYSDIR}/bin/depmod.pl
 chmod 755 ${BUILDTOOLSYSDIR}/bin/depmod.pl
 
-cd ${SRCDIR}
-wget http://sethwklein.net/iana-etc-2.30.tar.bz2
-tar -xf iana-etc-2.30.tar.bz2
-rm iana-etc-2.30.tar.bz2
-cd iana-etc-2.30
+cd ${SRCDIR}/iana-etc-2.30
 make get
 make STRIP=yes
 make DESTDIR=$TARGETFS install
@@ -226,21 +270,13 @@ ln -sfv ../init.d/apache24 S50apache24
 ln -sfv ../init.d/wirelessBridge S60wirelessBridge
 ln -sfv ../init.d/logiclayer S55logiclayer
 
-cd $SRCDIR
-wget http://www.mirrorservice.org/pub/OpenBSD/OpenSSH/portable/openssh-6.7p1.tar.gz
-tar -xf openssh-6.7p1.tar.gz
-rm openssh-6.7p1.tar.gz
-cd openssh-6.7p1
+cd $SRCDIR/openssh-6.7p1
 sed -i -e 's|#PermitEmptyPasswords no|PermitEmptyPasswords yes|g' sshd_config
 ./configure --host=$TARGET --with-libs --with-zlib=${BUILDTOOLSYSDIR}/sysroot --prefix=/ --with-ssl-dir=${BUILDTOOLSYSDIR}/sysroot LD=$TARGET-gcc AR=$TARGET-ar  --sysconfdir=/etc/ssh 
 LD=$TARGET-gcc AR=$TARGET-ar make
 make install-nokeys LD=$TARGET-gcc AR=$TARGET-ar DESTDIR=${TARGETFS} STRIP_OPT="-s --strip-program=arm-unknown-linux-gnueabihf-strip"
 
-cd $SRCDIR
-wget -4 http://mosquitto.org/files/source/mosquitto-1.3.5.tar.gz
-tar -xf mosquitto-1.3.5.tar.gz
-rm mosquitto-1.3.5.tar.gz
-cd mosquitto-1.3.5
+cd $SRCDIR/mosquitto-1.3.5
 ##maybe change prefix install dir as installs in /usr/local/ this is at the bottom of the config.mk
 make
 make install prefix='' DESTDIR=$TARGETFS
@@ -258,21 +294,13 @@ cp broker_mqtts ${TARGETFS}/bin/broker_mqtts
 cp ${DIR}/resources/broker.cfg ${TARGETFS}/usr/bin/broker.cfg
 cp Messages.1.3.0.2 ${TARGETFS}/usr/bin/Messages.1.3.0.2
 
-cd $SRCDIR
-wget http://rsync.samba.org/ftp/rsync/src/rsync-3.1.1.tar.gz
-tar -xf rsync-3.1.1.tar.gz
-rm rsync-3.1.1.tar.gz
-cd rsync-3.1.1
+cd $SRCDIR/rsync-3.1.1
 ./configure --host=$TARGET --prefix=/
 make
 make install prefix=/ DESTDIR=$TARGETFS
 
 #APR
-cd $SRCDIR
-wget http://mirror.catn.com/pub/apache/apr/apr-1.5.2.tar.bz2
-tar -xf apr-1.5.2.tar.bz2
-rm apr-1.5.2.tar.bz2
-cd apr-1.5.2
+cd $SRCDIR/apr-1.5.2
 #may have to be installed in src dir.
 #have not tested apr_cv_tcp_nodelay_with_cork
 ./configure --host=$TARGET --prefix=$SRCDIR/apache/apr-build ac_cv_file__dev_zero=yes ac_cv_func_setpgrp_void=yes apr_cv_tcp_nodelay_with_cork=no ac_cv_sizeof_struct_iovec=1
@@ -290,31 +318,19 @@ make
 make install
 cp -v $SRCDIR/apache/apr-build/lib/*.so* $TARGETFS/lib/
 
-cd ${SRCDIR}
-wget http://mirror.catn.com/pub/apache/apr/apr-util-1.5.4.tar.gz
-tar -xf apr-util-1.5.4.tar.gz
-rm apr-util-1.5.4.tar.gz
-cd apr-util-1.5.4
+cd ${SRCDIR}/apr-util-1.5.4
 ./configure --host=${TARGET} --prefix=${SRCDIR}/apache/apr-util-build --with-apr=${SRCDIR}/apache/apr-build
 make
 make install
 cp -v ${SRCDIR}/apache/apr-util-build/lib/*.so* $TARGETFS/lib/
 
-cd ${SRCDIR}
-wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.38.tar.gz
-tar -xf pcre-8.38.tar.gz
-rm pcre-8.38.tar.gz
-cd pcre-8.38
+cd ${SRCDIR}/pcre-8.38
 ./configure --host=${TARGET} --prefix=${SRCDIR}/apache/pcre-build
 make
 make install
 cp -v ${SRCDIR}/apache/pcre-build/lib/*.so* $TARGETFS/lib/
 
-cd ${SRCDIR}
-wget http://mirror.catn.com/pub/apache/httpd/httpd-2.4.18.tar.gz
-tar -xf httpd-2.4.18.tar.gz
-rm httpd-2.4.18.tar.gz
-cd httpd-2.4.18
+cd ${SRCDIR}/httpd-2.4.18
 #set the default user
 sed -i -e 's/User daemon/User httpd/g' ${SRCDIR}/httpd-2.4.18/docs/conf/httpd.conf.in
 sed -i -e 's/Group daemon/Group httpd/g' docs/conf/httpd.conf.in
@@ -333,33 +349,20 @@ make DESTDIR=${TARGETFS} install
 cp -vP /${BUILDTOOLSYSDIR}/sysroot/lib/*.so* ${TARGETFS}/lib/
 cp -vP /${BUILDTOOLSYSDIR}/arm-unknown-linux-gnueabihf/lib/*.so* ${TARGETFS}/lib/
 
-cd $SRCDIR
-wget ftp://xmlsoft.org/libxml2/libxml2-2.9.2.tar.gz
-tar -xf libxml2-2.9.2.tar.gz
-rm libxml2-2.9.2.tar.gz
-cd libxml2-2.9.2
+cd $SRCDIR/libxml2-2.9.2
 ./configure --host=$TARGET --without-python --prefix='' --without-lzma --with-zlib=${BUILDTOOLSYSDIR}/sysroot
 make
 make  DESTDIR=${BUILDTOOLSYSDIR}/sysroot install
 make  DESTDIR=${TARGETFS} install
 
 #need to install sqlite
-cd $SRCDIR
-wget http://www.sqlite.org/2015/sqlite-autoconf-3080801.tar.gz
-tar -xf sqlite-autoconf-3080801.tar.gz
-rm sqlite-autoconf-3080801.tar.gz
-cd sqlite-autoconf-3080801
+cd $SRCDIR/sqlite-autoconf-3080801
 ./configure --host=$TARGET --prefix=''
 make
 make DESTDIR=${BUILDTOOLSYSDIR}/sysroot install
 make  DESTDIR=${TARGETFS} install
 
-cd $SRCDIR
-wget http://uk1.php.net/get/php-5.6.5.tar.gz/from/this/mirror
-mv mirror php-5.6.5.tar.gz
-tar -xf php-5.6.5.tar.gz
-rm php-5.6.5.tar.gz
-cd php-5.6.5
+cd $SRCDIR/php-5.6.5
 #need to test
 sed -i -e 's|my $installbuilddir = "/apache24/build";|my $installbuilddir = "'"${TARGETFS}"'/apache24/build";|g' ${TARGETFS}/apache24/bin/apxs
 sed -i -e 's|includedir = ${prefix}/include|includedir = '"${TARGETFS}"'/apache24/include|g' ${TARGETFS}/apache24/build/config_vars.mk
@@ -434,6 +437,7 @@ echo "*/5 * * * * /usr/bin/shscheduler" > ${TARGETFS}/var/spool/cron/crontabs/ro
 
 
 cd ${TARGETFS}
+echo "packaging generated Filesystem"
 tar jcf ../fs.tar.bz2 *
 cd ${TARGETFS}/..
 rm -R ${SRCDIR}
