@@ -317,7 +317,7 @@ function populateMDevMapSelectLists() {
         $.each(json, function (key, value) {
             $selectdev.append("<option value='" + value['Id'] + "/" + value['controlId'] + "'>" + value['Id'] + "/" + value['controlId'] + " (" + value['DeviceType'] + "/" + value['control'] + ")</option>");
         });
-        var $change = $selectdev.on('change', showOnChangeSensorData());
+        var $change = $selectdev.on('change', showOnChangeSensorData);
 
     });
     showOnChangeSensorData();
