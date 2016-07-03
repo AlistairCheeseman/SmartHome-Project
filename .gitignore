@@ -35,7 +35,7 @@
 /Software/www/nbproject/private/
 /Software/Apps/*/build/
 /Software/Apps/*/dist/
-/Software/Apps/*/nbproject/private/
+/Software/Apps/*/nbproject/
 /Firmware/*/Debug/
 /Firmware/*/Release/
 *.atsuo
