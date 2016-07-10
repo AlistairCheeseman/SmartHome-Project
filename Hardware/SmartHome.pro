@@ -1,4 +1,4 @@
-update=02/07/2016 22:12:46
+update=04/07/2016 10:38:47
 version=1
 last_client=kicad
 [pcbnew]
@@ -59,3 +59,4 @@ LibName27=atmel
 LibName28=contrib
 LibName29=valves
 LibName30=CustomLibs/jack_3pole
+LibName31=CustomLibs/ld33v
