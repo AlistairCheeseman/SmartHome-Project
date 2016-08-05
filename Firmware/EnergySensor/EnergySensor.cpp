@@ -11,6 +11,9 @@
 #include <string.h>
 
 
+
+#define ADC_FACTOR 0.00322265625 // 3.3/1024
+
 #include "EnergySensorRevA.h"
 #define BAUD 9600
 #include <util/setbaud.h>
@@ -109,7 +112,7 @@ int main(void)
 }
 void calcPwr(double &power, double &pf)
 {
-	unsigned int timeout = 2000;
+	unsigned int timeout = 20000;
 	//how many zero crossings to measure
 	unsigned int crossingCount = 20;
 	//initial offset for filter at 1024/2
@@ -119,7 +122,7 @@ void calcPwr(double &power, double &pf)
 	unsigned int currentCrossCount = 0;
 	
 	//the number of samples taken.
-	unsigned int numberOfSamples = 0;
+	unsigned long numberOfSamples = 0;
 	
 	
 	bool lastVCross;
@@ -173,23 +176,27 @@ void calcPwr(double &power, double &pf)
 		if (numberOfSamples==1) lastVCross = checkVCross;
 		if (lastVCross != checkVCross) currentCrossCount++;
 	}
+	printf("Number of samples: %lu\n", numberOfSamples);
+	printf("Number of crosses: %i\n", currentCrossCount);
 	//scale the voltage to the voltage at the pin then multiply it by a calibration factor, this was worked out with use of an oscilloscope to ensure it is accurate representation of measurement.
-	int Tout  = (sqrt(summedV / numberOfSamples))  * (3.30/1024) * 248.528; //was 230.412
+	int Tout  = (sqrt(summedV / numberOfSamples))  * ADC_FACTOR * 199.6; 
 	
-	double rmsARaw =(sqrt(summedA / numberOfSamples)-2.9);
+	double rmsARaw =sqrt(summedA / numberOfSamples); //-2.9
 
 	if (rmsARaw < 0)
 	rmsARaw =0;
 	//same as with the voltage, this is a calibration factor that is worked out with use of an oscilloscope.
-	double AAvg = (rmsARaw * (3.30/1024.0)) * 90.9  ;
-	power =AAvg * Tout;
-	int raw = AAvg;
+	double AAvg = (rmsARaw * ADC_FACTOR) * 90.9  ;
 
-
-	printf("Current (RMS)         : %d\n", raw);
+	//assign final variables to output.
 	power = AAvg * Tout;
-	//	printf("Voltage (RMS)         : %dV\n", Tout);
 	pf = 1;
+
+	int intAAvg = AAvg * 10.0;
+	int intpower = power * 10.0;
+	printf("Current (RMS)         : %dA\n", intAAvg);
+	printf("Voltage (RMS)         : %dV\n", Tout);
+	printf("Power (RMS)			  : %dW\n", intpower);
 }
 void setup(void)
 {
@@ -211,21 +218,17 @@ void adc_init()
 	/*AREF = (ARef Pin Voltage)*/
 	ADMUX &=~(1<<REFS0);
 	ADMUX &=~(1<<REFS1);
+	//ADMUX=0b11XXXXXX
 	
 	/*right adjust result */
 	ADMUX &= ~(1<<ADLAR);
 
 
-	/* Set Prescaler for ADC Speed */
-	//111 = CLK / 128
-	//ADCSRA |=(1<<ADPS2);
-	//ADCSRA |=(1<<ADPS1);
-	//ADCSRA |=(1<<ADPS0);
-	//128 is too slow.
-	//set to /2 max speed
-	ADCSRA &=~(1<<ADPS2);
-	ADCSRA &=~(1<<ADPS1);
-	ADCSRA |=(1<<ADPS0);
+	/* Set Prescaler for ADC Speed (ADC MAX FOR GOOD QUALITY = 200KHz*/
+	// 10M clock /64 =156.250KHz 110
+	ADCSRA |=(1<<ADPS2);  //set to 1
+	ADCSRA |=(1<<ADPS1); //set to 1
+	ADCSRA &=~(1<<ADPS0);  //set to 0
 	
 	
 	ADCSRA |= (1<<ADEN); //Enable the ADC now it has been configured
