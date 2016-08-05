@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
 
     mosqpp::lib_init();
     SQL* sql = new SQL("/var/db/smarthome");
-    MQTT* mqtt = new MQTT("Scheduler", "192.168.3.50", 1883);
+    MQTT* mqtt = new MQTT("Scheduler", "127.0.0.1", 1883);
 
     if (argv[1] != NULL)
     {
