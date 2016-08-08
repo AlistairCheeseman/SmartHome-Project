@@ -93,6 +93,7 @@ int main(int argc, char** argv) {
     // create the MQTT class to handle everything.
     mqttstor = new mqtt("logiclayer", mqttserver, port, database);
     while (keep_running) {
+        fflush(stdout);
        rc = mqttstor->loop();
         if (rc) {
             mqttstor->reconnect();
