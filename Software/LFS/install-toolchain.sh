@@ -320,6 +320,7 @@ make install prefix=$SYSROOT 2>&1 | tee -a make.out
 echo "ncurses"
 echo -e '\033]2;ncurses\007'
 cd $SRCDIR/ncurses
-./configure --prefix=/ --host=$TARGET  2>&1 | tee configure.out
+./configure --prefix=/ --with-shared --host=$TARGET  2>&1 | tee configure.out
 make  2>&1 | tee make.out
 make install DESTDIR=$SYSROOT  2>&1 | tee -a make.out
+
