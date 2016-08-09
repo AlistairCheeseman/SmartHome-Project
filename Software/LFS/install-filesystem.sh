@@ -6,6 +6,10 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ./buildscript.sh
 
 
+export USE_MIRROR=TRUE #whether to use filestore internal server
+export NETBOOT=TRUE #whether to use TFP & NFS.
+
+
 rm -Rf $TARGETFS
 rm -Rf $SRCDIR
 mkdir -pv $TARGETFS
@@ -64,57 +68,65 @@ chmod -v 664 ${TARGETFS}/var/run/utmp ${TARGETFS}/var/log/lastlog
 mkdir -pv $SRCDIR
 cd $SRCDIR
 
+if [ $USE_MIRROR == 'TRUE' ]; then
+
+
+wget --no-check-certificate https://filestore.kmxsoftware.co.uk/u-boot-2014.07.tar.bz2
+wget --no-check-certificate https://filestore.kmxsoftware.co.uk/busybox-1.22.1.tar.bz2
+wget --no-check-certificate https://filestore.kmxsoftware.co.uk/iana-etc-2.30.tar.bz2
+wget --no-check-certificate https://filestore.kmxsoftware.co.uk/openssh-6.7p1.tar.gz
+wget --no-check-certificate https://filestore.kmxsoftware.co.uk/php-5.6.5.tar.gz
+wget --no-check-certificate https://filestore.kmxsoftware.co.uk/sqlite-autoconf-3080801.tar.gz
+wget --no-check-certificate https://filestore.kmxsoftware.co.uk/libxml2-2.9.2.tar.gz
+wget --no-check-certificate https://filestore.kmxsoftware.co.uk/httpd-2.4.18.tar.gz
+wget --no-check-certificate https://filestore.kmxsoftware.co.uk/pcre-8.38.tar.gz
+wget --no-check-certificate https://filestore.kmxsoftware.co.uk/apr-util-1.5.4.tar.gz
+wget --no-check-certificate https://filestore.kmxsoftware.co.uk/apr-1.5.2.tar.bz2
+wget --no-check-certificate https://filestore.kmxsoftware.co.uk/rsync-3.1.1.tar.gz
+wget --no-check-certificate https://filestore.kmxsoftware.co.uk/mosquitto-1.3.5.tar.gz
+else
 wget ftp://ftp.denx.de/pub/u-boot/u-boot-2014.07.tar.bz2
-tar -xf u-boot-2014.07.tar.bz2
-rm u-boot-2014.07.tar.bz2
-
 wget --no-check-certificate http://busybox.net/downloads/busybox-1.22.1.tar.bz2
-tar -xf busybox-1.22.1.tar.bz2
-rm busybox-1.22.1.tar.bz2
-
 wget http://sethwklein.net/iana-etc-2.30.tar.bz2
-tar -xf iana-etc-2.30.tar.bz2
-rm iana-etc-2.30.tar.bz2
 wget http://www.mirrorservice.org/pub/OpenBSD/OpenSSH/portable/openssh-6.7p1.tar.gz
-tar -xf openssh-6.7p1.tar.gz
-rm openssh-6.7p1.tar.gz
-
 wget http://uk1.php.net/get/php-5.6.5.tar.gz/from/this/mirror
 mv mirror php-5.6.5.tar.gz
-tar -xf php-5.6.5.tar.gz
-rm php-5.6.5.tar.gz
-
 wget http://www.sqlite.org/2015/sqlite-autoconf-3080801.tar.gz
-tar -xf sqlite-autoconf-3080801.tar.gz
-rm sqlite-autoconf-3080801.tar.gz
-
-
 wget ftp://xmlsoft.org/libxml2/libxml2-2.9.2.tar.gz
-tar -xf libxml2-2.9.2.tar.gz
-rm libxml2-2.9.2.tar.gz
-
 wget http://mirror.catn.com/pub/apache/httpd/httpd-2.4.18.tar.gz
-tar -xf httpd-2.4.18.tar.gz
-rm httpd-2.4.18.tar.gz
-
 wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.38.tar.gz
-tar -xf pcre-8.38.tar.gz
-rm pcre-8.38.tar.gz
-
 wget http://mirror.catn.com/pub/apache/apr/apr-util-1.5.4.tar.gz
-tar -xf apr-util-1.5.4.tar.gz
-rm apr-util-1.5.4.tar.gz
-
 wget http://mirror.catn.com/pub/apache/apr/apr-1.5.2.tar.bz2
-tar -xf apr-1.5.2.tar.bz2
-rm apr-1.5.2.tar.bz2
-
 wget http://rsync.samba.org/ftp/rsync/src/rsync-3.1.1.tar.gz
-tar -xf rsync-3.1.1.tar.gz
-rm rsync-3.1.1.tar.gz
-
 wget -4 http://mosquitto.org/files/source/mosquitto-1.3.5.tar.gz
+fi
+
+tar -xf u-boot-2014.07.tar.bz2
+tar -xf busybox-1.22.1.tar.bz2
+tar -xf iana-etc-2.30.tar.bz2
+tar -xf openssh-6.7p1.tar.gz
+tar -xf php-5.6.5.tar.gz
+tar -xf sqlite-autoconf-3080801.tar.gz
+tar -xf libxml2-2.9.2.tar.gz
+tar -xf httpd-2.4.18.tar.gz
+tar -xf pcre-8.38.tar.gz
+tar -xf apr-util-1.5.4.tar.gz
+tar -xf apr-1.5.2.tar.bz2
+tar -xf rsync-3.1.1.tar.gz
 tar -xf mosquitto-1.3.5.tar.gz
+
+rm u-boot-2014.07.tar.bz2
+rm busybox-1.22.1.tar.bz2
+rm iana-etc-2.30.tar.bz2
+rm openssh-6.7p1.tar.gz
+rm php-5.6.5.tar.gz
+rm sqlite-autoconf-3080801.tar.gz
+rm libxml2-2.9.2.tar.gz
+rm httpd-2.4.18.tar.gz
+rm pcre-8.38.tar.gz
+rm apr-util-1.5.4.tar.gz
+rm apr-1.5.2.tar.bz2
+rm rsync-3.1.1.tar.gz
 rm mosquitto-1.3.5.tar.gz
 
 
@@ -179,8 +191,11 @@ cp spitest ${TARGETFS}/bin/
 
 cp ${DIR}/resources/uEnv.txt.nfs ${TARGETFS}/boot/
 cp ${DIR}/resources/uEnv.txt.local ${TARGETFS}/boot/
-cp ${TARGETFS}/boot/uEnv.txt.nfs ${TARGETFS}/boot/uEnv.txt
-
+if [ $NETBOOT == 'TRUE' ]; then
+  cp ${TARGETFS}/boot/uEnv.txt.nfs ${TARGETFS}/boot/uEnv.txt
+else
+  cp ${TARGETFS}/boot/uEnv.txt.local ${TARGETFS}/boot/uEnv.txt
+fi
 
 cd $SRCDIR/busybox-1.22.1
 make defconfig
@@ -203,8 +218,11 @@ make DESTDIR=$TARGETFS install
 
 cp ${DIR}/resources/fstab.nfs ${TARGETFS}/etc/fstab.nfs
 cp ${DIR}/resources/fstab.local ${TARGETFS}/etc/fstab.local
-cp ${TARGETFS}/etc/fstab.nfs ${TARGETFS}/etc/fstab
-
+if [ $NETBOOT == 'TRUE' ]; then
+  cp ${TARGETFS}/etc/fstab.nfs ${TARGETFS}/etc/fstab
+else
+  cp ${TARGETFS}/etc/fstab.local ${TARGETFS}/etc/fstab
+fi
 cp ${DIR}/resources/mdev.conf ${TARGETFS}/etc/mdev.conf
 cp ${DIR}/resources/profile ${TARGETFS}/etc/profile
 cp ${DIR}/resources/inittab ${TARGETFS}/etc/inittab
@@ -215,8 +233,11 @@ cp ${DIR}/resources/rc.shutdown ${TARGETFS}/etc/rc.shutdown
 
 cp ${DIR}/resources/rc.sysinit.nfs ${TARGETFS}/etc/
 cp ${DIR}/resources/rc.sysinit.local ${TARGETFS}/etc/
-cp ${TARGETFS}/etc/rc.sysinit.nfs ${TARGETFS}/etc/rc.sysinit
-
+if [ $NETBOOT == 'TRUE' ]; then
+ cp ${TARGETFS}/etc/rc.sysinit.nfs ${TARGETFS}/etc/rc.sysinit
+else
+  cp ${TARGETFS}/etc/rc.sysinit.local ${TARGETFS}/etc/rc.sysinit
+fi
 
 
 
@@ -448,7 +469,7 @@ echo "####################################################################"
 echo "#                                                                  #"
 echo "#                                                                  #"
 echo "#                           COMPLETED SUCESSFULLY                  #"
-echo "#                      INSTALLED TO ${TARGETFS}             #"
+echo "#                      INSTALLED TO ${TARGETFS}            #"
 echo "#                                took $((($ENDTIME - $STARTTIME)/60)) mins             #"
 echo "#                                                                  #"
 echo "#                                                                  #"
