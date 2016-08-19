@@ -165,4 +165,8 @@ INNER JOIN auto_state ast ON ast.Id = ato.stateId";
     $statement->execute();
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode($results);
+}elseif ($DBView == "Logfile") {
+    $out = array();
+    exec('cat /var/log/smarthome.log', $out);
+    echo json_encode($out);  
 }
