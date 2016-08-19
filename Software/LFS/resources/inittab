@@ -59,7 +59,7 @@
 # Start an "askfirst" shell on the console (whatever that may be)
 ::askfirst:-/bin/login
 # Start an "askfirst" shell on /dev/tty2-4
-ttyS0::askfirst:-/bin/sh
+#ttyS0::askfirst:-/bin/sh
 #tty3::askfirst:-/bin/sh
 #tty4::askfirst:-/bin/sh
 
