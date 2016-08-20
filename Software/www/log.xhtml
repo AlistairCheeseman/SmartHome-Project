@@ -11,6 +11,7 @@
             $(document).ready(function ()
             {
                 $.ajaxSetup({cache: false}); // turn off ajax CACHING
+                showLog();
             });
            
 
@@ -46,15 +47,22 @@
             </div>
         </nav>
        
+        
+        
         <div class="container">
-             <h1>Logs</h1>
-            <h2>LogicLayerLog:</h2>
-            
+            <h1>Logs</h1>
+            <h2>LogicLayer Log:</h2>
+            <div id="LLdatatablediv" />
             <hr />
-                <h2>Wireless-NRF Log:</h2>
-                
-
-        </div>
+            <h2>Wireless-NRF Log:</h2>  
+            <div id="NRFdatatablediv" />
+            <hr />
+            <h2>Scheduler Log:</h2>  
+            <div id="Scheddatatablediv" />
+        </div> 
+        
+        
+        
         <div id="footer">
             <div class="container">
                 <p class="muted credit">Cand No: 79087 - Smart Home for 3rd Year MEng Electronic Engineering Project - University Of Sussex Engineering 2015.</p>

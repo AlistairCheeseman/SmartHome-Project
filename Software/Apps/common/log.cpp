@@ -5,7 +5,7 @@ void log::_log(log_level_t level, const char *format, ...)
 {
     va_list arg;
     
-    FILE * fp = fopen ("/var/log/smarthome.log", "a"); // append to end or create.
+    FILE * fp = fopen ("/var/log/logiclayer.log", "a"); // append to end or create.
         
     FILE *console = (level == LOG_ERROR) ? err_log : info_log;
     

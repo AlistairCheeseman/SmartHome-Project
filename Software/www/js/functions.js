@@ -964,3 +964,33 @@ function getRuleInfo() {
     });
 
 }
+
+function showLog() {
+    $.getJSON("/get_data.php?view=Logfile&file=LL", function (json)
+    {
+        var div = document.getElementById("LLdatatablediv");
+        $.each(json, function (key, value) {
+            var text = div.innerText; 
+            text = text + "\n";
+            div.innerText = text + value;
+        });
+    });
+    $.getJSON("/get_data.php?view=Logfile&file=NRF", function (json)
+    {
+        var div = document.getElementById("NRFdatatablediv");
+        $.each(json, function (key, value) {
+            var text = div.innerText; 
+            text = text + "\n";
+            div.innerText = text + value;
+        });
+    });
+    $.getJSON("/get_data.php?view=Logfile&file=Sched", function (json)
+    {
+        var div = document.getElementById("Scheddatatablediv");
+        $.each(json, function (key, value) {
+            var text = div.innerText; 
+            text = text + "\n";
+            div.innerText = text + value;
+        });
+    });
+}

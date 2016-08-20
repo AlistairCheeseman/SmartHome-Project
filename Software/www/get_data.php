@@ -166,7 +166,17 @@ INNER JOIN auto_state ast ON ast.Id = ato.stateId";
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode($results);
 }elseif ($DBView == "Logfile") {
+    $file = $_GET['file'];
     $out = array();
-    exec('cat /var/log/smarthome.log', $out);
+    if ($file == "LL")
+    {
+        exec('cat /var/log/logiclayer.log', $out);
+    } else if ($file == "NRF")
+    {
+        exec('cat /var/log/wireless-nrf.log', $out);
+    } else if ($file == "Sched")
+    {
+        exec('cat /var/log/scheduler.log', $out);
+    }
     echo json_encode($out);  
 }
