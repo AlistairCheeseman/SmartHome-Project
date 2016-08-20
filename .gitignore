@@ -33,9 +33,13 @@
 *.eps
 
 /Software/www/nbproject/private/
+/Software/www/nbproject
 /Software/Apps/*/build/
 /Software/Apps/*/dist/
 /Software/Apps/*/nbproject/
 /Firmware/*/Debug/
 /Firmware/*/Release/
 *.atsuo
+/Software/**/*.o
+Software/Apps/LogicLayer/logiclayer
+
