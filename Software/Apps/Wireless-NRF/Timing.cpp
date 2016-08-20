@@ -11,6 +11,9 @@
 
 Timing::Timing() {
     this->__start_timer();
+    this->mtime = 0;
+    this->seconds = 0;
+    this->useconds = 0;
 }
 
 Timing::~Timing() {

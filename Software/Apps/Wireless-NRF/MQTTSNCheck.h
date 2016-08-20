@@ -9,6 +9,7 @@
 #ifndef MQTTSN_H
 #define	MQTTSN_H
 #include <stdint.h>
+#include <string.h>
     namespace MQTTSNCheck
     {
         bool verifyPacket(void *(&payload), uint8_t &len);

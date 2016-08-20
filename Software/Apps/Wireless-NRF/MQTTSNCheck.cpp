@@ -57,85 +57,85 @@ bool MQTTSNCheck::verifyPacket(void *(&payload), uint8_t &length) {
 
     switch (buf[1]) {
         case 0x00:
-            topic = "ADVERTISE\n";
+        	strcpy(topic, "ADVERTISE\n");
             break;
         case 0x01:
-            topic = "SEARCHGW\n";
+        	strcpy(topic, "SEARCHGW\n");
             break;
         case 0x02:
-            topic = "GWINFO\n";
+        	strcpy(topic, "GWINFO\n");
             break;
         case 0x04:
-            topic = "CONNECT\n";
+        	strcpy(topic, "CONNECT\n");
             break;
         case 0x05:
-            topic = "CONNACK\n";
+        	strcpy(topic, "CONNACK\n");
             break;
         case 0x06:
-            topic = "WILLTOPICREQ\n";
+        	strcpy(topic, "WILLTOPICREQ\n");
             break;
         case 0x07:
-            topic = "WILLTOPIC\n";
+        	strcpy(topic, "WILLTOPIC\n");
             break;
         case 0x08:
-            topic = "WILLMSGREQ\n";
+        	strcpy(topic, "WILLMSGREQ\n");
             break;
         case 0x09:
-            topic = "WILLMSG\n";
+        	strcpy(topic, "WILLMSG\n");
             break;
         case 0x0A:
-            topic = "REGISTER\n";
+        	strcpy(topic, "REGISTER\n");
             break;
         case 0x0B:
-            topic = "REGACK\n";
+        	strcpy(topic, "REGACK\n");
             break;
         case 0x0C:
-            topic = "PUBLISH\n";
+        	strcpy(topic, "PUBLISH\n");
             break;
         case 0x0D:
-            topic = "PUBACK\n";
+        	strcpy(topic, "PUBACK\n");
             break;
         case 0x0E:
-            topic = "PUBCOMP\n";
+        	strcpy(topic,  "PUBCOMP\n");
             break;
         case 0x0F:
-            topic = "PUBREC\n";
+        	strcpy(topic, "PUBREC\n");
             break;
         case 0x10:
-            topic = "PUBREL\n";
+        	strcpy(topic, "PUBREL\n");
             break;
         case 0x12:
-            topic = "SUBSCRIBE\n";
+        	strcpy(topic, "SUBSCRIBE\n");
             break;
         case 0x13:
-            topic = "SUBACK\n";
+        	strcpy(topic, "SUBACK\n");
             break;
         case 0x14:
-            topic = "UNSUBSCRIBE\n";
+        	strcpy(topic, "UNSUBSCRIBE\n");
             break;
         case 0x15:
-            topic = "UNSUBACK\n";
+        	strcpy(topic, "UNSUBACK\n");
             break;
         case 0x16:
-            topic = "PINGREQ\n";
+        	strcpy(topic, "PINGREQ\n");
             break;
         case 0x17:
-            topic = "PINGRESP\n";
+        	strcpy(topic, "PINGRESP\n");
             break;
         case 0x18:
-            topic = "DISCONNECT\n";
+        	strcpy(topic, "DISCONNECT\n");
             break;
         case 0x1A:
-            topic = "WILLTOPICUPD\n";
+        	strcpy(topic, "WILLTOPICUPD\n");
             break;
         case 0x1B:
-            topic = "WILLTOPICRESP\n";
+        	strcpy(topic, "WILLTOPICRESP\n");
             break;
         case 0x1C:
-            topic = "WILLMSGUPD\n";
+        	strcpy(topic, "WILLMSGUPD\n");
             break;
         case 0x1D:
-            topic = "WILLMSGRESP\n";
+        	strcpy(topic, "WILLMSGRESP\n");
             break;
         default:
             break;

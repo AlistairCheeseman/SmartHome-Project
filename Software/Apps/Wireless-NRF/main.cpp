@@ -50,11 +50,6 @@ int main(int argc, char** argv) {
     int udpLoopNumber = 0;
 
 
-
-
-
-    int fd = -1;
-    int sock = -1;
     uint8_t currentPackLen = 0;
     uint32_t destId = 0;
     uint32_t sourceId = 0;
