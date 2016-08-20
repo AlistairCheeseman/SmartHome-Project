@@ -9,7 +9,15 @@ INC_DIR=/data/BBB/targetfs2/include
 CFLAGS=-c -Wall -I$(INC_DIR) -I./
 LDFLAGS=-lmosquittopp -lsqlite3 
 
-CXX=g++ -g
+ifeq ($(MAKELEVEL), 0)
+all: 
+	bash -c "source /data/smarthome/Software/LFS/buildscript.sh; \
+	for var in \$$(compgen -v); do export \$$var; done; \
+    $(MAKE) $@"
+else
+all: build
+endif
+#CXX=g++ -g
 build: SQL.o main.o MQTT.o
 	$(CXX) $(LDFLAGS) SQL.o main.o MQTT.o  -o shscheduler
 main.o: 
