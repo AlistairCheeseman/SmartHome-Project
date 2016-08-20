@@ -167,7 +167,7 @@ sleep 1
 sed -i -e 's|/\* #include "am335x-bone-spi0-spidev.dtsi" \*/|#include \"am335x-bone-spi0-spidev.dtsi\"|g' arch/arm/boot/dts/am335x-boneblack.dts
 sed -i -e 's|#include "am335x-ttyO1.dtsi"|/\* #include "am335x-ttyO1.dtsi" \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
 sed -i -e 's|/\* #include "am335x-bone-ttyO1.dtsi" \*/|#include "am335x-bone-ttyO1.dtsi"|g' arch/arm/boot/dts/am335x-boneblack.dts
-sed -i -e 's|#include "am335x-boneblack-nxp-hdmi-audio.dtsi"|/\* #include "am335x-boneblack-nxp-hdmi-audio.dtsi" \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
+#sed -i -e 's|#include "am335x-boneblack-nxp-hdmi-audio.dtsi"|/\* #include "am335x-boneblack-nxp-hdmi-audio.dtsi" \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
 sed -i -e 's|#include "am335x-can0.dtsi"|/\* #include "am335x-can0.dtsi" \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
 sed -i -e 's|#include "am335x-can1.dtsi"|/\* #include "am335x-can1.dtsi" \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
 sed -i -e 's|#include "am335x-bone-i2c2-cape-eeprom.dtsi"|/\* #include "am335x-bone-i2c2-cape-eeprom.dtsi" \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
