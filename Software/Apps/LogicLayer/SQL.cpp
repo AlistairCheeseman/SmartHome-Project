@@ -34,10 +34,10 @@ void SQL::connectDB(const char *filename) {
 
     rc = sqlite3_open_v2(filename, &db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_FULLMUTEX, NULL);
     if (rc) {
-        fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+        log::log(LOG_ERROR,, "Can't open database: %s", sqlite3_errmsg(db));
         isdbopen = false;
     } else {
-        fprintf(stderr, "Opened database successfully\n");
+        log::log(LOG_ERROR, "Opened database successfully");
         isdbopen = true;
     }
 }
@@ -54,10 +54,10 @@ void SQL::logVal(char *topic, char *payload) {
     do {
     rc = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
     if (rc != SQLITE_OK) {
-        fprintf(stderr, "SQL error: %s whilst logging raw value\n", zErrMsg);
+        log::log(LOG_ERROR, "SQL error: %s whilst logging raw value", zErrMsg);
         sqlite3_free(zErrMsg);
     } else {
-        fprintf(stdout, "Records stored successfully\n");
+        log::log(LOG_INFO,"Records stored successfully");
         break;
     }
     }while(1);
@@ -71,10 +71,10 @@ void SQL::execute(char* statement) {
     /* Execute SQL statement */
     rc = sqlite3_exec(db, statement, c_callback, this, &zErrMsg);
     if (rc != SQLITE_OK) {
-        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+        log::log(LOG_ERROR, "SQL error: %s", zErrMsg);
         sqlite3_free(zErrMsg);
     } else {
-        fprintf(stdout, "Records stored successfully\n");
+        log::log(LOG_INFO,"Records stored successfully");
     }
     delete zErrMsg;
 }
@@ -93,10 +93,10 @@ void SQL::writePower(float pf, float pow) {
     /* Execute SQL statement */
     rc = sqlite3_exec(db, sql, c_callback, this, &zErrMsg);
     if (rc != SQLITE_OK) {
-        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+        log::log(LOG_ERROR, "SQL error: %s", zErrMsg);
         sqlite3_free(zErrMsg);
     } else {
-        fprintf(stdout, "Records stored successfully\n");
+        log::log(LOG_INFO,"Records stored successfully");
     }
     delete sql;
     delete[] buffer;
@@ -111,9 +111,9 @@ int SQL::callback(int argc, char** argv, char** azColName) {
     /* just print returned results for time being.*/
     int i;
     for (i = 0; i < argc; i++) {
-        fprintf(stdout, "%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+        log::log(LOG_INFO,"%s = %s", azColName[i], argv[i] ? argv[i] : "NULL");
     }
-    fprintf(stdout, "\n");
+    log::log(LOG_INFO,"\r");
     return 0;
 }
 
@@ -186,7 +186,7 @@ char* SQL::getSRDEVTopic(char* mac, char* id) {
 
 
     // sprintf(output, "d/%s/P", SRTopic);
-    fprintf(stdout, "%s\n", output);
+    log::log(LOG_INFO, "%s", output);
     return output;
 }
 
@@ -296,7 +296,7 @@ void SQL::setSMAPVal(char* room, char* device, char* setting, char* MAPVal) {
                 break;
             }
             if (res == SQLITE_ERROR) {
-                fprintf(stdout, "SQL Error : %s\n", sqlite3_errmsg(db));
+                log::log(LOG_INFO,"SQL Error : %s", sqlite3_errmsg(db));
                 break;
             }
         }
@@ -307,10 +307,10 @@ void SQL::setSMAPVal(char* room, char* device, char* setting, char* MAPVal) {
     char *zErrMsg = 0;
     rc = sqlite3_exec(db, sql, c_callback, this, &zErrMsg);
     if (rc != SQLITE_OK) {
-        fprintf(stderr, "SQL error: %s in SensorHistory Insert and Current Value Update\n", zErrMsg);
+        log::log(LOG_ERROR, "SQL error: %s in SensorHistory Insert and Current Value Update", zErrMsg);
         sqlite3_free(zErrMsg);
     } else {
-        // fprintf(stdout,"Records stored successfully\n");
+        // log::log(LOG_INFO,"Records stored successfully");
     }
 }
 bool SQL::checkRules(char* id)
@@ -339,7 +339,7 @@ bool SQL::checkRules(char* id)
                 break;
             }
             if (res == SQLITE_ERROR) {
-                fprintf(stdout, "SQL Error : %s\n", sqlite3_errmsg(db));
+                log::log(LOG_INFO,"SQL Error : %s", sqlite3_errmsg(db));
                 break;
             }
         }
@@ -397,7 +397,7 @@ int SQL::getRules(char* id, automationRule *(&AR))
                 break;
             }
             if (res == SQLITE_BUSY) {
-                fprintf(stdout, "database busy\n");
+                log::log(LOG_INFO,"database busy");
             }
             currentrule++;
         }

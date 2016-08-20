@@ -12,7 +12,7 @@
 
 #include "SQL.h"
 #include "mqtt.h"
-
+#include "log.h"
 
 using namespace std;
 
@@ -21,9 +21,9 @@ bool keep_running = true;
 static void termination_handler (int signum)
 {
     switch(signum) {
-        case SIGHUP:  fprintf(stderr, "Got hangup signal."); break;
-        case SIGTERM: fprintf(stderr, "Got termination signal."); break;
-        case SIGINT:  fprintf(stderr, "Got interupt signal."); break;
+        case SIGHUP:  log::log(LOG_ERROR, "Got hangup signal."); break;
+        case SIGTERM: log::log(LOG_ERROR, "Got termination signal."); break;
+        case SIGINT:  log::log(LOG_ERROR, "Got interupt signal."); break;
     }
 
     // Signal the main thead to stop
@@ -56,30 +56,30 @@ int main(int argc, char** argv) {
      if (argc == 4)
     {
          strcpy(database, argv[1]);
-        fprintf(stdout,"Database: %s\n", database);
+        log::log(LOG_INFO,"Database: %s", database);
         strcpy(mqttserver, argv[2]);
-                 fprintf(stdout,"Mqtt Server: %s\n", mqttserver);
+                 log::log(LOG_INFO,"Mqtt Server: %s", mqttserver);
                  port = atoi(argv[3]);
-                 fprintf(stdout,"Port: %d\n", port);
+                 log::log(LOG_INFO,"Port: %d", port);
     }  
      else if (argc == 3)
     {
          strcpy(database, argv[1]);
-        fprintf(stdout,"Database: %s\n", database);
+        log::log(LOG_INFO,"Database: %s", database);
         strcpy(mqttserver, argv[2]);
-                 fprintf(stdout,"Mqtt Server: %s\n", mqttserver);      
-                 fprintf(stdout,"Port: %d\n", port);
+                 log::log(LOG_INFO,"Mqtt Server: %s", mqttserver);      
+                 log::log(LOG_INFO,"Port: %d", port);
     }    
     else
     {
-        fprintf(stdout,"Correct Usage:\n");
-        fprintf(stdout,"logiclayer <dblocation> <mqtthost> [<mqttport>]\n");
-        fprintf(stdout,"where:\n");
-        fprintf(stdout,"dblocation is the location of the sqlite db\nmqtthost is the ip address\nmqttport is the mqtt server port\n\n");
-        fprintf(stdout,"The values are normally:\n");
-        fprintf(stdout,"Database: /var/db/smarthome\n");
-        fprintf(stdout,"MQTT Server: the local IP Address\n");
-        fprintf(stdout,"MQTT Port: 1883\n");
+        log::log(LOG_INFO,"Correct Usage:");
+        log::log(LOG_INFO,"logiclayer <dblocation> <mqtthost> [<mqttport>]");
+        log::log(LOG_INFO,"where:");
+        log::log(LOG_INFO,"dblocation is the location of the sqlite db\nmqtthost is the ip address\nmqttport is the mqtt server port\n");
+        log::log(LOG_INFO,"The values are normally:");
+        log::log(LOG_INFO,"Database: /var/db/smarthome");
+        log::log(LOG_INFO,"MQTT Server: the local IP Address");
+        log::log(LOG_INFO,"MQTT Port: 1883");
         return 0;
     }
     

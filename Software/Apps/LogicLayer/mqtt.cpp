@@ -13,7 +13,7 @@
 #include "mqtt.h"
 
 
-
+#include "log.h"
 
 mqtt::mqtt(const char *id, const char *host, int port,const char *dbloc) : mosquittopp(id)
 {
@@ -32,7 +32,7 @@ mqtt::~mqtt() {
 
 void mqtt::on_connect(int rc)
 {
-	fprintf(stdout,"Connected with code %d.\n", rc);
+    log::log(LOG_INFO, "Connected with code %d.", rc);
 	if(rc == 0){
 		/* Only attempt to subscribe on a successful connect. */
             //subscribe to every topic as all requests will pass through this program.
@@ -54,5 +54,5 @@ void mqtt::on_message(const struct mosquitto_message *message)
 
 void mqtt::on_subscribe(int mid, int qos_count, const int *granted_qos)
 {
-	fprintf(stdout,"Subscription succeeded.\n");
+	log::log(LOG_INFO,"Subscription succeeded.");
 }

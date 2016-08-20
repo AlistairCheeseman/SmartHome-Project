@@ -38,20 +38,20 @@ void ProcessMessage::messageReceived(char *topic, char *payload, int payloadlen,
         id = strtok(NULL, "/"); //  the id of the item attached to the device.
         type = strtok(NULL, "/"); // the type of request.
 
-        fprintf(stdout, "======================================\n");
-        fprintf(stdout, "Device Transmission Recieved\n");
-        fprintf(stdout, "-------------------------------------\n");
-        fprintf(stdout, "Originating MAC Address: %s\n", mac);
-        fprintf(stdout, "Output ID: %s\n", id);
+        log::log(LOG_INFO,"======================================");
+        log::log(LOG_INFO,"Device Transmission Recieved");
+        log::log(LOG_INFO,"-------------------------------------");
+        log::log(LOG_INFO,"Originating MAC Address: %s", mac);
+        log::log(LOG_INFO,"Output ID: %s", id);
         if (!strcmp(type, "R"))
-            fprintf(stdout, "Message Type: %s\n", "Request");
+            log::log(LOG_INFO,"Message Type: %s", "Request");
         else if (!strcmp(type, "P"))
-            fprintf(stdout, "Message Type: %s\n", "State Change Request");
+            log::log(LOG_INFO,"Message Type: %s", "State Change Request");
         else if (!strcmp(type, "S"))
-            fprintf(stdout, "Message Type: %s\n", "State Update");
+            log::log(LOG_INFO,"Message Type: %s", "State Update");
 
-        fprintf(stdout, "Payload: %s\n", payload);
-        fprintf(stdout, "-------------------------------------\n");
+        log::log(LOG_INFO,"Payload: %s", payload);
+        log::log(LOG_INFO,"-------------------------------------");
 
         if (!strcmp(type, "R")) {
             //a request has been initiated.
@@ -66,7 +66,7 @@ void ProcessMessage::messageReceived(char *topic, char *payload, int payloadlen,
             char* currentTopic;
             currentTopic = strtok(publishtopic, ";");
             while (currentTopic != NULL) {
-                fprintf(stdout, "ACTION: Publishing State Request to DEV topic: %s \n", currentTopic);
+                log::log(LOG_INFO,"ACTION: Publishing State Request to DEV topic: %s", currentTopic);
                 sender->publish(NULL, currentTopic, strlen(currentTopic), payload);
                currentTopic = strtok(NULL, ";");
             }
@@ -81,25 +81,25 @@ void ProcessMessage::messageReceived(char *topic, char *payload, int payloadlen,
             //(update the logical mapping (state) too?)
 
             char* publishtopic = sqldb->getMAPDevtopic(mac, id);
-            fprintf(stdout, "ACTION: Publishing new DEV state to MAP Layer: %s \n", publishtopic);
+            log::log(LOG_INFO,"ACTION: Publishing new DEV state to MAP Layer: %s", publishtopic);
             sender->publish(NULL, publishtopic, strlen(publishtopic), payload);
             //check if there are any pending rules
             char* sensorId = new char[5];
             strcpy(sensorId, sqldb->getSensorId(mac, id));
-                fprintf(stdout, "Sensor Id: %s\n", sensorId);
+                log::log(LOG_INFO,"Sensor Id: %s", sensorId);
             bool pendingRules = sqldb->checkRules(sensorId);
             if (pendingRules == true)
             {
-                fprintf(stdout, "Found some rules to process with this request!\n");
+                log::log(LOG_INFO,"Found some rules to process with this request!");
                 automationRule * ARs = new automationRule[10];
               int ruleCount =   sqldb->getRules(sensorId, ARs);
               for (int t = 0;t<ruleCount;t++)
               {
-                  fprintf(stdout, "Rule Id: %d\n", ARs[t].id);
-                  fprintf(stdout, "Rule TypeId: %d\n", ARs[t].TypeId);
+                  log::log(LOG_INFO,"Rule Id: %d", ARs[t].id);
+                  log::log(LOG_INFO,"Rule TypeId: %d", ARs[t].TypeId);
                   if (ARs[t].TypeId == 5)
                   {
-                      fprintf(stdout, "Mirror Rule!");
+                      log::log(LOG_INFO,"Mirror Rule!");
                       sender->publish(NULL,ARs[t].topic, strlen(ARs[t].topic),payload); 
                       
                   }
@@ -109,9 +109,9 @@ void ProcessMessage::messageReceived(char *topic, char *payload, int payloadlen,
         } else if (!strcmp(type, "P")) {
             //nothing needs to be done for a state request, this is handled by the device.
             // the state request is solely on the device layer for the actual request of the state change
-            fprintf(stdout, "ACTION: State Request..........\nnot doing anything with packet.\n");
+            log::log(LOG_INFO,"ACTION: State Request..........\nnot doing anything with packet.");
         }
-        fprintf(stdout, "======================================\n\n");
+        log::log(LOG_INFO,"======================================");
     } else // if it is a logical mapping.
     {
         //   /map/room/device/setting/{S SR R}
@@ -120,36 +120,36 @@ void ProcessMessage::messageReceived(char *topic, char *payload, int payloadlen,
         char* device = strtok(NULL, "/");
         char* setting = strtok(NULL, "/");
         char* type = strtok(NULL, "/");
-        fprintf(stdout, "======================================\n");
-        fprintf(stdout, "Mapping Transmission Recieved\n");
-        fprintf(stdout, "-------------------------------------\n");
-        fprintf(stdout, "Room: %s\n", room);
-        fprintf(stdout, "Device: %s\n", device);
-        fprintf(stdout, "Setting on Device: %s\n", setting);
+        log::log(LOG_INFO,"======================================");
+        log::log(LOG_INFO,"Mapping Transmission Recieved");
+        log::log(LOG_INFO,"-------------------------------------");
+        log::log(LOG_INFO,"Room: %s", room);
+        log::log(LOG_INFO,"Device: %s", device);
+        log::log(LOG_INFO,"Setting on Device: %s", setting);
         if (!strcmp(type, "R"))
-            fprintf(stdout, "Message Type: %s\n", "Request");
+            log::log(LOG_INFO,"Message Type: %s", "Request");
         else if (!strcmp(type, "P"))
-            fprintf(stdout, "Message Type: %s\n", "State Change Request");
+            log::log(LOG_INFO,"Message Type: %s", "State Change Request");
         else if (!strcmp(type, "S"))
-            fprintf(stdout, "Message Type: %s\n", "State Update");
+            log::log(LOG_INFO,"Message Type: %s", "State Update");
 
-        fprintf(stdout, "Payload: %s\n", payload);
-        fprintf(stdout, "-------------------------------------\n");
+        log::log(LOG_INFO,"Payload: %s", payload);
+        log::log(LOG_INFO,"-------------------------------------");
 
 
 
         //todo: look up logical mapping and translate to physical device.
         if (!strcmp(type, "S")) {
             //logical device has been updated. ensure db holds up-to-date value by writing to it.
-            fprintf(stdout, "ACTION: writing new State value to DB.\n");
+            log::log(LOG_INFO,"ACTION: writing new State value to DB.");
             sqldb->setSMAPVal(room, device, setting, payload);
         }
         if (!strcmp(type, "R")) {
             char* publishtopic = sqldb->getSRMAPTopic(room, device, setting);
-            fprintf(stdout, "ACTION: Publishing State Request to DEV topic: %s \n", publishtopic);
+            log::log(LOG_INFO,"ACTION: Publishing State Request to DEV topic: %s", publishtopic);
             sender->publish(NULL, publishtopic, strlen(publishtopic), payload);
             //a request has been published. look up what device it corresponds to and publish a request on the physical layer.
         }
-        fprintf(stdout, "======================================\n\n");
+        log::log(LOG_INFO,"======================================");
     }
 }

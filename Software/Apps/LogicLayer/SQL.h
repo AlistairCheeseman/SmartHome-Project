@@ -12,6 +12,7 @@
 #include <sqlite3.h>
 #include <stdio.h>
 #include "automationRule.h"
+#include "log.h"
 // handle all the sql data, rather than using straight sql commands, it is passed through this layer class to abstract the sql functions.
 class SQL {
 public:
