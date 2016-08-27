@@ -41,7 +41,6 @@ static void termination_handler (int signum)
  * 
  */
 int main(int argc, char** argv) {
-    int count;
     char *database = new char[50];
     char *mqttserver = new char[50];
     int port = 1883;

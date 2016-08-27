@@ -34,7 +34,7 @@ void SQL::connectDB(const char *filename) {
 
     rc = sqlite3_open_v2(filename, &db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_FULLMUTEX, NULL);
     if (rc) {
-        log::log(LOG_ERROR,, "Can't open database: %s", sqlite3_errmsg(db));
+        log::log(LOG_ERROR, "Can't open database: %s", sqlite3_errmsg(db));
         isdbopen = false;
     } else {
         log::log(LOG_ERROR, "Opened database successfully");
