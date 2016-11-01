@@ -37,7 +37,8 @@ export FLOAT=hard
 export MAKEINFO_LOC=$(which makeinfo)
 
 export USE_MIRROR=TRUE
-
+# if using newer versions of GCC (v6) on the host to build the toolchain then we need to force gnu++98 to allow it to build successfully
+export CXX='g++ -std=gnu++98'
 
 #create the sysroot directory and link usr to the local folder to ensure everything is installed in root
 mkdir -p $ROOTDIR
@@ -323,4 +324,9 @@ cd $SRCDIR/ncurses
 ./configure --prefix=/ --with-shared --host=$TARGET  2>&1 | tee configure.out
 make  2>&1 | tee make.out
 make install DESTDIR=$SYSROOT  2>&1 | tee -a make.out
+
+#link libcurses to libncurses to enable older apps to work
+cd $SYSROOT/lib
+ln -sfv libncurses.so libcurses.so
+ln -sfv libncurses.a libcurses.a
 
