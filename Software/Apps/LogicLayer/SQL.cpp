@@ -402,6 +402,7 @@ int SQL::getRules(char* id, automationRule *(&AR))
             currentrule++;
         }
     }
+    sqlite3_finalize(ppStmt);
     return currentrule;
 }
 char* SQL::getSensorId(char* mac, char* id) {
