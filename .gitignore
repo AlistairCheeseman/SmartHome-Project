@@ -37,6 +37,10 @@
 /Software/Apps/*/build/
 /Software/Apps/*/dist/
 /Software/Apps/*/nbproject/
+#output binaries
+Software/Apps/SHScheduler/shscheduler
+Software/Apps/Wireless/NRF-wireless-nrf
+Software/Apps/LogicLayer/logiclayer
 /Firmware/*/Debug/
 /Firmware/*/Release/
 *.atsuo
