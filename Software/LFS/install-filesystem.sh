@@ -388,7 +388,7 @@ cd $SRCDIR/php-5.6.5
 sed -i -e 's|my $installbuilddir = "/apache24/build";|my $installbuilddir = "'"${TARGETFS}"'/apache24/build";|g' ${TARGETFS}/apache24/bin/apxs
 sed -i -e 's|includedir = ${prefix}/include|includedir = '"${TARGETFS}"'/apache24/include|g' ${TARGETFS}/apache24/build/config_vars.mk
 #nano ${TARGETFS}/apache24/bin/apxs
-./configure --host=$TARGET --prefix='' --with-libxml-dir=${BUILDTOOLSYSDIR}/sysroot --with-sqlite3 --enable-pdo --enable-json --with-pdo-sqlite --disable-all --with-apxs2=${TARGETFS}/apache24/bin/apxs --enable-session
+./configure --host=$TARGET --prefix='' --with-libxml-dir=${BUILDTOOLSYSDIR}/sysroot --with-sqlite3 --enable-pdo --enable-json --with-pdo-sqlite --disable-all --with-apxs2=${TARGETFS}/apache24/bin/apxs --enable-session --with-mysql --with-mysqli --with-pdo-mysql
 LDFLAGS='-ldl' make
 make INSTALL_ROOT=${TARGETFS} install
 #modify the incorrect location of the php module
@@ -458,8 +458,12 @@ echo "*/5 * * * * /usr/bin/shscheduler" > ${TARGETFS}/var/spool/cron/crontabs/ro
 
 
 cd ${TARGETFS}
+echo "fixing permissions"
+sudo chown -Rv root:root *
+sudo chgrp -v 13 var/run/utmp var/log/lastlog
 echo "packaging generated Filesystem"
-tar jcf ../fs.tar.bz2 *
+sudo tar jcf ../fs.tar.bz2 *
+chmod 777 ./fs.tar.bz2
 cd ${TARGETFS}/..
 rm -R ${SRCDIR}
 rm -R ${TARGETFS}
@@ -473,9 +477,11 @@ echo "#                      INSTALLED TO ${TARGETFS}            #"
 echo "#                                took $((($ENDTIME - $STARTTIME)/60)) mins             #"
 echo "#                                                                  #"
 echo "#                                                                  #"
-echo "#                                                                  #"
+echo "# to extract files run tar -xpf fs.tar.bz2                         #"
 echo "#                                                                  #"
 echo "#                                                                  #"
 echo "####################################################################"
 echo "####################################################################"
+
+
 
