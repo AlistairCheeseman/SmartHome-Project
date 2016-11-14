@@ -11,7 +11,7 @@ LDFLAGS=-lmosquittopp -lsqlite3
 
 ifeq ($(MAKELEVEL), 0)
 all: 
-	bash -c "source /data/smarthome/Software/LFS/buildscript.sh; \
+	bash -c "source ../../LFS/buildscript.sh; \
 	for var in \$$(compgen -v); do export \$$var; done; \
     $(MAKE) $@"
 else
