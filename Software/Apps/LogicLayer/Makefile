@@ -17,7 +17,7 @@ all:
 else
 all: build
 endif
-#CXX=${CROSS_COMPILE}-g++ -g
+CXX=${CROSS_COMPILE}-g++ -g
 build: SQL.o main.o mqtt.o ProcessMessage.o log.o
 	$(CXX) $(LDFLAGS) SQL.o main.o mqtt.o ProcessMessage.o log.o -o logiclayer
 main.o: 
