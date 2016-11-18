@@ -457,6 +457,20 @@ install -dv ${TARGETFS}/var/spool/cron/crontabs
 echo "*/5 * * * * /usr/bin/shscheduler" > ${TARGETFS}/var/spool/cron/crontabs/root
 
 
+#if gdb is needed.
+cd $SRCDIR
+wget http://ftp.gnu.org/gnu/gdb/gdb-7.12.tar.xz
+tar -xf gdb-7.12.tar.xz
+rm gdb-7.12.tar.xz
+mv gdb-7.12 gdb
+mkdir gdb-build
+cd gdb-build
+../gdb/configure --host=${TARGET} --target=${TARGET} --prefix=''
+make
+make DESTDIR=${TARGETFS} install
+
+
+
 cd ${TARGETFS}
 echo "fixing permissions"
 sudo chown -Rv root:root *
