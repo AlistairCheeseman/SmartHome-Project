@@ -4,35 +4,23 @@ set -e
 
 export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-#Firstly unset CFLAGS
-unset CFLAGS
-#the system that we will be creating a toolchain for.
-export TARGET=arm-unknown-linux-gnueabihf
-#the root location to be installed to
-export ROOTDIR=/data/BBB
+source config.sh
+
+
 #the source directory we will be storing downloaded files.
 export SRCDIR=${ROOTDIR}/tools/src
 #the directory we want our build tools installed into.
 export PREFIX=${ROOTDIR}/tools/build
 #where the final library files will be stored
 export SYSROOT=${PREFIX}/sysroot
-#the target(see near beginning) architechure
-export ARCH=arm
+
 #the prefix that will be before all cross compiled programs
 export CROSS_COMPILE=${TARGET}-
 #update the path to include the compiled binary programs
 export PATH=$PATH:${PREFIX}/bin
 #set the host machine architechure
 export HOST=$(echo ${MACHTYPE} | sed "s/-[^-]*/-cross/")
-#from the target, some more details
-# the target architecure
-export ARCH=arm
-#target arm architecture
-export ARM_ARCH=armv7-a
-#the float point architechure
-export FPU=neon
-#the float point type
-export FLOAT=hard
+
 
 export MAKEINFO_LOC=$(which makeinfo)
 
