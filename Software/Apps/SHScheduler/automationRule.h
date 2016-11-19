@@ -11,7 +11,7 @@
 // define structure to hold the rules when retrieved from the database.
 struct automationRule
 {
-char topic[20];
+char topic[50];
 char payload[4];
 char conditions[100][50];
 int conditionCount;
