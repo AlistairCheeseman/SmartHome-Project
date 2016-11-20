@@ -28,6 +28,7 @@ void SQL::connectDB(const char *filename) {
         isdbopen = false;
     } else {
         fprintf(stderr, "Opened database successfully\n");
+        sqlite3_exec(db, "Pragma busy_timeout=30000;", NULL, this, NULL);
         isdbopen = true;
     }
 }
@@ -123,7 +124,6 @@ void SQL::updateLastRunTime(int ruleId) {
         //   fprintf(stdout, "Records stored successfully\n");
     }
     delete[] sql;
-    delete zErrMsg;
 }
 
 void SQL::deleteRule(int ruleId) {
