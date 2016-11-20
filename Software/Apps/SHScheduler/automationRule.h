@@ -14,8 +14,8 @@ struct automationRule
 char topic[50];
 char payload[4];
 char conditions[100][50];
-int conditionCount;
-int id;
+unsigned int conditionCount;
+unsigned int id;
 bool isTemporary;
 };
 
