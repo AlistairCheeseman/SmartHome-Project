@@ -68,6 +68,9 @@ chmod -v 664 ${TARGETFS}/var/run/utmp ${TARGETFS}/var/log/lastlog
 mkdir -pv $SRCDIR
 cd $SRCDIR
 
+
+SQLITE_VER=3150100
+
 if [ $USE_MIRROR == 'TRUE' ]; then
 
 
@@ -76,7 +79,7 @@ wget --no-check-certificate https://filestore.kmxsoftware.co.uk/busybox-1.22.1.t
 wget --no-check-certificate https://filestore.kmxsoftware.co.uk/iana-etc-2.30.tar.bz2
 wget --no-check-certificate https://filestore.kmxsoftware.co.uk/openssh-6.7p1.tar.gz
 wget --no-check-certificate https://filestore.kmxsoftware.co.uk/php-5.6.5.tar.gz
-wget --no-check-certificate https://filestore.kmxsoftware.co.uk/sqlite-autoconf-3080801.tar.gz
+wget --no-check-certificate https://filestore.kmxsoftware.co.uk/sqlite-autoconf-${SQLITE_VER}.tar.gz
 wget --no-check-certificate https://filestore.kmxsoftware.co.uk/libxml2-2.9.2.tar.gz
 wget --no-check-certificate https://filestore.kmxsoftware.co.uk/httpd-2.4.18.tar.gz
 wget --no-check-certificate https://filestore.kmxsoftware.co.uk/pcre-8.38.tar.gz
@@ -106,7 +109,7 @@ tar -xf busybox-1.22.1.tar.bz2
 tar -xf iana-etc-2.30.tar.bz2
 tar -xf openssh-6.7p1.tar.gz
 tar -xf php-5.6.5.tar.gz
-tar -xf sqlite-autoconf-3080801.tar.gz
+tar -xf sqlite-autoconf-${SQLITE_VER}.tar.gz
 tar -xf libxml2-2.9.2.tar.gz
 tar -xf httpd-2.4.18.tar.gz
 tar -xf pcre-8.38.tar.gz
@@ -120,7 +123,7 @@ rm busybox-1.22.1.tar.bz2
 rm iana-etc-2.30.tar.bz2
 rm openssh-6.7p1.tar.gz
 rm php-5.6.5.tar.gz
-rm sqlite-autoconf-3080801.tar.gz
+rm sqlite-autoconf-${SQLITE_VER}.tar.gz
 rm libxml2-2.9.2.tar.gz
 rm httpd-2.4.18.tar.gz
 rm pcre-8.38.tar.gz
@@ -377,7 +380,7 @@ make  DESTDIR=${BUILDTOOLSYSDIR}/sysroot install
 make  DESTDIR=${TARGETFS} install
 
 #need to install sqlite
-cd $SRCDIR/sqlite-autoconf-3080801
+cd $SRCDIR/sqlite-autoconf-${SQLITE_VER}
 ./configure --host=$TARGET --prefix=''
 make
 make DESTDIR=${BUILDTOOLSYSDIR}/sysroot install
@@ -470,6 +473,17 @@ make
 make DESTDIR=${TARGETFS} install
 
 
+#if eclipse tcf debugger is needed
+cd ${SRCDIR}
+wget http://www.mirrorservice.org/sites/download.eclipse.org/eclipseMirror/tools/tcf/releases/1.3/org.eclipse.tcf.agent-1.3.0.zip
+unzip org.eclipse.tcf.agent-1.3.0.zip
+rm org.eclipse.tcf.agent-1.3.0.zip
+cd org.eclipse.tcf.agent-1.3.0
+cd agent
+# the first time the build is ran it will fail with a ranlib error.
+make MACHINE=arm MACHINE=arm NO_UUID=1 
+make MACHINE=arm MACHINE=arm NO_UUID=1 
+make INSTALLROOT=${TARGETFS} install 
 
 cd ${TARGETFS}
 echo "fixing permissions"
