@@ -4,7 +4,7 @@ set -e
 
 export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-source config.sh
+source ${DIR}/config.sh
 
 
 #the source directory we will be storing downloaded files.

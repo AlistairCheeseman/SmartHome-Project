@@ -1,6 +1,6 @@
 #/bin/bash
-
-source config.sh
+export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source ${DIR}/config.sh
 
 
 #the source directory we will be storing downloaded files
