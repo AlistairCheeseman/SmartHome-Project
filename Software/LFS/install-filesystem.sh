@@ -481,9 +481,11 @@ rm org.eclipse.tcf.agent-1.3.0.zip
 cd org.eclipse.tcf.agent-1.3.0
 cd agent
 # the first time the build is ran it will fail with a ranlib error.
-make MACHINE=arm MACHINE=arm NO_UUID=1 
-make MACHINE=arm MACHINE=arm NO_UUID=1 
-make INSTALLROOT=${TARGETFS} install 
+make MACHINE=arm NO_UUID=1 || true 
+# wait 10 seconds for the parallel build to finish
+sleep 10
+make MACHINE=arm NO_UUID=1 
+make MACHINE=arm INSTALLROOT=${TARGETFS} install 
 
 cd ${TARGETFS}
 echo "fixing permissions"
@@ -491,10 +493,10 @@ sudo chown -Rv root:root *
 sudo chgrp -v 13 var/run/utmp var/log/lastlog
 echo "packaging generated Filesystem"
 sudo tar jcf ../fs.tar.bz2 *
-chmod 777 ./fs.tar.bz2
+sudo chmod 777 ../fs.tar.bz2
 cd ${TARGETFS}/..
-rm -R ${SRCDIR}
-rm -R ${TARGETFS}
+sudo rm -Rf ${SRCDIR}
+sudo rm -Rf ${TARGETFS}
 ENDTIME=$(date +%s)
 echo "####################################################################"
 echo "####################################################################"
@@ -510,6 +512,7 @@ echo "#                                                                  #"
 echo "#                                                                  #"
 echo "####################################################################"
 echo "####################################################################"
+
 
 
 
