@@ -5,19 +5,22 @@ CCADMIN=CCadmin
 INSTALL=install
 
 
-INC_DIR=/data/BBB/targetfs2/include
-CFLAGS=-c -Wall -I$(INC_DIR) -I./
+
+CFLAGS=-g -c -Wall -I./ $(INC_DIR)
 LDFLAGS=-lmosquittopp -lsqlite3 
 
+all: clean build
+
 ifeq ($(MAKELEVEL), 0)
-all: 
-	bash -c "source /data/smarthome/Software/LFS/buildscript.sh; \
+cross: 
+	bash -c "source ../../LFS/buildscript.sh; \
 	for var in \$$(compgen -v); do export \$$var; done; \
+	export INC_DIR=-I\$$TARGETFS/include; \
     $(MAKE) $@"
 else
-all: build
+cross: clean build
 endif
-#CXX=g++ -g
+
 build: main.o UDP.o Timing.o SensorNet.o SPI.o Radio.o MQTTSNCheck.o GPIO.o
 	$(CXX) $(LDFLAGS) main.o UDP.o Timing.o SensorNet.o SPI.o Radio.o MQTTSNCheck.o GPIO.o  -o wireless-nrf
 main.o: 
@@ -43,6 +46,8 @@ clean:
 	rm -fv *.o wireless-nrf
 install: build
 	$(INSTALL) wireless-nrf $(DESTDIR)/bin
+deploy: cross
+	scp wireless-nrf root@192.168.1.237:/usr/bin
 
 
 

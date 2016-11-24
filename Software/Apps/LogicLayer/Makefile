@@ -5,19 +5,25 @@ CCADMIN=CCadmin
 INSTALL=install
 
 
-INC_DIR=/data/BBB/targetfs2/include
-CFLAGS=-c -Wall -I$(INC_DIR) -I./
+
+CFLAGS=-g -c -Wall -I./ $(INC_DIR)
 LDFLAGS=-lmosquittopp -lsqlite3 
 
+all: clean build
+
 ifeq ($(MAKELEVEL), 0)
-all: 
+cross: 
 	bash -c "source ../../LFS/buildscript.sh; \
 	for var in \$$(compgen -v); do export \$$var; done; \
+	export INC_DIR=-I\$$TARGETFS/include; \
     $(MAKE) $@"
 else
-all: build
+cross: clean build
 endif
-CXX=${CROSS_COMPILE}-g++ -g
+
+
+
+# the actual build 
 build: SQL.o main.o mqtt.o ProcessMessage.o log.o
 	$(CXX) $(LDFLAGS) SQL.o main.o mqtt.o ProcessMessage.o log.o -o logiclayer
 main.o: 
@@ -34,5 +40,5 @@ clean:
 	rm -fv *.o logiclayer
 install: build
 	$(INSTALL) logiclayer $(DESTDIR)/bin
-deploy: build
-	scp logiclayer root@192.168.1.237/usr/bin/
+deploy: cross
+	scp logiclayer root@192.168.1.237:/usr/bin

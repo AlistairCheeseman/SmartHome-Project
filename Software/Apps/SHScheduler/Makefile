@@ -5,19 +5,22 @@ CCADMIN=CCadmin
 INSTALL=install
 
 
-INC_DIR=/data/BBB/targetfs2/include
-CFLAGS=-c -Wall -I$(INC_DIR) -I./
+
+CFLAGS=-g -c -Wall -I./ $(INC_DIR)
 LDFLAGS=-lmosquittopp -lsqlite3 
 
+all: clean build
+
 ifeq ($(MAKELEVEL), 0)
-all: 
-	bash -c "source /data/smarthome/Software/LFS/buildscript.sh; \
+cross: 
+	bash -c "source ../../LFS/buildscript.sh; \
 	for var in \$$(compgen -v); do export \$$var; done; \
+	export INC_DIR=-I\$$TARGETFS/include; \
     $(MAKE) $@"
 else
-all: build
+cross: clean build
 endif
-#CXX=g++ -g
+
 build: SQL.o main.o MQTT.o
 	$(CXX) $(LDFLAGS) SQL.o main.o MQTT.o  -o shscheduler
 main.o: 
@@ -30,3 +33,5 @@ clean:
 	rm -fv *.o shscheduler
 install: build
 	$(INSTALL) shscheduler $(DESTDIR)/bin
+deploy: cross
+	scp shscheduler root@192.168.1.237:/usr/bin
