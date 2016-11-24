@@ -28,7 +28,7 @@ void SQL::connectDB(const char *filename) {
         isdbopen = false;
     } else {
         fprintf(stderr, "Opened database successfully\n");
-        sqlite3_exec(db, "Pragma busy_timeout=30000;", NULL, this, NULL);
+        sqlite3_exec(db, "Pragma busy_timeout=30000; PRAGMA foreign_keys = ON;", NULL, this, NULL);
         isdbopen = true;
     }
 }
