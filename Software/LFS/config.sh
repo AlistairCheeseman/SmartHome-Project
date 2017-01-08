@@ -18,3 +18,6 @@ export ARM_ARCH=armv7-a
 export FPU=neon
 #the float point type
 export FLOAT=hard
+
+
+export PACKAGEFS=FALSE
