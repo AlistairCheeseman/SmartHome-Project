@@ -39,19 +39,23 @@ ln -s . $SYSROOT/usr
 
 cd $SRCDIR
 
-export BINUTILS_VER=2.25
-export GCC_VER=4.9.1
-export GLIBC_VER=2.19
-export GMP_VER=6.0.0a
-export GMP_DIR=6.0.0
-export MPFR_VER=3.1.3
-export MPC_VER=1.0.2
+
+
+
+export BINUTILS_VER=2.27
+export GCC_VER=4.9.4
+export GLIBC_VER=2.24
+export GMP_VER=6.1.2
+export GMP_DIR=6.1.2
+export MPFR_VER=3.1.5
+export MPC_VER=1.0.3
 export LIBELF_VER=0.8.13
-export NCURSES_VER=5.9
+export NCURSES_VER=6.0
 export LIBAIO_VER=0.3.109
-export CARES_VER=1.10.0
-export OPENSSL_VER=1.0.1i
-export ZLIB_VER=1.2.8
+export CARES_VER=1.11.0
+export OPENSSL_VER=1.0.1i 
+# openssl 1.1.0 does not build filesystem.
+export ZLIB_VER=1.2.10
 
 
 if [ $USE_MIRROR == 'FALSE' ]; then
@@ -169,10 +173,10 @@ echo -e '\033]2;Building Binutils\007'
 mkdir -pv $SRCDIR/binutils-build
 cd $SRCDIR/binutils-build
 ../binutils/configure --prefix=${PREFIX} --target=${TARGET} --with-sysroot=${SYSROOT} --disable-nls --disable-multilib 2>&1 | tee configure.out
-make configure-host 2>&1 | tee -a configure.out
+make -j 2 configure-host 2>&1 | tee -a configure.out
 #there is a bug in binutils that incorrectly reports makeinfo is not installed so it must manually be input.
 #http://ubuntuforums.org/showthread.php?t=708309
-make MAKEINFO=${MAKEINFO_LOC} 2>&1 | tee make.out
+make -j 2 MAKEINFO=${MAKEINFO_LOC} 2>&1 | tee make.out
 make install 2>&1 | tee -a make.out
 
 
@@ -209,8 +213,8 @@ mkdir -pv $SRCDIR/gcc-build-1
 --with-mpc-lib=$(pwd)/mpc/src/.libs \
  2>&1 | tee configure.out
 
-make 2>&1 | tee make.out
-make install 2>&1 | tee -a make.out
+make -j 2 2>&1 | tee make.out
+make -j 2 install 2>&1 | tee -a make.out
 #echo "press enter to continue..."
 #read -rsp $'Press any key to continue...\n' -n1 key
 echo "GLibC"
