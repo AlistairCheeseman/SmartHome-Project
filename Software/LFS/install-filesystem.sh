@@ -69,74 +69,103 @@ mkdir -pv $SRCDIR
 cd $SRCDIR
 
 
+UBOOT_VER=2016.11
+BUSYBOX_VER=1.22.1
+IANA_VER=2.30
+OPENSSH_VER=7.4p1
+PHP_VER=5.6.5
 SQLITE_VER=3150100
+LIBXML2_VER=2.9.2
+HTTPD_VER=2.4.18
+PCRE_VER=8.38
+APR_UTIL_VER=1.5.4
+APR_VER=1.5.2
+RSYNC_VER=3.1.1
+MOSQUITTO_VER=1.3.5
+
+
+
 
 if [ $USE_MIRROR == 'TRUE' ]; then
-
-
-wget --no-check-certificate https://filestore.kmxsoftware.co.uk/u-boot-2014.07.tar.bz2
-wget --no-check-certificate https://filestore.kmxsoftware.co.uk/busybox-1.22.1.tar.bz2
-wget --no-check-certificate https://filestore.kmxsoftware.co.uk/iana-etc-2.30.tar.bz2
-wget --no-check-certificate https://filestore.kmxsoftware.co.uk/openssh-6.7p1.tar.gz
-wget --no-check-certificate https://filestore.kmxsoftware.co.uk/php-5.6.5.tar.gz
-wget --no-check-certificate https://filestore.kmxsoftware.co.uk/sqlite-autoconf-${SQLITE_VER}.tar.gz
-wget --no-check-certificate https://filestore.kmxsoftware.co.uk/libxml2-2.9.2.tar.gz
-wget --no-check-certificate https://filestore.kmxsoftware.co.uk/httpd-2.4.18.tar.gz
-wget --no-check-certificate https://filestore.kmxsoftware.co.uk/pcre-8.38.tar.gz
-wget --no-check-certificate https://filestore.kmxsoftware.co.uk/apr-util-1.5.4.tar.gz
-wget --no-check-certificate https://filestore.kmxsoftware.co.uk/apr-1.5.2.tar.bz2
-wget --no-check-certificate https://filestore.kmxsoftware.co.uk/rsync-3.1.1.tar.gz
-wget --no-check-certificate https://filestore.kmxsoftware.co.uk/mosquitto-1.3.5.tar.gz
+ wget --no-check-certificate https://filestore.kmxsoftware.co.uk/u-boot-${UBOOT_VER}.tar.bz2
+ wget --no-check-certificate https://filestore.kmxsoftware.co.uk/busybox-${BUSYBOX_VER}.tar.bz2
+ wget --no-check-certificate https://filestore.kmxsoftware.co.uk/iana-etc-${IANA_VER}.tar.bz2
+ wget --no-check-certificate https://filestore.kmxsoftware.co.uk/openssh-${OPENSSH_VER}.tar.gz
+ wget --no-check-certificate https://filestore.kmxsoftware.co.uk/php-${PHP_VER}.tar.gz
+ wget --no-check-certificate https://filestore.kmxsoftware.co.uk/sqlite-autoconf-${SQLITE_VER}.tar.gz
+ wget --no-check-certificate https://filestore.kmxsoftware.co.uk/libxml2-${LIBXML2_VER}.tar.gz
+ wget --no-check-certificate https://filestore.kmxsoftware.co.uk/httpd-${HTTPD_VER}.tar.gz
+ wget --no-check-certificate https://filestore.kmxsoftware.co.uk/pcre-${PCRE_VER}.tar.gz
+ wget --no-check-certificate https://filestore.kmxsoftware.co.uk/apr-util-${APR_UTIL_VER}.tar.gz
+ wget --no-check-certificate https://filestore.kmxsoftware.co.uk/apr-${APR_VER}.tar.bz2
+ wget --no-check-certificate https://filestore.kmxsoftware.co.uk/rsync-${RSYNC_VER}.tar.gz
+ wget --no-check-certificate https://filestore.kmxsoftware.co.uk/mosquitto-${MOSQUITTO_VER}.tar.gz
 else
-wget ftp://ftp.denx.de/pub/u-boot/u-boot-2014.07.tar.bz2
-wget --no-check-certificate http://busybox.net/downloads/busybox-1.22.1.tar.bz2
-wget http://sethwklein.net/iana-etc-2.30.tar.bz2
-wget http://www.mirrorservice.org/pub/OpenBSD/OpenSSH/portable/openssh-6.7p1.tar.gz
-wget http://uk1.php.net/get/php-5.6.5.tar.gz/from/this/mirror
-mv mirror php-5.6.5.tar.gz
-wget http://www.sqlite.org/2015/sqlite-autoconf-3080801.tar.gz
-wget ftp://xmlsoft.org/libxml2/libxml2-2.9.2.tar.gz
-wget http://mirror.catn.com/pub/apache/httpd/httpd-2.4.18.tar.gz
-wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.38.tar.gz
-wget http://mirror.catn.com/pub/apache/apr/apr-util-1.5.4.tar.gz
-wget http://mirror.catn.com/pub/apache/apr/apr-1.5.2.tar.bz2
-wget http://rsync.samba.org/ftp/rsync/src/rsync-3.1.1.tar.gz
-wget -4 http://mosquitto.org/files/source/mosquitto-1.3.5.tar.gz
+ wget ftp://ftp.denx.de/pub/u-boot/u-boot-${UBOOT_VER}.tar.bz2
+ wget --no-check-certificate http://busybox.net/downloads/busybox-${BUSYBOX_VER}.tar.bz2
+ wget http://sethwklein.net/iana-etc-${IANA_VER}.tar.bz2
+ wget http://www.mirrorservice.org/pub/OpenBSD/OpenSSH/portable/openssh-${OPENSSH_VER}.tar.gz
+ wget http://uk1.php.net/get/php-${PHP_VER}.tar.gz/from/this/mirror
+ mv mirror php-${PHP_VER}.tar.gz
+ wget http://www.sqlite.org/2015/sqlite-autoconf-${SQLITE_VER}.tar.gz
+ wget ftp://xmlsoft.org/libxml2/libxml2-${LIBXML2_VER}.tar.gz
+ wget http://mirror.catn.com/pub/apache/httpd/httpd-${HTTPD_VER}.tar.gz
+ wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-${PCRE_VER}.tar.gz
+ wget http://mirror.catn.com/pub/apache/apr/apr-util-${APR_UTIL_VER}.tar.gz
+ wget http://mirror.catn.com/pub/apache/apr/apr-${APR_VER}.tar.bz2
+ wget http://rsync.samba.org/ftp/rsync/src/rsync-${RSYNC_VER}.tar.gz
+ wget -4 http://mosquitto.org/files/source/mosquitto-${MOSQUITTO_VER}.tar.gz
 fi
 
-tar -xf u-boot-2014.07.tar.bz2
-tar -xf busybox-1.22.1.tar.bz2
-tar -xf iana-etc-2.30.tar.bz2
-tar -xf openssh-6.7p1.tar.gz
-tar -xf php-5.6.5.tar.gz
+tar -xf u-boot-${UBOOT_VER}.tar.bz2
+tar -xf busybox-${BUSYBOX_VER}.tar.bz2
+tar -xf iana-etc-${IANA_VER}.tar.bz2
+tar -xf openssh-${OPENSSH_VER}.tar.gz
+tar -xf php-${PHP_VER}.tar.gz
 tar -xf sqlite-autoconf-${SQLITE_VER}.tar.gz
-tar -xf libxml2-2.9.2.tar.gz
-tar -xf httpd-2.4.18.tar.gz
-tar -xf pcre-8.38.tar.gz
-tar -xf apr-util-1.5.4.tar.gz
-tar -xf apr-1.5.2.tar.bz2
-tar -xf rsync-3.1.1.tar.gz
-tar -xf mosquitto-1.3.5.tar.gz
+tar -xf libxml2-${LIBXML2_VER}.tar.gz
+tar -xf httpd-${HTTPD_VER}.tar.gz
+tar -xf pcre-${PCRE_VER}.tar.gz
+tar -xf apr-util-${APR_UTIL_VER}.tar.gz
+tar -xf apr-${APR_VER}.tar.bz2
+tar -xf rsync-${RSYNC_VER}.tar.gz
+tar -xf mosquitto-${MOSQUITTO_VER}.tar.gz
 
-rm u-boot-2014.07.tar.bz2
-rm busybox-1.22.1.tar.bz2
-rm iana-etc-2.30.tar.bz2
-rm openssh-6.7p1.tar.gz
-rm php-5.6.5.tar.gz
+rm u-boot-${UBOOT_VER}.tar.bz2
+rm busybox-${BUSYBOX_VER}.tar.bz2
+rm iana-etc-${IANA_VER}.tar.bz2
+rm openssh-${OPENSSH_VER}.tar.gz
+rm php-${PHP_VER}.tar.gz
 rm sqlite-autoconf-${SQLITE_VER}.tar.gz
-rm libxml2-2.9.2.tar.gz
-rm httpd-2.4.18.tar.gz
-rm pcre-8.38.tar.gz
-rm apr-util-1.5.4.tar.gz
-rm apr-1.5.2.tar.bz2
-rm rsync-3.1.1.tar.gz
-rm mosquitto-1.3.5.tar.gz
+rm libxml2-${LIBXML2_VER}.tar.gz
+rm httpd-${HTTPD_VER}.tar.gz
+rm pcre-${PCRE_VER}.tar.gz
+rm apr-util-${APR_UTIL_VER}.tar.gz
+rm apr-${APR_VER}.tar.bz2
+rm rsync-${RSYNC_VER}.tar.gz
+rm mosquitto-${MOSQUITTO_VER}.tar.gz
 
 
-cd u-boot-2014.07
+mv u-boot-${UBOOT_VER} u-boot
+mv busybox-${BUSYBOX_VER} busybox
+mv iana-etc-${IANA_VER} iana-etc
+mv openssh-${OPENSSH_VER} openssh
+mv php-${PHP_VER} php
+mv sqlite-autoconf-${SQLITE_VER} sqlite-autoconf
+mv libxml2-${LIBXML2_VER} libxml2
+mv httpd-${HTTPD_VER} httpd
+mv pcre-${PCRE_VER} pcre
+mv apr-util-${APR_UTIL_VER} apr-util
+mv apr-${APR_VER} apr
+mv rsync-${RSYNC_VER} rsync
+mv mosquitto-${MOSQUITTO_VER} mosquitto
+
+
+
+cd u-boot
 #note CROSS_COMPILE and ARCH must be set for this to work on the target system.
-make am335x_evm_config
-make
+make -j 2 am335x_evm_config
+make -j 2
 
 cp MLO $TARGETFS/boot/MLO
 cp u-boot.img $TARGETFS/boot/u-boot.img
@@ -152,7 +181,7 @@ cp -R ${BUILDTOOLSYSDIR}/../src/linux  $SRCDIR/linux
 #cd $SRCDIR/kernel/kernel
 cd $SRCDIR/linux
 #make beaglebone_defconfig
-make ARCH=arm bb.org_defconfig
+make -j 2 ARCH=arm bb.org_defconfig
 #this bit requires user input.
 #reccommended changes:
 #Device Drivers > SPI Support > (ENABLE) Debug Support for SPI drivers
@@ -177,8 +206,8 @@ sed -i -e 's|#include "am335x-bone-i2c2-cape-eeprom.dtsi"|/\* #include "am335x-b
 sed -i -e 's|#include "am335x-ttyO2.dtsi"|/\* #include "am335x-ttyO2.dtsi" \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
 sed -i -e 's|#include "am335x-ttyO4.dtsi"|/\* #include "am335x-ttyO4.dtsi" \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
 sed -i -e 's|#include "am335x-ttyO5.dtsi"|/\* #include "am335x-ttyO5.dtsi" \*/|g' arch/arm/boot/dts/am335x-boneblack.dts
-make uImage dtbs LOADADDR=0x80008000
-make modules
+make -j 2 uImage dtbs LOADADDR=0x80008000
+make -j 2 modules
 make INSTALL_MOD_PATH=$TARGETFS modules_install
 
 cp arch/arm/boot/uImage $TARGETFS/boot/uImage
@@ -200,7 +229,7 @@ else
   cp ${TARGETFS}/boot/uEnv.txt.local ${TARGETFS}/boot/uEnv.txt
 fi
 
-cd $SRCDIR/busybox-1.22.1
+cd $SRCDIR/busybox
 make defconfig
 sleep 1
 sed -i -e 's|CONFIG_FEATURE_INETD_RPC=y|# CONFIG_FEATURE_INETD_RPC is not set|g' .config
@@ -214,7 +243,7 @@ chmod +x ${TARGETFS}/bin/busybox
 cp examples/depmod.pl ${BUILDTOOLSYSDIR}/bin/depmod.pl
 chmod 755 ${BUILDTOOLSYSDIR}/bin/depmod.pl
 
-cd ${SRCDIR}/iana-etc-2.30
+cd ${SRCDIR}/iana-etc
 make get
 make STRIP=yes
 make DESTDIR=$TARGETFS install
@@ -294,13 +323,13 @@ ln -sfv ../init.d/apache24 S50apache24
 ln -sfv ../init.d/wirelessBridge S60wirelessBridge
 ln -sfv ../init.d/logiclayer S55logiclayer
 
-cd $SRCDIR/openssh-6.7p1
+cd $SRCDIR/openssh
 sed -i -e 's|#PermitEmptyPasswords no|PermitEmptyPasswords yes|g' sshd_config
 ./configure --host=$TARGET --with-libs --with-zlib=${BUILDTOOLSYSDIR}/sysroot --prefix=/ --with-ssl-dir=${BUILDTOOLSYSDIR}/sysroot LD=$TARGET-gcc AR=$TARGET-ar  --sysconfdir=/etc/ssh 
 LD=$TARGET-gcc AR=$TARGET-ar make
 make install-nokeys LD=$TARGET-gcc AR=$TARGET-ar DESTDIR=${TARGETFS} STRIP_OPT="-s --strip-program=arm-unknown-linux-gnueabihf-strip"
 
-cd $SRCDIR/mosquitto-1.3.5
+cd $SRCDIR/mosquitto
 ##maybe change prefix install dir as installs in /usr/local/ this is at the bottom of the config.mk
 make
 make install prefix='' DESTDIR=$TARGETFS
@@ -318,13 +347,13 @@ cp broker_mqtts ${TARGETFS}/bin/broker_mqtts
 cp ${DIR}/resources/broker.cfg ${TARGETFS}/usr/bin/broker.cfg
 cp Messages.1.3.0.2 ${TARGETFS}/usr/bin/Messages.1.3.0.2
 
-cd $SRCDIR/rsync-3.1.1
+cd $SRCDIR/rsync
 ./configure --host=$TARGET --prefix=/
 make
 make install prefix=/ DESTDIR=$TARGETFS
 
 #APR
-cd $SRCDIR/apr-1.5.2
+cd $SRCDIR/apr
 #may have to be installed in src dir.
 #have not tested apr_cv_tcp_nodelay_with_cork
 ./configure --host=$TARGET --prefix=$SRCDIR/apache/apr-build ac_cv_file__dev_zero=yes ac_cv_func_setpgrp_void=yes apr_cv_tcp_nodelay_with_cork=no ac_cv_sizeof_struct_iovec=1
@@ -342,21 +371,21 @@ make
 make install
 cp -v $SRCDIR/apache/apr-build/lib/*.so* $TARGETFS/lib/
 
-cd ${SRCDIR}/apr-util-1.5.4
+cd ${SRCDIR}/apr-util
 ./configure --host=${TARGET} --prefix=${SRCDIR}/apache/apr-util-build --with-apr=${SRCDIR}/apache/apr-build
 make
 make install
 cp -v ${SRCDIR}/apache/apr-util-build/lib/*.so* $TARGETFS/lib/
 
-cd ${SRCDIR}/pcre-8.38
+cd ${SRCDIR}/pcre
 ./configure --host=${TARGET} --prefix=${SRCDIR}/apache/pcre-build
 make
 make install
 cp -v ${SRCDIR}/apache/pcre-build/lib/*.so* $TARGETFS/lib/
 
-cd ${SRCDIR}/httpd-2.4.18
+cd ${SRCDIR}/httpd
 #set the default user
-sed -i -e 's/User daemon/User httpd/g' ${SRCDIR}/httpd-2.4.18/docs/conf/httpd.conf.in
+sed -i -e 's/User daemon/User httpd/g' ${SRCDIR}/httpd/docs/conf/httpd.conf.in
 sed -i -e 's/Group daemon/Group httpd/g' docs/conf/httpd.conf.in
 ./configure --prefix=/apache24 --host=${TARGET} --with-apr=${SRCDIR}/apache/apr-build --with-apr-util=${SRCDIR}/apache/apr-util-build  --with-pcre=${SRCDIR}/apache/pcre-build ap_cv_void_ptr_lt_long=no --with-mpm=prefork  --sysconfdir=/apache24/etc
 #this will fail, but it must be ran to allow the below replacement to take place. ||true ensures that the broken make will not halt the buildscript
@@ -373,20 +402,20 @@ make DESTDIR=${TARGETFS} install
 cp -vP /${BUILDTOOLSYSDIR}/sysroot/lib/*.so* ${TARGETFS}/lib/
 cp -vP /${BUILDTOOLSYSDIR}/arm-unknown-linux-gnueabihf/lib/*.so* ${TARGETFS}/lib/
 
-cd $SRCDIR/libxml2-2.9.2
+cd $SRCDIR/libxml2
 ./configure --host=$TARGET --without-python --prefix='' --without-lzma --with-zlib=${BUILDTOOLSYSDIR}/sysroot
 make
 make  DESTDIR=${BUILDTOOLSYSDIR}/sysroot install
 make  DESTDIR=${TARGETFS} install
 
 #need to install sqlite
-cd $SRCDIR/sqlite-autoconf-${SQLITE_VER}
+cd $SRCDIR/sqlite-autoconf
 ./configure --host=$TARGET --prefix=''
 make
 make DESTDIR=${BUILDTOOLSYSDIR}/sysroot install
 make  DESTDIR=${TARGETFS} install
 
-cd $SRCDIR/php-5.6.5
+cd $SRCDIR/php
 #need to test
 sed -i -e 's|my $installbuilddir = "/apache24/build";|my $installbuilddir = "'"${TARGETFS}"'/apache24/build";|g' ${TARGETFS}/apache24/bin/apxs
 sed -i -e 's|includedir = ${prefix}/include|includedir = '"${TARGETFS}"'/apache24/include|g' ${TARGETFS}/apache24/build/config_vars.mk
@@ -492,11 +521,13 @@ echo "fixing permissions"
 sudo chown -Rv root:root *
 sudo chgrp -v 13 var/run/utmp var/log/lastlog
 echo "packaging generated Filesystem"
-sudo tar jcf ../fs.tar.bz2 *
-sudo chmod 777 ../fs.tar.bz2
-cd ${TARGETFS}/..
-sudo rm -Rf ${SRCDIR}
-sudo rm -Rf ${TARGETFS}
+if [ ${PACKAGEFS} == 'TRUE' ]; then
+ sudo tar jcf ../fs.tar.bz2 *
+ sudo chmod 777 ../fs.tar.bz2
+ cd ${TARGETFS}/..
+ sudo rm -Rf ${SRCDIR}
+ sudo rm -Rf ${TARGETFS}
+fi
 ENDTIME=$(date +%s)
 echo "####################################################################"
 echo "####################################################################"
@@ -512,6 +543,7 @@ echo "#                                                                  #"
 echo "#                                                                  #"
 echo "####################################################################"
 echo "####################################################################"
+
 
 
 
