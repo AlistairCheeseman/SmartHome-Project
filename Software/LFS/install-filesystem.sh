@@ -69,19 +69,19 @@ mkdir -pv $SRCDIR
 cd $SRCDIR
 
 
-UBOOT_VER=2016.11
-BUSYBOX_VER=1.22.1
+UBOOT_VER=2014.07
+BUSYBOX_VER=1.26.1
 IANA_VER=2.30
 OPENSSH_VER=7.4p1
-PHP_VER=5.6.5
-SQLITE_VER=3150100
-LIBXML2_VER=2.9.2
-HTTPD_VER=2.4.18
-PCRE_VER=8.38
+PHP_VER=7.1.0
+SQLITE_VER=3160200
+LIBXML2_VER=2.9.4
+HTTPD_VER=2.4.25
+PCRE_VER=8.39
 APR_UTIL_VER=1.5.4
 APR_VER=1.5.2
-RSYNC_VER=3.1.1
-MOSQUITTO_VER=1.3.5
+RSYNC_VER=3.1.2
+MOSQUITTO_VER=1.4.10
 
 
 
@@ -100,13 +100,14 @@ if [ $USE_MIRROR == 'TRUE' ]; then
  wget --no-check-certificate https://filestore.kmxsoftware.co.uk/apr-${APR_VER}.tar.bz2
  wget --no-check-certificate https://filestore.kmxsoftware.co.uk/rsync-${RSYNC_VER}.tar.gz
  wget --no-check-certificate https://filestore.kmxsoftware.co.uk/mosquitto-${MOSQUITTO_VER}.tar.gz
+ wget --no-check-certificate https://filestore.kmxsoftware.co.uk/gdb-7.12.tar.xz
+ wget --no-check-certificate https://filestore.kmxsoftware.co.uk/org.eclipse.tcf.agent-1.3.0.zip
 else
  wget ftp://ftp.denx.de/pub/u-boot/u-boot-${UBOOT_VER}.tar.bz2
  wget --no-check-certificate http://busybox.net/downloads/busybox-${BUSYBOX_VER}.tar.bz2
  wget http://sethwklein.net/iana-etc-${IANA_VER}.tar.bz2
  wget http://www.mirrorservice.org/pub/OpenBSD/OpenSSH/portable/openssh-${OPENSSH_VER}.tar.gz
- wget http://uk1.php.net/get/php-${PHP_VER}.tar.gz/from/this/mirror
- mv mirror php-${PHP_VER}.tar.gz
+ wget http://uk1.php.net/get/php-${PHP_VER}.tar.gz/from/this/mirror -O php-${PHP_VER}.tar.gz
  wget http://www.sqlite.org/2015/sqlite-autoconf-${SQLITE_VER}.tar.gz
  wget ftp://xmlsoft.org/libxml2/libxml2-${LIBXML2_VER}.tar.gz
  wget http://mirror.catn.com/pub/apache/httpd/httpd-${HTTPD_VER}.tar.gz
@@ -115,6 +116,8 @@ else
  wget http://mirror.catn.com/pub/apache/apr/apr-${APR_VER}.tar.bz2
  wget http://rsync.samba.org/ftp/rsync/src/rsync-${RSYNC_VER}.tar.gz
  wget -4 http://mosquitto.org/files/source/mosquitto-${MOSQUITTO_VER}.tar.gz
+ wget http://ftp.gnu.org/gnu/gdb/gdb-7.12.tar.xz
+ wget http://www.mirrorservice.org/sites/download.eclipse.org/eclipseMirror/tools/tcf/releases/1.3/org.eclipse.tcf.agent-1.3.0.zip
 fi
 
 tar -xf u-boot-${UBOOT_VER}.tar.bz2
@@ -130,6 +133,8 @@ tar -xf apr-util-${APR_UTIL_VER}.tar.gz
 tar -xf apr-${APR_VER}.tar.bz2
 tar -xf rsync-${RSYNC_VER}.tar.gz
 tar -xf mosquitto-${MOSQUITTO_VER}.tar.gz
+tar -xf gdb-7.12.tar.xz
+
 
 rm u-boot-${UBOOT_VER}.tar.bz2
 rm busybox-${BUSYBOX_VER}.tar.bz2
@@ -144,6 +149,7 @@ rm apr-util-${APR_UTIL_VER}.tar.gz
 rm apr-${APR_VER}.tar.bz2
 rm rsync-${RSYNC_VER}.tar.gz
 rm mosquitto-${MOSQUITTO_VER}.tar.gz
+rm gdb-7.12.tar.xz
 
 
 mv u-boot-${UBOOT_VER} u-boot
@@ -159,8 +165,10 @@ mv apr-util-${APR_UTIL_VER} apr-util
 mv apr-${APR_VER} apr
 mv rsync-${RSYNC_VER} rsync
 mv mosquitto-${MOSQUITTO_VER} mosquitto
+mv gdb-7.12 gdb
 
 
+echo -e '\033]2;U-BOOT\007'
 
 cd u-boot
 #note CROSS_COMPILE and ARCH must be set for this to work on the target system.
@@ -172,6 +180,9 @@ cp u-boot.img $TARGETFS/boot/u-boot.img
 
 #mkimage has been built for the build system
 cp tools/mkimage ${BUILDTOOLSYSDIR}/bin/mkimage
+
+
+echo -e '\033]2;KERNEL\007'
 
 #git no longer clones to /kernel.
 #cp -R ${BUILDTOOLSYSDIR}/../src/kernel  $SRCDIR/kernel
@@ -220,7 +231,7 @@ cd Documentation/spi
 $CC spidev_test.c -o spitest
 cp spitest ${TARGETFS}/bin/
 
-
+echo -e '\033]2;U-ENV config\007'
 cp ${DIR}/resources/uEnv.txt.nfs ${TARGETFS}/boot/
 cp ${DIR}/resources/uEnv.txt.local ${TARGETFS}/boot/
 if [ $NETBOOT == 'TRUE' ]; then
@@ -228,6 +239,8 @@ if [ $NETBOOT == 'TRUE' ]; then
 else
   cp ${TARGETFS}/boot/uEnv.txt.local ${TARGETFS}/boot/uEnv.txt
 fi
+echo -e '\033]2;BUSYBOX\007'
+
 
 cd $SRCDIR/busybox
 make defconfig
@@ -243,10 +256,15 @@ chmod +x ${TARGETFS}/bin/busybox
 cp examples/depmod.pl ${BUILDTOOLSYSDIR}/bin/depmod.pl
 chmod 755 ${BUILDTOOLSYSDIR}/bin/depmod.pl
 
+echo -e '\033]2;IANA\007'
+
 cd ${SRCDIR}/iana-etc
 make get
 make STRIP=yes
 make DESTDIR=$TARGETFS install
+
+
+echo -e '\033]2;/etc files\007'
 
 cp ${DIR}/resources/fstab.nfs ${TARGETFS}/etc/fstab.nfs
 cp ${DIR}/resources/fstab.local ${TARGETFS}/etc/fstab.local
@@ -323,21 +341,30 @@ ln -sfv ../init.d/apache24 S50apache24
 ln -sfv ../init.d/wirelessBridge S60wirelessBridge
 ln -sfv ../init.d/logiclayer S55logiclayer
 
+echo -e '\033]2;OPENSSH\007'
+
 cd $SRCDIR/openssh
+#open up openssh for DEVELOPMENT ONLY
 sed -i -e 's|#PermitEmptyPasswords no|PermitEmptyPasswords yes|g' sshd_config
+sed -i -e 's|#PermitRootLogin prohibit-password|PermitRootLogin yes|g' sshd_config
 ./configure --host=$TARGET --with-libs --with-zlib=${BUILDTOOLSYSDIR}/sysroot --prefix=/ --with-ssl-dir=${BUILDTOOLSYSDIR}/sysroot LD=$TARGET-gcc AR=$TARGET-ar  --sysconfdir=/etc/ssh 
 LD=$TARGET-gcc AR=$TARGET-ar make
 make install-nokeys LD=$TARGET-gcc AR=$TARGET-ar DESTDIR=${TARGETFS} STRIP_OPT="-s --strip-program=arm-unknown-linux-gnueabihf-strip"
 
+echo -e '\033]2;MOSQUITTO\007'
+
 cd $SRCDIR/mosquitto
 ##maybe change prefix install dir as installs in /usr/local/ this is at the bottom of the config.mk
-make
-make install prefix='' DESTDIR=$TARGETFS
-make install prefix='' DESTDIR=${BUILDTOOLSYSDIR}/sysroot
+# we don;t have libuuid installed so build without it.
+sed -i -e 's|WITH_UUID:=yes|#WITH_UUID:=yes|g' config.mk
+make CROSS_COMPILE=''
+make CROSS_COMPILE='' install prefix='' DESTDIR=$TARGETFS
+make CROSS_COMPILE='' install prefix='' DESTDIR=${BUILDTOOLSYSDIR}/sysroot
 cp $TARGETFS/etc/mosquitto/mosquitto.conf.example $TARGETFS/etc/mosquitto/mosquitto.conf
 
 sed -i -e 's|#pid_file|pid_file /var/run/mosquitto.pid|g' $TARGETFS/etc/mosquitto/mosquitto.conf 
 
+echo -e '\033]2;RSMB\007'
 
 cd ${SRCDIR}
 git clone https://git.eclipse.org/r/mosquitto/org.eclipse.mosquitto.rsmb rsmb
@@ -347,10 +374,14 @@ cp broker_mqtts ${TARGETFS}/bin/broker_mqtts
 cp ${DIR}/resources/broker.cfg ${TARGETFS}/usr/bin/broker.cfg
 cp Messages.1.3.0.2 ${TARGETFS}/usr/bin/Messages.1.3.0.2
 
+echo -e '\033]2;RSYNC\007'
+
 cd $SRCDIR/rsync
 ./configure --host=$TARGET --prefix=/
 make
 make install prefix=/ DESTDIR=$TARGETFS
+
+echo -e '\033]2;APR\007'
 
 #APR
 cd $SRCDIR/apr
@@ -371,11 +402,16 @@ make
 make install
 cp -v $SRCDIR/apache/apr-build/lib/*.so* $TARGETFS/lib/
 
+echo -e '\033]2;APR-UTIL\007'
+
 cd ${SRCDIR}/apr-util
 ./configure --host=${TARGET} --prefix=${SRCDIR}/apache/apr-util-build --with-apr=${SRCDIR}/apache/apr-build
 make
 make install
 cp -v ${SRCDIR}/apache/apr-util-build/lib/*.so* $TARGETFS/lib/
+
+
+echo -e '\033]2;PCRE\007'
 
 cd ${SRCDIR}/pcre
 ./configure --host=${TARGET} --prefix=${SRCDIR}/apache/pcre-build
@@ -383,6 +419,8 @@ make
 make install
 cp -v ${SRCDIR}/apache/pcre-build/lib/*.so* $TARGETFS/lib/
 
+echo -e '\033]2;HTTPD\007'
+echo "Building HTTPD"
 cd ${SRCDIR}/httpd
 #set the default user
 sed -i -e 's/User daemon/User httpd/g' ${SRCDIR}/httpd/docs/conf/httpd.conf.in
@@ -402,11 +440,16 @@ make DESTDIR=${TARGETFS} install
 cp -vP /${BUILDTOOLSYSDIR}/sysroot/lib/*.so* ${TARGETFS}/lib/
 cp -vP /${BUILDTOOLSYSDIR}/arm-unknown-linux-gnueabihf/lib/*.so* ${TARGETFS}/lib/
 
+
+echo -e '\033]2;LIBXML2\007'
+echo "Building LIBXML2"
 cd $SRCDIR/libxml2
 ./configure --host=$TARGET --without-python --prefix='' --without-lzma --with-zlib=${BUILDTOOLSYSDIR}/sysroot
 make
 make  DESTDIR=${BUILDTOOLSYSDIR}/sysroot install
 make  DESTDIR=${TARGETFS} install
+
+echo -e '\033]2;SQLITE\007'
 
 #need to install sqlite
 cd $SRCDIR/sqlite-autoconf
@@ -491,10 +534,6 @@ echo "*/5 * * * * /usr/bin/shscheduler" > ${TARGETFS}/var/spool/cron/crontabs/ro
 
 #if gdb is needed.
 cd $SRCDIR
-wget http://ftp.gnu.org/gnu/gdb/gdb-7.12.tar.xz
-tar -xf gdb-7.12.tar.xz
-rm gdb-7.12.tar.xz
-mv gdb-7.12 gdb
 mkdir gdb-build
 cd gdb-build
 ../gdb/configure --host=${TARGET} --target=${TARGET} --prefix=''
@@ -504,7 +543,6 @@ make DESTDIR=${TARGETFS} install
 
 #if eclipse tcf debugger is needed
 cd ${SRCDIR}
-wget http://www.mirrorservice.org/sites/download.eclipse.org/eclipseMirror/tools/tcf/releases/1.3/org.eclipse.tcf.agent-1.3.0.zip
 unzip org.eclipse.tcf.agent-1.3.0.zip
 rm org.eclipse.tcf.agent-1.3.0.zip
 cd org.eclipse.tcf.agent-1.3.0
@@ -543,8 +581,3 @@ echo "#                                                                  #"
 echo "#                                                                  #"
 echo "####################################################################"
 echo "####################################################################"
-
-
-
-
-
